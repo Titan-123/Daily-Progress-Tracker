@@ -255,17 +255,23 @@ export default function Index() {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button className="w-full justify-start" variant="outline">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  View Calendar
+                <Button asChild className="w-full justify-start" variant="outline">
+                  <Link to="/calendar">
+                    <Calendar className="h-4 w-4 mr-2" />
+                    View Calendar
+                  </Link>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <BarChart3 className="h-4 w-4 mr-2" />
-                  Analytics
+                <Button asChild className="w-full justify-start" variant="outline">
+                  <Link to="/analytics">
+                    <BarChart3 className="h-4 w-4 mr-2" />
+                    Analytics
+                  </Link>
                 </Button>
-                <Button className="w-full justify-start" variant="outline">
-                  <Target className="h-4 w-4 mr-2" />
-                  Set New Goals
+                <Button asChild className="w-full justify-start" variant="outline">
+                  <Link to="/goals">
+                    <Target className="h-4 w-4 mr-2" />
+                    Set New Goals
+                  </Link>
                 </Button>
               </CardContent>
             </Card>
