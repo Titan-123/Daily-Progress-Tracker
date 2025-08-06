@@ -1,57 +1,112 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, Calendar, Target, TrendingUp, BarChart3, 
   Heart, Flame, Trophy, Star, CheckCircle2, Clock, 
-  ArrowUpRight, ArrowDownRight, Zap 
+  ArrowUpRight, ArrowDownRight, Zap, Loader2 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface AnalyticsData {
-  weeklyCompletion: number;
-  monthlyCompletion: number;
-  currentStreak: number;
-  bestStreak: number;
-  totalTargetsCompleted: number;
-  consistencyScore: number;
-  improvementAreas: string[];
-  strengths: string[];
-  weeklyData: { day: string; completion: number; completed: number; total: number }[];
-  monthlyTrends: { week: string; completion: number }[];
-}
+import { api, type AnalyticsData } from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Analytics() {
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [loading, setLoading] = useState(true);
   const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('week');
-  
-  const analyticsData: AnalyticsData = {
-    weeklyCompletion: 78,
-    monthlyCompletion: 82,
-    currentStreak: 12,
-    bestStreak: 21,
-    totalTargetsCompleted: 156,
-    consistencyScore: 85,
-    improvementAreas: ['Weekend consistency', 'Evening targets', 'Study goals'],
-    strengths: ['Morning routine', 'Exercise habits', 'Writing practice'],
-    weeklyData: [
-      { day: 'Mon', completion: 100, completed: 3, total: 3 },
-      { day: 'Tue', completion: 67, completed: 2, total: 3 },
-      { day: 'Wed', completion: 100, completed: 3, total: 3 },
-      { day: 'Thu', completion: 100, completed: 3, total: 3 },
-      { day: 'Fri', completion: 33, completed: 1, total: 3 },
-      { day: 'Sat', completion: 67, completed: 2, total: 3 },
-      { day: 'Sun', completion: 100, completed: 3, total: 3 },
-    ],
-    monthlyTrends: [
-      { week: 'Week 1', completion: 85 },
-      { week: 'Week 2', completion: 72 },
-      { week: 'Week 3', completion: 91 },
-      { week: 'Week 4', completion: 78 },
-    ]
+
+  // Load analytics data on component mount
+  useEffect(() => {
+    loadAnalyticsData();
+  }, []);
+
+  const loadAnalyticsData = async () => {
+    try {
+      setLoading(true);
+      const data = await api.analytics.getAnalyticsData();
+      setAnalyticsData(data);
+    } catch (error) {
+      console.error('Failed to load analytics data:', error);
+      toast.error('Failed to load analytics data. Please try again.');
+      // Fallback to mock data if API fails
+      setAnalyticsData({
+        weeklyCompletion: 78,
+        monthlyCompletion: 82,
+        currentStreak: 12,
+        bestStreak: 21,
+        totalTargetsCompleted: 156,
+        consistencyScore: 85,
+        improvementAreas: ['Weekend consistency', 'Evening targets', 'Study goals'],
+        strengths: ['Morning routine', 'Exercise habits', 'Writing practice'],
+        weeklyData: [
+          { day: 'Mon', completion: 100, completed: 3, total: 3 },
+          { day: 'Tue', completion: 67, completed: 2, total: 3 },
+          { day: 'Wed', completion: 100, completed: 3, total: 3 },
+          { day: 'Thu', completion: 100, completed: 3, total: 3 },
+          { day: 'Fri', completion: 33, completed: 1, total: 3 },
+          { day: 'Sat', completion: 67, completed: 2, total: 3 },
+          { day: 'Sun', completion: 100, completed: 3, total: 3 },
+        ],
+        monthlyTrends: [
+          { week: 'Week 1', completion: 85 },
+          { week: 'Week 2', completion: 72 },
+          { week: 'Week 3', completion: 91 },
+          { week: 'Week 4', completion: 78 },
+        ]
+      });
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const loadWeeklyData = async (weekOffset: number = 0) => {
+    try {
+      const weeklyData = await api.analytics.getWeeklyData(weekOffset);
+      if (analyticsData) {
+        setAnalyticsData({ ...analyticsData, weeklyData });
+      }
+    } catch (error) {
+      console.error('Failed to load weekly data:', error);
+      toast.error('Failed to load weekly data');
+    }
+  };
+
+  const loadMonthlyTrends = async () => {
+    try {
+      const monthlyTrends = await api.analytics.getMonthlyTrends();
+      if (analyticsData) {
+        setAnalyticsData({ ...analyticsData, monthlyTrends });
+      }
+    } catch (error) {
+      console.error('Failed to load monthly trends:', error);
+      toast.error('Failed to load monthly trends');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading your analytics...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!analyticsData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-muted-foreground">Failed to load analytics data</p>
+          <Button onClick={loadAnalyticsData}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
 
   const getMotivationalInsight = () => {
     const { weeklyCompletion, currentStreak, consistencyScore } = analyticsData;
@@ -182,8 +237,19 @@ export default function Analytics() {
             {/* Weekly Progress Chart */}
             <Card>
               <CardHeader>
-                <CardTitle>This Week's Progress</CardTitle>
-                <CardDescription>Daily completion rates and target achievement</CardDescription>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle>This Week's Progress</CardTitle>
+                    <CardDescription>Daily completion rates and target achievement</CardDescription>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => loadWeeklyData()}
+                  >
+                    Refresh Data
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
@@ -213,8 +279,19 @@ export default function Analytics() {
             <div className="grid gap-6 lg:grid-cols-2">
               <Card>
                 <CardHeader>
-                  <CardTitle>Monthly Completion Trend</CardTitle>
-                  <CardDescription>Weekly averages over the past month</CardDescription>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <CardTitle>Monthly Completion Trend</CardTitle>
+                      <CardDescription>Weekly averages over the past month</CardDescription>
+                    </div>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={loadMonthlyTrends}
+                    >
+                      Refresh
+                    </Button>
+                  </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
