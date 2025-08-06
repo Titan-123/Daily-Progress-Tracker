@@ -1,47 +1,110 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, Target, TrendingUp, Heart, Star, CheckCircle2, Plus, BarChart3 } from 'lucide-react';
+import { Calendar, Target, TrendingUp, Heart, Star, CheckCircle2, Plus, BarChart3, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
-
-interface Target {
-  id: string;
-  title: string;
-  description: string;
-  type: 'daily' | 'weekly' | 'monthly';
-  completed: boolean;
-  streak: number;
-}
-
-interface Achievement {
-  id: string;
-  title: string;
-  description: string;
-  icon: string;
-  earned: boolean;
-}
+import { api, type Target as TargetType, type Achievement, type DashboardData } from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Index() {
   const [currentDate] = useState(new Date());
-  const [todaysTargets, setTodaysTargets] = useState<Target[]>([
-    { id: '1', title: 'Write 500 words', description: 'Creative writing practice', type: 'daily', completed: false, streak: 3 },
-    { id: '2', title: 'Study for 2 hours', description: 'Focus on JavaScript fundamentals', type: 'daily', completed: true, streak: 7 },
-    { id: '3', title: 'Exercise 30 minutes', description: 'Morning workout routine', type: 'daily', completed: false, streak: 2 },
-  ]);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [toggling, setToggling] = useState<string | null>(null);
 
-  const [weeklyProgress] = useState(85);
-  const [totalStreak] = useState(12);
-  const [achievements] = useState<Achievement[]>([
-    { id: '1', title: '7-Day Streak', description: 'Completed daily goals for a week!', icon: '🔥', earned: true },
-    { id: '2', title: 'Early Bird', description: 'Started progress tracking before 8 AM', icon: '🌅', earned: true },
-    { id: '3', title: 'Consistency Master', description: 'Hit 90% weekly completion rate', icon: '⭐', earned: false },
-  ]);
+  // Load dashboard data on component mount
+  useEffect(() => {
+    loadDashboardData();
+  }, []);
 
+  const loadDashboardData = async () => {
+    try {
+      setLoading(true);
+      const data = await api.dashboard.getDashboardData();
+      setDashboardData(data);
+    } catch (error) {
+      console.error('Failed to load dashboard data:', error);
+      toast.error('Failed to load dashboard data. Please try again.');
+      // Fallback to mock data if API fails
+      setDashboardData({
+        targets: [
+          { id: '1', title: 'Write 500 words', description: 'Creative writing practice', type: 'daily', completed: false, streak: 3 },
+          { id: '2', title: 'Study for 2 hours', description: 'Focus on JavaScript fundamentals', type: 'daily', completed: true, streak: 7 },
+          { id: '3', title: 'Exercise 30 minutes', description: 'Morning workout routine', type: 'daily', completed: false, streak: 2 },
+        ],
+        achievements: [
+          { id: '1', title: '7-Day Streak', description: 'Completed daily goals for a week!', icon: '🔥', earned: true },
+          { id: '2', title: 'Early Bird', description: 'Started progress tracking before 8 AM', icon: '🌅', earned: true },
+          { id: '3', title: 'Consistency Master', description: 'Hit 90% weekly completion rate', icon: '⭐', earned: false },
+        ],
+        weeklyProgress: 85,
+        totalStreak: 12,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const toggleTarget = async (targetId: string) => {
+    if (!dashboardData || toggling) return;
+
+    try {
+      setToggling(targetId);
+      
+      // Optimistic update
+      const updatedTargets = dashboardData.targets.map(target => 
+        target.id === targetId ? { ...target, completed: !target.completed } : target
+      );
+      setDashboardData({ ...dashboardData, targets: updatedTargets });
+
+      // Make API call
+      const updatedTarget = await api.dashboard.toggleTarget(targetId);
+      
+      // Update with server response
+      const finalTargets = dashboardData.targets.map(target => 
+        target.id === targetId ? updatedTarget : target
+      );
+      setDashboardData({ ...dashboardData, targets: finalTargets });
+
+      toast.success(updatedTarget.completed ? 'Target completed! 🎉' : 'Target unchecked');
+    } catch (error) {
+      console.error('Failed to toggle target:', error);
+      toast.error('Failed to update target. Please try again.');
+      // Revert optimistic update on error
+      await loadDashboardData();
+    } finally {
+      setToggling(null);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading your progress...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!dashboardData) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <p className="text-muted-foreground">Failed to load dashboard data</p>
+          <Button onClick={loadDashboardData}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
+  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } = dashboardData;
   const completedCount = todaysTargets.filter(target => target.completed).length;
   const totalCount = todaysTargets.length;
-  const completionRate = Math.round((completedCount / totalCount) * 100);
+  const completionRate = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
   const motivationalMessages = {
     excellent: [
@@ -65,14 +128,6 @@ export default function Index() {
     if (completionRate >= 80) return motivationalMessages.excellent[Math.floor(Math.random() * motivationalMessages.excellent.length)];
     if (completionRate >= 50) return motivationalMessages.good[Math.floor(Math.random() * motivationalMessages.good.length)];
     return motivationalMessages.encouraging[Math.floor(Math.random() * motivationalMessages.encouraging.length)];
-  };
-
-  const toggleTarget = (id: string) => {
-    setTodaysTargets(targets => 
-      targets.map(target => 
-        target.id === id ? { ...target, completed: !target.completed } : target
-      )
-    );
   };
 
   return (
@@ -135,15 +190,19 @@ export default function Index() {
                       target.completed 
                         ? 'border-success/30 bg-success/5' 
                         : 'border-border hover:border-primary/30'
-                    }`}
+                    } ${toggling === target.id ? 'opacity-50' : ''}`}
                     onClick={() => toggleTarget(target.id)}
                   >
                     <div className="flex items-center gap-3">
-                      <CheckCircle2 
-                        className={`h-6 w-6 ${
-                          target.completed ? 'text-success fill-current' : 'text-muted-foreground'
-                        }`} 
-                      />
+                      {toggling === target.id ? (
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                      ) : (
+                        <CheckCircle2 
+                          className={`h-6 w-6 ${
+                            target.completed ? 'text-success fill-current' : 'text-muted-foreground'
+                          }`} 
+                        />
+                      )}
                       <div className="flex-1">
                         <h3 className={`font-semibold ${target.completed ? 'line-through text-muted-foreground' : ''}`}>
                           {target.title}
