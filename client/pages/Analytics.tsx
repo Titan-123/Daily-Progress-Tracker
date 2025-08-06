@@ -1,22 +1,42 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  ArrowLeft, Calendar, Target, TrendingUp, BarChart3, 
-  Heart, Flame, Trophy, Star, CheckCircle2, Clock, 
-  ArrowUpRight, ArrowDownRight, Zap, Loader2 
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { api, type AnalyticsData } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Calendar,
+  Target,
+  TrendingUp,
+  BarChart3,
+  Heart,
+  Flame,
+  Trophy,
+  Star,
+  CheckCircle2,
+  Clock,
+  ArrowUpRight,
+  ArrowDownRight,
+  Zap,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { api, type AnalyticsData } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Analytics() {
-  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(null);
+  const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
-  const [timeRange, setTimeRange] = useState<'week' | 'month' | 'year'>('week');
+  const [timeRange, setTimeRange] = useState<"week" | "month" | "year">("week");
 
   // Load analytics data on component mount
   useEffect(() => {
@@ -29,8 +49,8 @@ export default function Analytics() {
       const data = await api.analytics.getAnalyticsData();
       setAnalyticsData(data);
     } catch (error) {
-      console.error('Failed to load analytics data:', error);
-      toast.error('Failed to load analytics data. Please try again.');
+      console.error("Failed to load analytics data:", error);
+      toast.error("Failed to load analytics data. Please try again.");
       // Fallback to mock data if API fails
       setAnalyticsData({
         weeklyCompletion: 78,
@@ -39,23 +59,27 @@ export default function Analytics() {
         bestStreak: 21,
         totalTargetsCompleted: 156,
         consistencyScore: 85,
-        improvementAreas: ['Weekend consistency', 'Evening targets', 'Study goals'],
-        strengths: ['Morning routine', 'Exercise habits', 'Writing practice'],
+        improvementAreas: [
+          "Weekend consistency",
+          "Evening targets",
+          "Study goals",
+        ],
+        strengths: ["Morning routine", "Exercise habits", "Writing practice"],
         weeklyData: [
-          { day: 'Mon', completion: 100, completed: 3, total: 3 },
-          { day: 'Tue', completion: 67, completed: 2, total: 3 },
-          { day: 'Wed', completion: 100, completed: 3, total: 3 },
-          { day: 'Thu', completion: 100, completed: 3, total: 3 },
-          { day: 'Fri', completion: 33, completed: 1, total: 3 },
-          { day: 'Sat', completion: 67, completed: 2, total: 3 },
-          { day: 'Sun', completion: 100, completed: 3, total: 3 },
+          { day: "Mon", completion: 100, completed: 3, total: 3 },
+          { day: "Tue", completion: 67, completed: 2, total: 3 },
+          { day: "Wed", completion: 100, completed: 3, total: 3 },
+          { day: "Thu", completion: 100, completed: 3, total: 3 },
+          { day: "Fri", completion: 33, completed: 1, total: 3 },
+          { day: "Sat", completion: 67, completed: 2, total: 3 },
+          { day: "Sun", completion: 100, completed: 3, total: 3 },
         ],
         monthlyTrends: [
-          { week: 'Week 1', completion: 85 },
-          { week: 'Week 2', completion: 72 },
-          { week: 'Week 3', completion: 91 },
-          { week: 'Week 4', completion: 78 },
-        ]
+          { week: "Week 1", completion: 85 },
+          { week: "Week 2", completion: 72 },
+          { week: "Week 3", completion: 91 },
+          { week: "Week 4", completion: 78 },
+        ],
       });
     } finally {
       setLoading(false);
@@ -69,8 +93,8 @@ export default function Analytics() {
         setAnalyticsData({ ...analyticsData, weeklyData });
       }
     } catch (error) {
-      console.error('Failed to load weekly data:', error);
-      toast.error('Failed to load weekly data');
+      console.error("Failed to load weekly data:", error);
+      toast.error("Failed to load weekly data");
     }
   };
 
@@ -81,8 +105,8 @@ export default function Analytics() {
         setAnalyticsData({ ...analyticsData, monthlyTrends });
       }
     } catch (error) {
-      console.error('Failed to load monthly trends:', error);
-      toast.error('Failed to load monthly trends');
+      console.error("Failed to load monthly trends:", error);
+      toast.error("Failed to load monthly trends");
     }
   };
 
@@ -110,24 +134,27 @@ export default function Analytics() {
 
   const getMotivationalInsight = () => {
     const { weeklyCompletion, currentStreak, consistencyScore } = analyticsData;
-    
+
     if (weeklyCompletion >= 80 && currentStreak >= 10) {
       return {
-        message: "You're absolutely unstoppable! Your consistency is building incredible momentum! 🚀",
-        type: 'excellent' as const,
-        icon: '🌟'
+        message:
+          "You're absolutely unstoppable! Your consistency is building incredible momentum! 🚀",
+        type: "excellent" as const,
+        icon: "🌟",
       };
     } else if (weeklyCompletion >= 60 && currentStreak >= 5) {
       return {
-        message: "Great progress! You're building solid habits that will serve you well! 💪",
-        type: 'good' as const,
-        icon: '⭐'
+        message:
+          "Great progress! You're building solid habits that will serve you well! 💪",
+        type: "good" as const,
+        icon: "⭐",
       };
     } else {
       return {
-        message: "Every small step matters! You're learning and growing with each day! 🌱",
-        type: 'encouraging' as const,
-        icon: '💚'
+        message:
+          "Every small step matters! You're learning and growing with each day! 🌱",
+        type: "encouraging" as const,
+        icon: "💚",
       };
     }
   };
@@ -149,7 +176,9 @@ export default function Analytics() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Progress Analytics
             </h1>
-            <p className="text-muted-foreground">Understanding your journey and celebrating growth</p>
+            <p className="text-muted-foreground">
+              Understanding your journey and celebrating growth
+            </p>
           </div>
         </div>
 
@@ -159,7 +188,9 @@ export default function Analytics() {
             <div className="flex items-center gap-4">
               <div className="text-4xl">{insight.icon}</div>
               <div>
-                <p className="text-xl font-semibold text-primary">{insight.message}</p>
+                <p className="text-xl font-semibold text-primary">
+                  {insight.message}
+                </p>
                 <p className="text-sm text-muted-foreground mt-1">
                   Your data shows beautiful patterns of growth and dedication!
                 </p>
@@ -181,25 +212,35 @@ export default function Analytics() {
               <Card className="border-success/20 bg-success/5">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">Current Streak</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Current Streak
+                    </CardTitle>
                     <Flame className="h-4 w-4 text-warning" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold text-success">{analyticsData.currentStreak} days</div>
-                  <p className="text-xs text-muted-foreground">Best: {analyticsData.bestStreak} days</p>
+                  <div className="text-2xl font-bold text-success">
+                    {analyticsData.currentStreak} days
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Best: {analyticsData.bestStreak} days
+                  </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">Weekly Rate</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Weekly Rate
+                    </CardTitle>
                     <TrendingUp className="h-4 w-4 text-primary" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{analyticsData.weeklyCompletion}%</div>
+                  <div className="text-2xl font-bold">
+                    {analyticsData.weeklyCompletion}%
+                  </div>
                   <div className="flex items-center text-xs text-success">
                     <ArrowUpRight className="h-3 w-3 mr-1" />
                     +5% from last week
@@ -210,26 +251,38 @@ export default function Analytics() {
               <Card>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">Total Completed</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Total Completed
+                    </CardTitle>
                     <CheckCircle2 className="h-4 w-4 text-primary" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{analyticsData.totalTargetsCompleted}</div>
-                  <p className="text-xs text-muted-foreground">targets achieved</p>
+                  <div className="text-2xl font-bold">
+                    {analyticsData.totalTargetsCompleted}
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    targets achieved
+                  </p>
                 </CardContent>
               </Card>
 
               <Card>
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-sm font-medium">Consistency</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      Consistency
+                    </CardTitle>
                     <Star className="h-4 w-4 text-warning" />
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{analyticsData.consistencyScore}%</div>
-                  <p className="text-xs text-muted-foreground">reliability score</p>
+                  <div className="text-2xl font-bold">
+                    {analyticsData.consistencyScore}%
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    reliability score
+                  </p>
                 </CardContent>
               </Card>
             </div>
@@ -240,11 +293,13 @@ export default function Analytics() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle>This Week's Progress</CardTitle>
-                    <CardDescription>Daily completion rates and target achievement</CardDescription>
+                    <CardDescription>
+                      Daily completion rates and target achievement
+                    </CardDescription>
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
+                  <Button
+                    variant="outline"
+                    size="sm"
                     onClick={() => loadWeeklyData()}
                   >
                     Refresh Data
@@ -261,7 +316,15 @@ export default function Analytics() {
                           <span className="text-muted-foreground">
                             {day.completed}/{day.total} targets
                           </span>
-                          <Badge variant={day.completion === 100 ? 'default' : day.completion >= 67 ? 'secondary' : 'outline'}>
+                          <Badge
+                            variant={
+                              day.completion === 100
+                                ? "default"
+                                : day.completion >= 67
+                                  ? "secondary"
+                                  : "outline"
+                            }
+                          >
                             {day.completion}%
                           </Badge>
                         </div>
@@ -282,11 +345,13 @@ export default function Analytics() {
                   <div className="flex items-center justify-between">
                     <div>
                       <CardTitle>Monthly Completion Trend</CardTitle>
-                      <CardDescription>Weekly averages over the past month</CardDescription>
+                      <CardDescription>
+                        Weekly averages over the past month
+                      </CardDescription>
                     </div>
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
+                    <Button
+                      variant="outline"
+                      size="sm"
                       onClick={loadMonthlyTrends}
                     >
                       Refresh
@@ -300,10 +365,14 @@ export default function Analytics() {
                         <div className="flex items-center justify-between text-sm">
                           <span className="font-medium">{week.week}</span>
                           <div className="flex items-center gap-2">
-                            <span className="text-muted-foreground">{week.completion}%</span>
+                            <span className="text-muted-foreground">
+                              {week.completion}%
+                            </span>
                             {index > 0 && (
                               <div className="flex items-center">
-                                {week.completion > analyticsData.monthlyTrends[index - 1].completion ? (
+                                {week.completion >
+                                analyticsData.monthlyTrends[index - 1]
+                                  .completion ? (
                                   <ArrowUpRight className="h-3 w-3 text-success" />
                                 ) : (
                                   <ArrowDownRight className="h-3 w-3 text-destructive" />
@@ -322,7 +391,9 @@ export default function Analytics() {
               <Card>
                 <CardHeader>
                   <CardTitle>Habit Strength</CardTitle>
-                  <CardDescription>How well-established are your habits?</CardDescription>
+                  <CardDescription>
+                    How well-established are your habits?
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
@@ -369,12 +440,17 @@ export default function Analytics() {
                     <Trophy className="h-5 w-5 text-success" />
                     Your Strengths
                   </CardTitle>
-                  <CardDescription>Areas where you're absolutely thriving!</CardDescription>
+                  <CardDescription>
+                    Areas where you're absolutely thriving!
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {analyticsData.strengths.map((strength, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-background/50">
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-background/50"
+                      >
                         <Star className="h-4 w-4 text-warning fill-current" />
                         <span className="font-medium">{strength}</span>
                       </div>
@@ -382,7 +458,9 @@ export default function Analytics() {
                   </div>
                   <div className="mt-4 p-4 rounded-lg bg-background/30">
                     <p className="text-sm text-muted-foreground">
-                      💪 You're showing incredible consistency in these areas! These strengths are the foundation for building even more amazing habits.
+                      💪 You're showing incredible consistency in these areas!
+                      These strengths are the foundation for building even more
+                      amazing habits.
                     </p>
                   </div>
                 </CardContent>
@@ -395,12 +473,17 @@ export default function Analytics() {
                     <Zap className="h-5 w-5 text-warning" />
                     Growth Opportunities
                   </CardTitle>
-                  <CardDescription>Gentle areas to focus on for even more success</CardDescription>
+                  <CardDescription>
+                    Gentle areas to focus on for even more success
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-3">
                     {analyticsData.improvementAreas.map((area, index) => (
-                      <div key={index} className="flex items-center gap-3 p-3 rounded-lg bg-background/50">
+                      <div
+                        key={index}
+                        className="flex items-center gap-3 p-3 rounded-lg bg-background/50"
+                      >
                         <Target className="h-4 w-4 text-warning" />
                         <span className="font-medium">{area}</span>
                       </div>
@@ -408,7 +491,9 @@ export default function Analytics() {
                   </div>
                   <div className="mt-4 p-4 rounded-lg bg-background/30">
                     <p className="text-sm text-muted-foreground">
-                      🌱 Remember, growth happens gradually! Pick one area to focus on this week. Small, consistent improvements lead to big transformations.
+                      🌱 Remember, growth happens gradually! Pick one area to
+                      focus on this week. Small, consistent improvements lead to
+                      big transformations.
                     </p>
                   </div>
                 </CardContent>
@@ -420,9 +505,14 @@ export default function Analytics() {
               <CardContent className="pt-6">
                 <div className="text-center space-y-3">
                   <Heart className="h-8 w-8 text-primary mx-auto fill-current" />
-                  <h3 className="text-xl font-semibold">You're Doing Amazing! 🌟</h3>
+                  <h3 className="text-xl font-semibold">
+                    You're Doing Amazing! 🌟
+                  </h3>
                   <p className="text-muted-foreground max-w-2xl mx-auto">
-                    Your analytics tell a story of dedication, growth, and resilience. Every data point represents a moment you chose to show up for yourself. That's something to be truly proud of!
+                    Your analytics tell a story of dedication, growth, and
+                    resilience. Every data point represents a moment you chose
+                    to show up for yourself. That's something to be truly proud
+                    of!
                   </p>
                   <Button asChild className="mt-4">
                     <Link to="/goals">

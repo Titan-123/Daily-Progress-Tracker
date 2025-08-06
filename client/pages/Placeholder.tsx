@@ -1,7 +1,13 @@
-import { Construction, ArrowLeft } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Construction, ArrowLeft } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface PlaceholderProps {
   title: string;
@@ -23,7 +29,8 @@ export default function Placeholder({ title, description }: PlaceholderProps) {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-sm text-muted-foreground">
-                This page is coming soon! Continue chatting to help build out this feature.
+                This page is coming soon! Continue chatting to help build out
+                this feature.
               </p>
               <Button asChild className="w-full">
                 <Link to="/">

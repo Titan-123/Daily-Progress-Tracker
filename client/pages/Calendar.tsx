@@ -1,23 +1,48 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { 
-  ArrowLeft, Calendar as CalendarIcon, ChevronLeft, ChevronRight,
-  Target, CheckCircle2, XCircle, Heart, MessageSquare, Star,
-  TrendingUp, Award, Book, Zap, Loader2
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { api, type DayData } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Calendar as CalendarIcon,
+  ChevronLeft,
+  ChevronRight,
+  Target,
+  CheckCircle2,
+  XCircle,
+  Heart,
+  MessageSquare,
+  Star,
+  TrendingUp,
+  Award,
+  Book,
+  Zap,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { api, type DayData } from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Calendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState<DayData | null>(null);
-  const [reflection, setReflection] = useState('');
+  const [reflection, setReflection] = useState("");
   const [calendarData, setCalendarData] = useState<Record<string, DayData>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -35,35 +60,71 @@ export default function Calendar() {
       const data = await api.calendar.getCalendarData(month, year);
       setCalendarData(data);
     } catch (error) {
-      console.error('Failed to load calendar data:', error);
-      toast.error('Failed to load calendar data. Please try again.');
+      console.error("Failed to load calendar data:", error);
+      toast.error("Failed to load calendar data. Please try again.");
       // Fallback to mock data if API fails
       setCalendarData({
-        '2024-12-16': {
-          date: '2024-12-16',
+        "2024-12-16": {
+          date: "2024-12-16",
           completed: 3,
           total: 3,
           targets: [
-            { id: '1', title: 'Write 500 words', completed: true, category: 'Creative' },
-            { id: '2', title: 'Study for 2 hours', completed: true, category: 'Learning' },
-            { id: '3', title: 'Exercise 30 minutes', completed: true, category: 'Health' }
+            {
+              id: "1",
+              title: "Write 500 words",
+              completed: true,
+              category: "Creative",
+            },
+            {
+              id: "2",
+              title: "Study for 2 hours",
+              completed: true,
+              category: "Learning",
+            },
+            {
+              id: "3",
+              title: "Exercise 30 minutes",
+              completed: true,
+              category: "Health",
+            },
           ],
-          reflection: 'Amazing day! Felt so productive and energized. The morning routine really helped set the tone.',
-          mood: 'excellent',
-          highlights: ['Finished a short story', 'Had a breakthrough in JavaScript concepts', 'Great workout session']
+          reflection:
+            "Amazing day! Felt so productive and energized. The morning routine really helped set the tone.",
+          mood: "excellent",
+          highlights: [
+            "Finished a short story",
+            "Had a breakthrough in JavaScript concepts",
+            "Great workout session",
+          ],
         },
-        '2024-12-15': {
-          date: '2024-12-15',
+        "2024-12-15": {
+          date: "2024-12-15",
           completed: 2,
           total: 3,
           targets: [
-            { id: '1', title: 'Write 500 words', completed: true, category: 'Creative' },
-            { id: '2', title: 'Study for 2 hours', completed: false, category: 'Learning' },
-            { id: '3', title: 'Exercise 30 minutes', completed: true, category: 'Health' }
+            {
+              id: "1",
+              title: "Write 500 words",
+              completed: true,
+              category: "Creative",
+            },
+            {
+              id: "2",
+              title: "Study for 2 hours",
+              completed: false,
+              category: "Learning",
+            },
+            {
+              id: "3",
+              title: "Exercise 30 minutes",
+              completed: true,
+              category: "Health",
+            },
           ],
-          reflection: 'Good day overall. Missed study time because of an unexpected meeting, but still proud of what I accomplished.',
-          mood: 'good'
-        }
+          reflection:
+            "Good day overall. Missed study time because of an unexpected meeting, but still proud of what I accomplished.",
+          mood: "good",
+        },
       });
     } finally {
       setLoading(false);
@@ -72,15 +133,15 @@ export default function Calendar() {
 
   const loadDayData = async (date: Date) => {
     try {
-      const dateString = date.toISOString().split('T')[0];
+      const dateString = date.toISOString().split("T")[0];
       const dayData = await api.calendar.getDayData(dateString);
       if (dayData) {
         setSelectedDay(dayData);
-        setReflection(dayData.reflection || '');
+        setReflection(dayData.reflection || "");
       }
     } catch (error) {
-      console.error('Failed to load day data:', error);
-      toast.error('Failed to load day details');
+      console.error("Failed to load day data:", error);
+      toast.error("Failed to load day details");
     }
   };
 
@@ -89,50 +150,53 @@ export default function Calendar() {
 
     try {
       setSaving(true);
-      const updatedDay = await api.calendar.saveReflection(selectedDay.date, reflection);
-      
+      const updatedDay = await api.calendar.saveReflection(
+        selectedDay.date,
+        reflection,
+      );
+
       // Update local data
-      setCalendarData(prev => ({
+      setCalendarData((prev) => ({
         ...prev,
-        [selectedDay.date]: updatedDay
+        [selectedDay.date]: updatedDay,
       }));
-      
+
       setSelectedDay(null);
-      setReflection('');
-      toast.success('Reflection saved! 📝');
+      setReflection("");
+      toast.success("Reflection saved! 📝");
     } catch (error) {
-      console.error('Failed to save reflection:', error);
-      toast.error('Failed to save reflection. Please try again.');
+      console.error("Failed to save reflection:", error);
+      toast.error("Failed to save reflection. Please try again.");
     } finally {
       setSaving(false);
     }
   };
 
-  const updateMood = async (date: string, mood: DayData['mood']) => {
+  const updateMood = async (date: string, mood: DayData["mood"]) => {
     try {
       const updatedDay = await api.calendar.updateMood(date, mood);
-      setCalendarData(prev => ({
+      setCalendarData((prev) => ({
         ...prev,
-        [date]: updatedDay
+        [date]: updatedDay,
       }));
-      toast.success('Mood updated! 😊');
+      toast.success("Mood updated! 😊");
     } catch (error) {
-      console.error('Failed to update mood:', error);
-      toast.error('Failed to update mood');
+      console.error("Failed to update mood:", error);
+      toast.error("Failed to update mood");
     }
   };
 
   const addHighlight = async (date: string, highlight: string) => {
     try {
       const updatedDay = await api.calendar.addHighlight(date, highlight);
-      setCalendarData(prev => ({
+      setCalendarData((prev) => ({
         ...prev,
-        [date]: updatedDay
+        [date]: updatedDay,
       }));
-      toast.success('Highlight added! ⭐');
+      toast.success("Highlight added! ⭐");
     } catch (error) {
-      console.error('Failed to add highlight:', error);
-      toast.error('Failed to add highlight');
+      console.error("Failed to add highlight:", error);
+      toast.error("Failed to add highlight");
     }
   };
 
@@ -145,50 +209,65 @@ export default function Calendar() {
     const startingDayOfWeek = firstDay.getDay();
 
     const days = [];
-    
+
     // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
-    
+
     // Add all days of the month
     for (let day = 1; day <= daysInMonth; day++) {
       days.push(new Date(year, month, day));
     }
-    
+
     return days;
   };
 
   const getDayData = (date: Date): DayData | null => {
-    const dateKey = date.toISOString().split('T')[0];
+    const dateKey = date.toISOString().split("T")[0];
     return calendarData[dateKey] || null;
   };
 
   const getCompletionRate = (dayData: DayData) => {
-    return dayData.total === 0 ? 0 : Math.round((dayData.completed / dayData.total) * 100);
+    return dayData.total === 0
+      ? 0
+      : Math.round((dayData.completed / dayData.total) * 100);
   };
 
   const getDayColor = (dayData: DayData | null) => {
-    if (!dayData) return 'bg-background hover:bg-muted';
+    if (!dayData) return "bg-background hover:bg-muted";
     const rate = getCompletionRate(dayData);
-    if (rate === 100) return 'bg-success/20 hover:bg-success/30 border-success/30';
-    if (rate >= 67) return 'bg-warning/20 hover:bg-warning/30 border-warning/30';
-    if (rate > 0) return 'bg-accent/20 hover:bg-accent/30 border-accent/30';
-    return 'bg-destructive/10 hover:bg-destructive/20 border-destructive/20';
+    if (rate === 100)
+      return "bg-success/20 hover:bg-success/30 border-success/30";
+    if (rate >= 67)
+      return "bg-warning/20 hover:bg-warning/30 border-warning/30";
+    if (rate > 0) return "bg-accent/20 hover:bg-accent/30 border-accent/30";
+    return "bg-destructive/10 hover:bg-destructive/20 border-destructive/20";
   };
 
   const getMoodEmoji = (mood?: string) => {
     switch (mood) {
-      case 'excellent': return '🌟';
-      case 'good': return '😊';
-      case 'okay': return '😐';
-      case 'difficult': return '😔';
-      default: return '📅';
+      case "excellent":
+        return "🌟";
+      case "good":
+        return "😊";
+      case "okay":
+        return "😐";
+      case "difficult":
+        return "😔";
+      default:
+        return "📅";
     }
   };
 
-  const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentDate(new Date(currentDate.getFullYear(), currentDate.getMonth() + (direction === 'next' ? 1 : -1), 1));
+  const navigateMonth = (direction: "prev" | "next") => {
+    setCurrentDate(
+      new Date(
+        currentDate.getFullYear(),
+        currentDate.getMonth() + (direction === "next" ? 1 : -1),
+        1,
+      ),
+    );
   };
 
   const isToday = (date: Date) => {
@@ -197,19 +276,26 @@ export default function Calendar() {
   };
 
   const days = getDaysInMonth(currentDate);
-  const monthName = currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const monthName = currentDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
-  const weekStats = Object.values(calendarData)
-    .filter(day => {
-      const dayDate = new Date(day.date);
-      const today = new Date();
-      const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-      return dayDate >= weekAgo && dayDate <= today;
-    });
+  const weekStats = Object.values(calendarData).filter((day) => {
+    const dayDate = new Date(day.date);
+    const today = new Date();
+    const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    return dayDate >= weekAgo && dayDate <= today;
+  });
 
-  const weeklyCompletion = weekStats.length > 0 
-    ? Math.round((weekStats.reduce((sum, day) => sum + day.completed, 0) / weekStats.reduce((sum, day) => sum + day.total, 0)) * 100)
-    : 0;
+  const weeklyCompletion =
+    weekStats.length > 0
+      ? Math.round(
+          (weekStats.reduce((sum, day) => sum + day.completed, 0) /
+            weekStats.reduce((sum, day) => sum + day.total, 0)) *
+            100,
+        )
+      : 0;
 
   if (loading) {
     return (
@@ -237,7 +323,9 @@ export default function Calendar() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Progress Calendar
             </h1>
-            <p className="text-muted-foreground">Your journey of growth, day by day</p>
+            <p className="text-muted-foreground">
+              Your journey of growth, day by day
+            </p>
           </div>
         </div>
 
@@ -252,46 +340,60 @@ export default function Calendar() {
                     {monthName}
                   </CardTitle>
                   <div className="flex items-center gap-2">
-                    <Button variant="outline" size="sm" onClick={() => navigateMonth('prev')}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth("prev")}
+                    >
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
-                    <Button variant="outline" size="sm" onClick={() => navigateMonth('next')}>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => navigateMonth("next")}
+                    >
                       <ChevronRight className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>
-                <CardDescription>Click on any day to view details and add reflections</CardDescription>
+                <CardDescription>
+                  Click on any day to view details and add reflections
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 {/* Calendar Grid */}
                 <div className="space-y-4">
                   {/* Day headers */}
                   <div className="grid grid-cols-7 gap-2 text-sm font-medium text-muted-foreground">
-                    {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
-                      <div key={day} className="p-2 text-center">{day}</div>
-                    ))}
+                    {["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map(
+                      (day) => (
+                        <div key={day} className="p-2 text-center">
+                          {day}
+                        </div>
+                      ),
+                    )}
                   </div>
-                  
+
                   {/* Calendar days */}
                   <div className="grid grid-cols-7 gap-2">
                     {days.map((date, index) => {
                       if (!date) {
                         return <div key={index} className="p-2 h-20"></div>;
                       }
-                      
+
                       const dayData = getDayData(date);
                       return (
                         <Dialog key={date.toISOString()}>
                           <DialogTrigger asChild>
                             <div
                               className={`p-2 h-20 border-2 rounded-lg cursor-pointer transition-all ${getDayColor(dayData)} ${
-                                isToday(date) ? 'ring-2 ring-primary' : ''
+                                isToday(date) ? "ring-2 ring-primary" : ""
                               }`}
                               onClick={() => {
                                 const dayData = getDayData(date);
                                 if (dayData) {
                                   setSelectedDay(dayData);
-                                  setReflection(dayData.reflection || '');
+                                  setReflection(dayData.reflection || "");
                                 } else {
                                   loadDayData(date);
                                 }
@@ -299,11 +401,15 @@ export default function Calendar() {
                             >
                               <div className="flex flex-col h-full">
                                 <div className="flex items-center justify-between mb-1">
-                                  <span className={`text-sm font-medium ${isToday(date) ? 'text-primary' : ''}`}>
+                                  <span
+                                    className={`text-sm font-medium ${isToday(date) ? "text-primary" : ""}`}
+                                  >
                                     {date.getDate()}
                                   </span>
                                   {dayData && (
-                                    <span className="text-xs">{getMoodEmoji(dayData.mood)}</span>
+                                    <span className="text-xs">
+                                      {getMoodEmoji(dayData.mood)}
+                                    </span>
                                   )}
                                 </div>
                                 {dayData && (
@@ -311,97 +417,128 @@ export default function Calendar() {
                                     <div className="text-xs text-center mb-1">
                                       {dayData.completed}/{dayData.total}
                                     </div>
-                                    <Progress 
-                                      value={getCompletionRate(dayData)} 
-                                      className="h-1" 
+                                    <Progress
+                                      value={getCompletionRate(dayData)}
+                                      className="h-1"
                                     />
                                   </div>
                                 )}
                               </div>
                             </div>
                           </DialogTrigger>
-                          {selectedDay && selectedDay.date === date.toISOString().split('T')[0] && (
-                            <DialogContent className="sm:max-w-lg">
-                              <DialogHeader>
-                                <DialogTitle className="flex items-center gap-2">
-                                  {getMoodEmoji(selectedDay.mood)}
-                                  {new Date(selectedDay.date).toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  {selectedDay.completed} of {selectedDay.total} targets completed ({getCompletionRate(selectedDay)}%)
-                                </DialogDescription>
-                              </DialogHeader>
-                              
-                              <div className="space-y-4">
-                                {/* Targets for the day */}
-                                <div>
-                                  <h4 className="font-semibold mb-2">Daily Targets</h4>
-                                  <div className="space-y-2">
-                                    {selectedDay.targets.map((target) => (
-                                      <div key={target.id} className="flex items-center gap-3 p-2 rounded-lg bg-muted/30">
-                                        {target.completed ? (
-                                          <CheckCircle2 className="h-4 w-4 text-success" />
-                                        ) : (
-                                          <XCircle className="h-4 w-4 text-muted-foreground" />
-                                        )}
-                                        <span className={target.completed ? '' : 'text-muted-foreground'}>
-                                          {target.title}
-                                        </span>
-                                        <Badge variant="outline" className="ml-auto">
-                                          {target.category}
-                                        </Badge>
-                                      </div>
-                                    ))}
-                                  </div>
-                                </div>
+                          {selectedDay &&
+                            selectedDay.date ===
+                              date.toISOString().split("T")[0] && (
+                              <DialogContent className="sm:max-w-lg">
+                                <DialogHeader>
+                                  <DialogTitle className="flex items-center gap-2">
+                                    {getMoodEmoji(selectedDay.mood)}
+                                    {new Date(
+                                      selectedDay.date,
+                                    ).toLocaleDateString("en-US", {
+                                      weekday: "long",
+                                      month: "long",
+                                      day: "numeric",
+                                    })}
+                                  </DialogTitle>
+                                  <DialogDescription>
+                                    {selectedDay.completed} of{" "}
+                                    {selectedDay.total} targets completed (
+                                    {getCompletionRate(selectedDay)}%)
+                                  </DialogDescription>
+                                </DialogHeader>
 
-                                {/* Highlights */}
-                                {selectedDay.highlights && (
+                                <div className="space-y-4">
+                                  {/* Targets for the day */}
+                                  <div>
+                                    <h4 className="font-semibold mb-2">
+                                      Daily Targets
+                                    </h4>
+                                    <div className="space-y-2">
+                                      {selectedDay.targets.map((target) => (
+                                        <div
+                                          key={target.id}
+                                          className="flex items-center gap-3 p-2 rounded-lg bg-muted/30"
+                                        >
+                                          {target.completed ? (
+                                            <CheckCircle2 className="h-4 w-4 text-success" />
+                                          ) : (
+                                            <XCircle className="h-4 w-4 text-muted-foreground" />
+                                          )}
+                                          <span
+                                            className={
+                                              target.completed
+                                                ? ""
+                                                : "text-muted-foreground"
+                                            }
+                                          >
+                                            {target.title}
+                                          </span>
+                                          <Badge
+                                            variant="outline"
+                                            className="ml-auto"
+                                          >
+                                            {target.category}
+                                          </Badge>
+                                        </div>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  {/* Highlights */}
+                                  {selectedDay.highlights && (
+                                    <div>
+                                      <h4 className="font-semibold mb-2 flex items-center gap-2">
+                                        <Star className="h-4 w-4 text-warning" />
+                                        Highlights
+                                      </h4>
+                                      <ul className="space-y-1">
+                                        {selectedDay.highlights.map(
+                                          (highlight, index) => (
+                                            <li
+                                              key={index}
+                                              className="text-sm text-muted-foreground"
+                                            >
+                                              • {highlight}
+                                            </li>
+                                          ),
+                                        )}
+                                      </ul>
+                                    </div>
+                                  )}
+
+                                  {/* Reflection */}
                                   <div>
                                     <h4 className="font-semibold mb-2 flex items-center gap-2">
-                                      <Star className="h-4 w-4 text-warning" />
-                                      Highlights
+                                      <MessageSquare className="h-4 w-4" />
+                                      Daily Reflection
                                     </h4>
-                                    <ul className="space-y-1">
-                                      {selectedDay.highlights.map((highlight, index) => (
-                                        <li key={index} className="text-sm text-muted-foreground">
-                                          • {highlight}
-                                        </li>
-                                      ))}
-                                    </ul>
+                                    <Textarea
+                                      value={reflection}
+                                      onChange={(e) =>
+                                        setReflection(e.target.value)
+                                      }
+                                      placeholder="How did today go? What did you learn about yourself?"
+                                      className="min-h-[100px]"
+                                    />
+                                    <Button
+                                      onClick={saveReflection}
+                                      className="w-full mt-2"
+                                      disabled={!reflection.trim() || saving}
+                                    >
+                                      {saving ? (
+                                        <>
+                                          <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                                          Saving...
+                                        </>
+                                      ) : (
+                                        "Save Reflection"
+                                      )}
+                                    </Button>
                                   </div>
-                                )}
-
-                                {/* Reflection */}
-                                <div>
-                                  <h4 className="font-semibold mb-2 flex items-center gap-2">
-                                    <MessageSquare className="h-4 w-4" />
-                                    Daily Reflection
-                                  </h4>
-                                  <Textarea
-                                    value={reflection}
-                                    onChange={(e) => setReflection(e.target.value)}
-                                    placeholder="How did today go? What did you learn about yourself?"
-                                    className="min-h-[100px]"
-                                  />
-                                  <Button 
-                                    onClick={saveReflection} 
-                                    className="w-full mt-2"
-                                    disabled={!reflection.trim() || saving}
-                                  >
-                                    {saving ? (
-                                      <>
-                                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                                        Saving...
-                                      </>
-                                    ) : (
-                                      'Save Reflection'
-                                    )}
-                                  </Button>
                                 </div>
-                              </div>
-                            </DialogContent>
-                          )}
+                              </DialogContent>
+                            )}
                         </Dialog>
                       );
                     })}
@@ -431,9 +568,11 @@ export default function Calendar() {
                 </div>
                 <div className="text-center">
                   <p className="text-sm text-muted-foreground">
-                    {weeklyCompletion >= 80 ? "Outstanding week! 🌟" : 
-                     weeklyCompletion >= 60 ? "Good progress! 💪" : 
-                     "Keep going! Every day matters! 💚"}
+                    {weeklyCompletion >= 80
+                      ? "Outstanding week! 🌟"
+                      : weeklyCompletion >= 60
+                        ? "Good progress! 💪"
+                        : "Keep going! Every day matters! 💚"}
                   </p>
                 </div>
               </CardContent>
@@ -475,15 +614,21 @@ export default function Calendar() {
               <CardContent className="space-y-3 text-sm">
                 <div>
                   <p className="font-medium">💭 What went well?</p>
-                  <p className="text-muted-foreground">Celebrate your wins, no matter how small</p>
+                  <p className="text-muted-foreground">
+                    Celebrate your wins, no matter how small
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">🌱 What did you learn?</p>
-                  <p className="text-muted-foreground">Growth comes from every experience</p>
+                  <p className="text-muted-foreground">
+                    Growth comes from every experience
+                  </p>
                 </div>
                 <div>
                   <p className="font-medium">🎯 How can tomorrow be better?</p>
-                  <p className="text-muted-foreground">Small adjustments lead to big changes</p>
+                  <p className="text-muted-foreground">
+                    Small adjustments lead to big changes
+                  </p>
                 </div>
               </CardContent>
             </Card>

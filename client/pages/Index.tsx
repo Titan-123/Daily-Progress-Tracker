@@ -1,16 +1,39 @@
-import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import { Calendar, Target, TrendingUp, Heart, Star, CheckCircle2, Plus, BarChart3, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { api, type Target as TargetType, type Achievement, type DashboardData } from '@/lib/api';
-import { toast } from 'sonner';
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import {
+  Calendar,
+  Target,
+  TrendingUp,
+  Heart,
+  Star,
+  CheckCircle2,
+  Plus,
+  BarChart3,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import {
+  api,
+  type Target as TargetType,
+  type Achievement,
+  type DashboardData,
+} from "@/lib/api";
+import { toast } from "sonner";
 
 export default function Index() {
   const [currentDate] = useState(new Date());
-  const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
+  const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+    null,
+  );
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
 
@@ -25,19 +48,58 @@ export default function Index() {
       const data = await api.dashboard.getDashboardData();
       setDashboardData(data);
     } catch (error) {
-      console.error('Failed to load dashboard data:', error);
-      toast.error('Failed to load dashboard data. Please try again.');
+      console.error("Failed to load dashboard data:", error);
+      toast.error("Failed to load dashboard data. Please try again.");
       // Fallback to mock data if API fails
       setDashboardData({
         targets: [
-          { id: '1', title: 'Write 500 words', description: 'Creative writing practice', type: 'daily', completed: false, streak: 3 },
-          { id: '2', title: 'Study for 2 hours', description: 'Focus on JavaScript fundamentals', type: 'daily', completed: true, streak: 7 },
-          { id: '3', title: 'Exercise 30 minutes', description: 'Morning workout routine', type: 'daily', completed: false, streak: 2 },
+          {
+            id: "1",
+            title: "Write 500 words",
+            description: "Creative writing practice",
+            type: "daily",
+            completed: false,
+            streak: 3,
+          },
+          {
+            id: "2",
+            title: "Study for 2 hours",
+            description: "Focus on JavaScript fundamentals",
+            type: "daily",
+            completed: true,
+            streak: 7,
+          },
+          {
+            id: "3",
+            title: "Exercise 30 minutes",
+            description: "Morning workout routine",
+            type: "daily",
+            completed: false,
+            streak: 2,
+          },
         ],
         achievements: [
-          { id: '1', title: '7-Day Streak', description: 'Completed daily goals for a week!', icon: '🔥', earned: true },
-          { id: '2', title: 'Early Bird', description: 'Started progress tracking before 8 AM', icon: '🌅', earned: true },
-          { id: '3', title: 'Consistency Master', description: 'Hit 90% weekly completion rate', icon: '⭐', earned: false },
+          {
+            id: "1",
+            title: "7-Day Streak",
+            description: "Completed daily goals for a week!",
+            icon: "🔥",
+            earned: true,
+          },
+          {
+            id: "2",
+            title: "Early Bird",
+            description: "Started progress tracking before 8 AM",
+            icon: "🌅",
+            earned: true,
+          },
+          {
+            id: "3",
+            title: "Consistency Master",
+            description: "Hit 90% weekly completion rate",
+            icon: "⭐",
+            earned: false,
+          },
         ],
         weeklyProgress: 85,
         totalStreak: 12,
@@ -52,26 +114,30 @@ export default function Index() {
 
     try {
       setToggling(targetId);
-      
+
       // Optimistic update
-      const updatedTargets = dashboardData.targets.map(target => 
-        target.id === targetId ? { ...target, completed: !target.completed } : target
+      const updatedTargets = dashboardData.targets.map((target) =>
+        target.id === targetId
+          ? { ...target, completed: !target.completed }
+          : target,
       );
       setDashboardData({ ...dashboardData, targets: updatedTargets });
 
       // Make API call
       const updatedTarget = await api.dashboard.toggleTarget(targetId);
-      
+
       // Update with server response
-      const finalTargets = dashboardData.targets.map(target => 
-        target.id === targetId ? updatedTarget : target
+      const finalTargets = dashboardData.targets.map((target) =>
+        target.id === targetId ? updatedTarget : target,
       );
       setDashboardData({ ...dashboardData, targets: finalTargets });
 
-      toast.success(updatedTarget.completed ? 'Target completed! 🎉' : 'Target unchecked');
+      toast.success(
+        updatedTarget.completed ? "Target completed! 🎉" : "Target unchecked",
+      );
     } catch (error) {
-      console.error('Failed to toggle target:', error);
-      toast.error('Failed to update target. Please try again.');
+      console.error("Failed to toggle target:", error);
+      toast.error("Failed to update target. Please try again.");
       // Revert optimistic update on error
       await loadDashboardData();
     } finally {
@@ -101,33 +167,49 @@ export default function Index() {
     );
   }
 
-  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } = dashboardData;
-  const completedCount = todaysTargets.filter(target => target.completed).length;
+  const {
+    targets: todaysTargets,
+    achievements,
+    weeklyProgress,
+    totalStreak,
+  } = dashboardData;
+  const completedCount = todaysTargets.filter(
+    (target) => target.completed,
+  ).length;
   const totalCount = todaysTargets.length;
-  const completionRate = totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
+  const completionRate =
+    totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
   const motivationalMessages = {
     excellent: [
       "You're absolutely crushing it today! 🌟",
       "Look at you being amazing! Keep it up! ✨",
-      "Your dedication is truly inspiring! 🎉"
+      "Your dedication is truly inspiring! 🎉",
     ],
     good: [
       "You're doing great! Almost there! 💪",
       "Fantastic progress! You've got this! 🚀",
-      "So proud of your consistency! 💫"
+      "So proud of your consistency! 💫",
     ],
     encouraging: [
       "Every step forward counts! You're building something beautiful! 🌱",
       "It's okay to start small - you're still moving forward! 💚",
-      "Tomorrow is a fresh start, and I believe in you! 🌈"
-    ]
+      "Tomorrow is a fresh start, and I believe in you! 🌈",
+    ],
   };
 
   const getCurrentMessage = () => {
-    if (completionRate >= 80) return motivationalMessages.excellent[Math.floor(Math.random() * motivationalMessages.excellent.length)];
-    if (completionRate >= 50) return motivationalMessages.good[Math.floor(Math.random() * motivationalMessages.good.length)];
-    return motivationalMessages.encouraging[Math.floor(Math.random() * motivationalMessages.encouraging.length)];
+    if (completionRate >= 80)
+      return motivationalMessages.excellent[
+        Math.floor(Math.random() * motivationalMessages.excellent.length)
+      ];
+    if (completionRate >= 50)
+      return motivationalMessages.good[
+        Math.floor(Math.random() * motivationalMessages.good.length)
+      ];
+    return motivationalMessages.encouraging[
+      Math.floor(Math.random() * motivationalMessages.encouraging.length)
+    ];
   };
 
   return (
@@ -150,9 +232,17 @@ export default function Index() {
         <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
-              <p className="text-2xl font-semibold text-primary">{getCurrentMessage()}</p>
+              <p className="text-2xl font-semibold text-primary">
+                {getCurrentMessage()}
+              </p>
               <p className="text-muted-foreground">
-                Today is {currentDate.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                Today is{" "}
+                {currentDate.toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
               </p>
             </div>
           </CardContent>
@@ -170,7 +260,8 @@ export default function Index() {
                       Today's Targets
                     </CardTitle>
                     <CardDescription>
-                      {completedCount} of {totalCount} completed ({completionRate}%)
+                      {completedCount} of {totalCount} completed (
+                      {completionRate}%)
                     </CardDescription>
                   </div>
                   <Button asChild variant="outline" size="sm">
@@ -184,33 +275,43 @@ export default function Index() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {todaysTargets.map((target) => (
-                  <div 
+                  <div
                     key={target.id}
                     className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                      target.completed 
-                        ? 'border-success/30 bg-success/5' 
-                        : 'border-border hover:border-primary/30'
-                    } ${toggling === target.id ? 'opacity-50' : ''}`}
+                      target.completed
+                        ? "border-success/30 bg-success/5"
+                        : "border-border hover:border-primary/30"
+                    } ${toggling === target.id ? "opacity-50" : ""}`}
                     onClick={() => toggleTarget(target.id)}
                   >
                     <div className="flex items-center gap-3">
                       {toggling === target.id ? (
                         <Loader2 className="h-6 w-6 animate-spin text-primary" />
                       ) : (
-                        <CheckCircle2 
+                        <CheckCircle2
                           className={`h-6 w-6 ${
-                            target.completed ? 'text-success fill-current' : 'text-muted-foreground'
-                          }`} 
+                            target.completed
+                              ? "text-success fill-current"
+                              : "text-muted-foreground"
+                          }`}
                         />
                       )}
                       <div className="flex-1">
-                        <h3 className={`font-semibold ${target.completed ? 'line-through text-muted-foreground' : ''}`}>
+                        <h3
+                          className={`font-semibold ${target.completed ? "line-through text-muted-foreground" : ""}`}
+                        >
                           {target.title}
                         </h3>
-                        <p className="text-sm text-muted-foreground">{target.description}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {target.description}
+                        </p>
                       </div>
                       <div className="flex items-center gap-2">
-                        <Badge variant={target.type === 'daily' ? 'default' : 'secondary'}>
+                        <Badge
+                          variant={
+                            target.type === "daily" ? "default" : "secondary"
+                          }
+                        >
                           {target.type}
                         </Badge>
                         {target.streak > 0 && (
@@ -232,26 +333,32 @@ export default function Index() {
                   <Star className="h-5 w-5 text-warning fill-current" />
                   Recent Achievements
                 </CardTitle>
-                <CardDescription>Celebrating your amazing progress!</CardDescription>
+                <CardDescription>
+                  Celebrating your amazing progress!
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid gap-3 sm:grid-cols-2">
                   {achievements.map((achievement) => (
-                    <div 
+                    <div
                       key={achievement.id}
                       className={`p-3 rounded-lg border ${
-                        achievement.earned 
-                          ? 'border-warning/30 bg-warning/5' 
-                          : 'border-border bg-muted/30'
+                        achievement.earned
+                          ? "border-warning/30 bg-warning/5"
+                          : "border-border bg-muted/30"
                       }`}
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{achievement.icon}</span>
                         <div>
-                          <h4 className={`font-medium ${!achievement.earned && 'text-muted-foreground'}`}>
+                          <h4
+                            className={`font-medium ${!achievement.earned && "text-muted-foreground"}`}
+                          >
                             {achievement.title}
                           </h4>
-                          <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                          <p className="text-sm text-muted-foreground">
+                            {achievement.description}
+                          </p>
                         </div>
                         {achievement.earned && (
                           <Badge className="ml-auto">Earned!</Badge>
@@ -270,15 +377,15 @@ export default function Index() {
             <Card className="border-primary/20">
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg flex items-center gap-2">
-                  <div className="p-2 bg-primary/10 rounded-lg">
-                    🔥
-                  </div>
+                  <div className="p-2 bg-primary/10 rounded-lg">🔥</div>
                   Current Streak
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="text-center space-y-2">
-                  <div className="text-3xl font-bold text-primary">{totalStreak} days</div>
+                  <div className="text-3xl font-bold text-primary">
+                    {totalStreak} days
+                  </div>
                   <p className="text-sm text-muted-foreground">
                     You're on fire! Keep the momentum going!
                   </p>
@@ -316,19 +423,31 @@ export default function Index() {
                 <CardTitle className="text-lg">Quick Actions</CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
-                <Button asChild className="w-full justify-start" variant="outline">
+                <Button
+                  asChild
+                  className="w-full justify-start"
+                  variant="outline"
+                >
                   <Link to="/calendar">
                     <Calendar className="h-4 w-4 mr-2" />
                     View Calendar
                   </Link>
                 </Button>
-                <Button asChild className="w-full justify-start" variant="outline">
+                <Button
+                  asChild
+                  className="w-full justify-start"
+                  variant="outline"
+                >
                   <Link to="/analytics">
                     <BarChart3 className="h-4 w-4 mr-2" />
                     Analytics
                   </Link>
                 </Button>
-                <Button asChild className="w-full justify-start" variant="outline">
+                <Button
+                  asChild
+                  className="w-full justify-start"
+                  variant="outline"
+                >
                   <Link to="/goals">
                     <Target className="h-4 w-4 mr-2" />
                     Set New Goals

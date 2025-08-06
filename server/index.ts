@@ -3,24 +3,24 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 import { handleGetDashboard, handleToggleTarget } from "./routes/dashboard";
-import { 
-  handleGetGoals, 
-  handleCreateGoal, 
-  handleUpdateGoal, 
-  handleDeleteGoal, 
-  handleToggleGoalStatus 
+import {
+  handleGetGoals,
+  handleCreateGoal,
+  handleUpdateGoal,
+  handleDeleteGoal,
+  handleToggleGoalStatus,
 } from "./routes/goals";
-import { 
-  handleGetAnalytics, 
-  handleGetWeeklyData, 
-  handleGetMonthlyTrends 
+import {
+  handleGetAnalytics,
+  handleGetWeeklyData,
+  handleGetMonthlyTrends,
 } from "./routes/analytics";
-import { 
-  handleGetCalendarData, 
-  handleGetDayData, 
-  handleSaveReflection, 
-  handleUpdateMood, 
-  handleAddHighlight 
+import {
+  handleGetCalendarData,
+  handleGetDayData,
+  handleSaveReflection,
+  handleUpdateMood,
+  handleAddHighlight,
 } from "./routes/calendar";
 
 export function createServer() {
