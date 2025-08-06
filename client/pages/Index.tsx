@@ -118,9 +118,11 @@ export default function Index() {
                       {completedCount} of {totalCount} completed ({completionRate}%)
                     </CardDescription>
                   </div>
-                  <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Target
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/goals">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Target
+                    </Link>
                   </Button>
                 </div>
                 <Progress value={completionRate} className="h-2" />
