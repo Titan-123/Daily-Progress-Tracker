@@ -2,6 +2,26 @@ import "dotenv/config";
 import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
+import { handleGetDashboard, handleToggleTarget } from "./routes/dashboard";
+import { 
+  handleGetGoals, 
+  handleCreateGoal, 
+  handleUpdateGoal, 
+  handleDeleteGoal, 
+  handleToggleGoalStatus 
+} from "./routes/goals";
+import { 
+  handleGetAnalytics, 
+  handleGetWeeklyData, 
+  handleGetMonthlyTrends 
+} from "./routes/analytics";
+import { 
+  handleGetCalendarData, 
+  handleGetDayData, 
+  handleSaveReflection, 
+  handleUpdateMood, 
+  handleAddHighlight 
+} from "./routes/calendar";
 
 export function createServer() {
   const app = express();
@@ -18,6 +38,29 @@ export function createServer() {
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Dashboard API routes
+  app.get("/api/dashboard", handleGetDashboard);
+  app.post("/api/targets/:targetId/toggle", handleToggleTarget);
+
+  // Goals API routes
+  app.get("/api/goals", handleGetGoals);
+  app.post("/api/goals", handleCreateGoal);
+  app.patch("/api/goals/:goalId", handleUpdateGoal);
+  app.delete("/api/goals/:goalId", handleDeleteGoal);
+  app.post("/api/goals/:goalId/toggle", handleToggleGoalStatus);
+
+  // Analytics API routes
+  app.get("/api/analytics", handleGetAnalytics);
+  app.get("/api/analytics/weekly", handleGetWeeklyData);
+  app.get("/api/analytics/monthly", handleGetMonthlyTrends);
+
+  // Calendar API routes
+  app.get("/api/calendar", handleGetCalendarData);
+  app.get("/api/calendar/day/:date", handleGetDayData);
+  app.post("/api/calendar/day/:date/reflection", handleSaveReflection);
+  app.post("/api/calendar/day/:date/mood", handleUpdateMood);
+  app.post("/api/calendar/day/:date/highlights", handleAddHighlight);
 
   return app;
 }
