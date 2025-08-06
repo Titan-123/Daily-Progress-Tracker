@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { 
   ArrowLeft, Target, Plus, Edit2, Trash2, Calendar, 
-  Clock, Repeat, Star, Heart, CheckCircle2, Save 
+  Clock, Repeat, Star, Heart, CheckCircle2, Save, Loader2 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -13,78 +13,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-
-interface Goal {
-  id: string;
-  title: string;
-  description: string;
-  type: 'daily' | 'weekly' | 'monthly';
-  category: string;
-  target: string;
-  streak: number;
-  isActive: boolean;
-  createdAt: Date;
-}
+import { api, type Goal } from '@/lib/api';
+import { toast } from 'sonner';
 
 export default function Goals() {
-  const [goals, setGoals] = useState<Goal[]>([
-    {
-      id: '1',
-      title: 'Write 500 words',
-      description: 'Creative writing practice to develop my storytelling skills',
-      type: 'daily',
-      category: 'Creative',
-      target: '500 words',
-      streak: 7,
-      isActive: true,
-      createdAt: new Date('2024-01-01')
-    },
-    {
-      id: '2',
-      title: 'Study programming',
-      description: 'Focus on JavaScript fundamentals and practice coding challenges',
-      type: 'daily',
-      category: 'Learning',
-      target: '2 hours',
-      streak: 12,
-      isActive: true,
-      createdAt: new Date('2024-01-02')
-    },
-    {
-      id: '3',
-      title: 'Exercise routine',
-      description: 'Morning workout to stay healthy and energized',
-      type: 'daily',
-      category: 'Health',
-      target: '30 minutes',
-      streak: 5,
-      isActive: true,
-      createdAt: new Date('2024-01-05')
-    },
-    {
-      id: '4',
-      title: 'Read books',
-      description: 'Expand knowledge and enjoy fiction',
-      type: 'weekly',
-      category: 'Learning',
-      target: '3 books',
-      streak: 2,
-      isActive: true,
-      createdAt: new Date('2024-01-01')
-    },
-    {
-      id: '5',
-      title: 'Complete a project',
-      description: 'Finish and ship a meaningful coding project',
-      type: 'monthly',
-      category: 'Professional',
-      target: '1 project',
-      streak: 1,
-      isActive: true,
-      createdAt: new Date('2024-01-01')
-    }
-  ]);
-
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const [newGoal, setNewGoal] = useState({
     title: '',
     description: '',
@@ -92,36 +27,109 @@ export default function Goals() {
     category: '',
     target: ''
   });
-
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
 
   const categories = ['Health', 'Learning', 'Creative', 'Professional', 'Personal', 'Social'];
 
-  const addGoal = () => {
-    if (!newGoal.title || !newGoal.description || !newGoal.category || !newGoal.target) return;
+  // Load goals on component mount
+  useEffect(() => {
+    loadGoals();
+  }, []);
 
-    const goal: Goal = {
-      id: Date.now().toString(),
-      ...newGoal,
-      streak: 0,
-      isActive: true,
-      createdAt: new Date()
-    };
-
-    setGoals([...goals, goal]);
-    setNewGoal({ title: '', description: '', type: 'daily', category: '', target: '' });
-    setIsDialogOpen(false);
+  const loadGoals = async () => {
+    try {
+      setLoading(true);
+      const goalsData = await api.goals.getGoals();
+      setGoals(goalsData);
+    } catch (error) {
+      console.error('Failed to load goals:', error);
+      toast.error('Failed to load goals. Please try again.');
+      // Fallback to mock data if API fails
+      setGoals([
+        {
+          id: '1',
+          title: 'Write 500 words',
+          description: 'Creative writing practice to develop my storytelling skills',
+          type: 'daily',
+          category: 'Creative',
+          target: '500 words',
+          streak: 7,
+          isActive: true,
+          createdAt: '2024-01-01T00:00:00Z'
+        },
+        {
+          id: '2',
+          title: 'Study programming',
+          description: 'Focus on JavaScript fundamentals and practice coding challenges',
+          type: 'daily',
+          category: 'Learning',
+          target: '2 hours',
+          streak: 12,
+          isActive: true,
+          createdAt: '2024-01-02T00:00:00Z'
+        },
+        {
+          id: '3',
+          title: 'Exercise routine',
+          description: 'Morning workout to stay healthy and energized',
+          type: 'daily',
+          category: 'Health',
+          target: '30 minutes',
+          streak: 5,
+          isActive: true,
+          createdAt: '2024-01-05T00:00:00Z'
+        }
+      ]);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const toggleGoalStatus = (id: string) => {
-    setGoals(goals.map(goal => 
-      goal.id === id ? { ...goal, isActive: !goal.isActive } : goal
-    ));
+  const addGoal = async () => {
+    if (!newGoal.title || !newGoal.description || !newGoal.category || !newGoal.target) {
+      toast.error('Please fill in all fields');
+      return;
+    }
+
+    try {
+      setSaving(true);
+      const createdGoal = await api.goals.createGoal(newGoal);
+      setGoals([...goals, createdGoal]);
+      setNewGoal({ title: '', description: '', type: 'daily', category: '', target: '' });
+      setIsDialogOpen(false);
+      toast.success('Goal created successfully! 🎯');
+    } catch (error) {
+      console.error('Failed to create goal:', error);
+      toast.error('Failed to create goal. Please try again.');
+    } finally {
+      setSaving(false);
+    }
   };
 
-  const deleteGoal = (id: string) => {
-    setGoals(goals.filter(goal => goal.id !== id));
+  const toggleGoalStatus = async (goalId: string) => {
+    try {
+      const updatedGoal = await api.goals.toggleGoalStatus(goalId);
+      setGoals(goals.map(goal => 
+        goal.id === goalId ? updatedGoal : goal
+      ));
+      toast.success(updatedGoal.isActive ? 'Goal resumed' : 'Goal paused');
+    } catch (error) {
+      console.error('Failed to toggle goal status:', error);
+      toast.error('Failed to update goal status. Please try again.');
+    }
+  };
+
+  const deleteGoal = async (goalId: string) => {
+    if (!confirm('Are you sure you want to delete this goal?')) return;
+
+    try {
+      await api.goals.deleteGoal(goalId);
+      setGoals(goals.filter(goal => goal.id !== goalId));
+      toast.success('Goal deleted successfully');
+    } catch (error) {
+      console.error('Failed to delete goal:', error);
+      toast.error('Failed to delete goal. Please try again.');
+    }
   };
 
   const getGoalsByType = (type: 'daily' | 'weekly' | 'monthly') => {
@@ -192,7 +200,7 @@ export default function Goals() {
           {goal.description}
         </p>
         <div className="flex items-center justify-between mt-3 text-xs text-muted-foreground">
-          <span>Created {goal.createdAt.toLocaleDateString()}</span>
+          <span>Created {new Date(goal.createdAt).toLocaleDateString()}</span>
           {goal.isActive && (
             <div className="flex items-center gap-1">
               <CheckCircle2 className="h-3 w-3 text-success" />
@@ -203,6 +211,17 @@ export default function Goals() {
       </CardContent>
     </Card>
   );
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
+        <div className="text-center space-y-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto" />
+          <p className="text-muted-foreground">Loading your goals...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5">
@@ -304,9 +323,22 @@ export default function Goals() {
                     onChange={(e) => setNewGoal({ ...newGoal, target: e.target.value })}
                   />
                 </div>
-                <Button onClick={addGoal} className="w-full">
-                  <Save className="h-4 w-4 mr-2" />
-                  Create Goal
+                <Button 
+                  onClick={addGoal} 
+                  className="w-full" 
+                  disabled={saving}
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Create Goal
+                    </>
+                  )}
                 </Button>
               </div>
             </DialogContent>
