@@ -58,8 +58,14 @@ npm run seed
 
 ### 5. Start Server
 
+**For Production:**
 ```bash
 npm start
+```
+
+**For Development (with auto-restart):**
+```bash
+npm run dev
 ```
 
 The server will start on http://localhost:3000
