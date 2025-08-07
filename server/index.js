@@ -6,6 +6,13 @@ import connectDB from "./config/database.js";
 import { handleDemo } from "./routes/demo.js";
 import { handleGetDashboard, handleToggleTarget } from "./routes/dashboard.js";
 import {
+  handleRegister,
+  handleLogin,
+  handleGetProfile,
+  handleUpdateProfile
+} from "./routes/auth.js";
+import { authenticateToken, optionalAuth } from "./middleware/auth.js";
+import {
   handleGetGoals,
   handleCreateGoal,
   handleUpdateGoal,
