@@ -67,55 +67,55 @@ const AppRoutes = () => {
     <BrowserRouter>
       <Routes>
         {/* Public routes */}
-        <Route 
-          path="/login" 
+        <Route
+          path="/login"
           element={
             <PublicRoute>
               <Login />
             </PublicRoute>
-          } 
+          }
         />
-        <Route 
-          path="/register" 
+        <Route
+          path="/register"
           element={
             <PublicRoute>
               <Register />
             </PublicRoute>
-          } 
+          }
         />
 
         {/* Protected routes */}
-        <Route 
-          path="/" 
+        <Route
+          path="/"
           element={
             <ProtectedRoute>
               <Index />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/analytics" 
+        <Route
+          path="/analytics"
           element={
             <ProtectedRoute>
               <Analytics />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/goals" 
+        <Route
+          path="/goals"
           element={
             <ProtectedRoute>
               <Goals />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/calendar" 
+        <Route
+          path="/calendar"
           element={
             <ProtectedRoute>
               <Calendar />
             </ProtectedRoute>
-          } 
+          }
         />
 
         {/* Catch all route */}

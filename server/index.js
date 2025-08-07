@@ -9,7 +9,7 @@ import {
   handleRegister,
   handleLogin,
   handleGetProfile,
-  handleUpdateProfile
+  handleUpdateProfile,
 } from "./routes/auth.js";
 import { authenticateToken, optionalAuth } from "./middleware/auth.js";
 import {
@@ -71,14 +71,22 @@ export function createServer() {
 
   // Dashboard API routes (authentication required)
   app.get("/api/dashboard", authenticateToken, handleGetDashboard);
-  app.post("/api/targets/:targetId/toggle", authenticateToken, handleToggleTarget);
+  app.post(
+    "/api/targets/:targetId/toggle",
+    authenticateToken,
+    handleToggleTarget,
+  );
 
   // Goals API routes (authentication required)
   app.get("/api/goals", authenticateToken, handleGetGoals);
   app.post("/api/goals", authenticateToken, handleCreateGoal);
   app.patch("/api/goals/:goalId", authenticateToken, handleUpdateGoal);
   app.delete("/api/goals/:goalId", authenticateToken, handleDeleteGoal);
-  app.post("/api/goals/:goalId/toggle", authenticateToken, handleToggleGoalStatus);
+  app.post(
+    "/api/goals/:goalId/toggle",
+    authenticateToken,
+    handleToggleGoalStatus,
+  );
 
   // Analytics API routes (authentication required)
   app.get("/api/analytics", authenticateToken, handleGetAnalytics);
@@ -88,9 +96,17 @@ export function createServer() {
   // Calendar API routes (authentication required)
   app.get("/api/calendar", authenticateToken, handleGetCalendarData);
   app.get("/api/calendar/day/:date", authenticateToken, handleGetDayData);
-  app.post("/api/calendar/day/:date/reflection", authenticateToken, handleSaveReflection);
+  app.post(
+    "/api/calendar/day/:date/reflection",
+    authenticateToken,
+    handleSaveReflection,
+  );
   app.post("/api/calendar/day/:date/mood", authenticateToken, handleUpdateMood);
-  app.post("/api/calendar/day/:date/highlights", authenticateToken, handleAddHighlight);
+  app.post(
+    "/api/calendar/day/:date/highlights",
+    authenticateToken,
+    handleAddHighlight,
+  );
 
   // Error handling middleware
   app.use((error, req, res, next) => {

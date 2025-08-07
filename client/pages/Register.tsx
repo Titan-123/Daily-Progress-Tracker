@@ -1,54 +1,65 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Eye, EyeOff, Heart, Loader2, CheckCircle } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import { Eye, EyeOff, Heart, Loader2, CheckCircle } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export default function Register() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const { register } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!name || !email || !password || !confirmPassword) {
-      toast.error('Please fill in all fields');
+      toast.error("Please fill in all fields");
       return;
     }
 
     if (password !== confirmPassword) {
-      toast.error('Passwords do not match');
+      toast.error("Passwords do not match");
       return;
     }
 
     if (password.length < 6) {
-      toast.error('Password must be at least 6 characters long');
+      toast.error("Password must be at least 6 characters long");
       return;
     }
 
     setLoading(true);
     try {
       await register(name, email, password);
-      toast.success('Welcome to Daily Progress! 🎉 Your journey starts now!');
+      toast.success("Welcome to Daily Progress! 🎉 Your journey starts now!");
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : 'Registration failed');
+      toast.error(
+        error instanceof Error ? error.message : "Registration failed",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const passwordRequirements = [
-    { text: 'At least 6 characters', met: password.length >= 6 },
-    { text: 'Passwords match', met: password === confirmPassword && password.length > 0 },
+    { text: "At least 6 characters", met: password.length >= 6 },
+    {
+      text: "Passwords match",
+      met: password === confirmPassword && password.length > 0,
+    },
   ];
 
   return (
@@ -70,7 +81,9 @@ export default function Register() {
         {/* Registration Form */}
         <Card className="border-2 border-primary/10">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center">Create Account</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center">
+              Create Account
+            </CardTitle>
             <CardDescription className="text-center">
               Join thousands of people building better habits
             </CardDescription>
@@ -102,13 +115,13 @@ export default function Register() {
                   required
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Create a password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -136,7 +149,7 @@ export default function Register() {
                 <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="Confirm your password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
@@ -148,14 +161,23 @@ export default function Register() {
               {/* Password Requirements */}
               {password.length > 0 && (
                 <div className="space-y-2">
-                  <Label className="text-sm font-medium">Password Requirements</Label>
+                  <Label className="text-sm font-medium">
+                    Password Requirements
+                  </Label>
                   <div className="space-y-1">
                     {passwordRequirements.map((req, index) => (
-                      <div key={index} className="flex items-center gap-2 text-xs">
-                        <CheckCircle 
-                          className={`h-3 w-3 ${req.met ? 'text-success' : 'text-muted-foreground'}`}
+                      <div
+                        key={index}
+                        className="flex items-center gap-2 text-xs"
+                      >
+                        <CheckCircle
+                          className={`h-3 w-3 ${req.met ? "text-success" : "text-muted-foreground"}`}
                         />
-                        <span className={req.met ? 'text-success' : 'text-muted-foreground'}>
+                        <span
+                          className={
+                            req.met ? "text-success" : "text-muted-foreground"
+                          }
+                        >
                           {req.text}
                         </span>
                       </div>
@@ -167,7 +189,9 @@ export default function Register() {
               <Button
                 type="submit"
                 className="w-full"
-                disabled={loading || !passwordRequirements.every(req => req.met)}
+                disabled={
+                  loading || !passwordRequirements.every((req) => req.met)
+                }
               >
                 {loading ? (
                   <>
@@ -175,16 +199,16 @@ export default function Register() {
                     Creating account...
                   </>
                 ) : (
-                  'Create Account'
+                  "Create Account"
                 )}
               </Button>
             </form>
 
             <div className="mt-6 text-center">
               <p className="text-sm text-muted-foreground">
-                Already have an account?{' '}
-                <Link 
-                  to="/login" 
+                Already have an account?{" "}
+                <Link
+                  to="/login"
                   className="font-semibold text-primary hover:underline"
                 >
                   Sign in

@@ -1,8 +1,8 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 import {
   handleGetDashboardFallback,
   handleToggleTargetFallback,
-} from './dashboard-fallback.js';
+} from "./dashboard-fallback.js";
 
 // Only import MongoDB models if mongoose is connected
 let Target,
@@ -22,10 +22,10 @@ const loadMongoModules = async () => {
     try {
       const [targetModule, goalModule, achievementModule, analyticsModule] =
         await Promise.all([
-          import('../models/Target.js'),
-          import('../models/Goal.js'),
-          import('../models/Achievement.js'),
-          import('../utils/analytics.js'),
+          import("../models/Target.js"),
+          import("../models/Goal.js"),
+          import("../models/Achievement.js"),
+          import("../utils/analytics.js"),
         ]);
 
       Target = targetModule.default;
@@ -37,7 +37,7 @@ const loadMongoModules = async () => {
 
       return true;
     } catch (error) {
-      console.error('Error loading MongoDB modules:', error);
+      console.error("Error loading MongoDB modules:", error);
       return false;
     }
   }
@@ -54,9 +54,9 @@ export const handleGetDashboard = async (req, res) => {
 
   try {
     const userId = req.userId;
-    
+
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     const today = new Date();
@@ -69,14 +69,14 @@ export const handleGetDashboard = async (req, res) => {
     let todayTargets = await Target.find({
       userId,
       date: { $gte: today, $lt: tomorrow },
-    }).populate('goalId');
+    }).populate("goalId");
 
     // If no targets for today, create them from active daily goals
     if (todayTargets.length === 0) {
       const activeGoals = await Goal.find({
         userId,
         isActive: true,
-        type: 'daily',
+        type: "daily",
       });
 
       if (activeGoals.length > 0) {
@@ -97,7 +97,7 @@ export const handleGetDashboard = async (req, res) => {
 
         // Populate the goalId for the response
         const populatedTargets = await Target.populate(newTargets, {
-          path: 'goalId',
+          path: "goalId",
         });
         todayTargets.push(...populatedTargets);
       }
@@ -115,7 +115,7 @@ export const handleGetDashboard = async (req, res) => {
 
     // Get user achievements
     const userAchievements = await UserAchievement.find({ userId })
-      .populate('achievementId')
+      .populate("achievementId")
       .sort({ earnedAt: -1 })
       .limit(10);
 
@@ -131,26 +131,26 @@ export const handleGetDashboard = async (req, res) => {
     if (achievements.length === 0) {
       achievements.push(
         {
-          id: '1',
-          title: 'First Step',
-          description: 'Welcome to your progress journey!',
-          icon: '🎯',
+          id: "1",
+          title: "First Step",
+          description: "Welcome to your progress journey!",
+          icon: "🎯",
           earned: false,
         },
         {
-          id: '2',
-          title: 'Goal Setter',
-          description: 'Create your first custom goal',
-          icon: '🌟',
+          id: "2",
+          title: "Goal Setter",
+          description: "Create your first custom goal",
+          icon: "🌟",
           earned: false,
         },
         {
-          id: '3',
-          title: 'Day One',
-          description: 'Complete your first daily target',
-          icon: '✅',
+          id: "3",
+          title: "Day One",
+          description: "Complete your first daily target",
+          icon: "✅",
           earned: false,
-        }
+        },
       );
     }
 
@@ -166,7 +166,7 @@ export const handleGetDashboard = async (req, res) => {
       totalStreak: currentStreak,
     });
   } catch (error) {
-    console.error('❌ MongoDB dashboard error:', error);
+    console.error("❌ MongoDB dashboard error:", error);
     return handleGetDashboardFallback(req, res);
   }
 };
@@ -183,12 +183,12 @@ export const handleToggleTarget = async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     const target = await Target.findOne({ _id: targetId, userId });
     if (!target) {
-      return res.status(404).json({ error: 'Target not found' });
+      return res.status(404).json({ error: "Target not found" });
     }
 
     // Toggle completion
@@ -226,7 +226,7 @@ export const handleToggleTarget = async (req, res) => {
       streak: target.streak,
     });
   } catch (error) {
-    console.error('❌ MongoDB toggle target error:', error);
+    console.error("❌ MongoDB toggle target error:", error);
     return handleToggleTargetFallback(req, res);
   }
 };
