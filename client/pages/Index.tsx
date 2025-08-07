@@ -10,7 +10,10 @@ import {
   Plus,
   BarChart3,
   Loader2,
+  LogOut,
+  User,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
