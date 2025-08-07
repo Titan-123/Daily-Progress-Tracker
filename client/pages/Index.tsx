@@ -12,7 +12,8 @@ import {
   Loader2,
   LogOut,
   User,
-  Menu,
+  Repeat,
+  Clock,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -152,11 +153,11 @@ export default function Index() {
       setDashboardData({ ...dashboardData, targets: finalTargets });
 
       toast.success(
-        updatedTarget.completed ? "Target completed! 🎉" : "Target unchecked",
+        updatedTarget.completed ? "Habit completed! 🎉" : "Habit unchecked",
       );
     } catch (error) {
       console.error("Failed to toggle target:", error);
-      toast.error("Failed to update target. Please try again.");
+      toast.error("Failed to update habit. Please try again.");
       // Revert optimistic update on error
       await loadDashboardData();
     } finally {
@@ -186,34 +187,33 @@ export default function Index() {
     );
   }
 
-  const {
-    targets: todaysTargets,
-    achievements,
-    weeklyProgress,
-    totalStreak,
-  } = dashboardData;
-  const completedCount = todaysTargets.filter(
-    (target) => target.completed,
-  ).length;
+  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } =
+    dashboardData;
+  const completedCount = todaysTargets.filter((target) => target.completed).length;
   const totalCount = todaysTargets.length;
   const completionRate =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
+  // Separate recurring habits from one-off tasks (for future implementation)
+  const recurringHabits = todaysTargets.filter(target => target.type === 'daily');
+  const weeklyGoals = todaysTargets.filter(target => target.type === 'weekly');
+  const monthlyGoals = todaysTargets.filter(target => target.type === 'monthly');
+
   const motivationalMessages = {
     excellent: [
-      "You're absolutely crushing it today! 🌟",
-      "Look at you being amazing! Keep it up! ✨",
-      "Your dedication is truly inspiring! 🎉",
+      "You're absolutely crushing your habits today! 🌟",
+      "Look at you building amazing routines! Keep it up! ✨",
+      "Your consistency is truly inspiring! 🎉",
     ],
     good: [
-      "You're doing great! Almost there! 💪",
-      "Fantastic progress! You've got this! 🚀",
+      "Great habit building! Almost there! 💪",
+      "Fantastic progress on your daily routine! 🚀",
       "So proud of your consistency! 💫",
     ],
     encouraging: [
-      "Every step forward counts! You're building something beautiful! 🌱",
-      "It's okay to start small - you're still moving forward! 💚",
-      "Tomorrow is a fresh start, and I believe in you! 🌈",
+      "Every habit counts! You're building something beautiful! 🌱",
+      "Small daily actions create big changes! Keep going! 💚",
+      "Tomorrow is a fresh start for your habits! 🌈",
     ],
   };
 
@@ -249,29 +249,29 @@ export default function Index() {
 
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link
-                to="/"
+              <Link 
+                to="/" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
               >
                 <Target className="h-4 w-4" />
                 Dashboard
               </Link>
-              <Link
-                to="/goals"
+              <Link 
+                to="/goals" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
-                <Plus className="h-4 w-4" />
-                Goals
+                <Repeat className="h-4 w-4" />
+                Habits & Goals
               </Link>
-              <Link
-                to="/analytics"
+              <Link 
+                to="/analytics" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <BarChart3 className="h-4 w-4" />
                 Analytics
               </Link>
-              <Link
-                to="/calendar"
+              <Link 
+                to="/calendar" 
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Calendar className="h-4 w-4" />
@@ -324,7 +324,7 @@ export default function Index() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="p-2 bg-primary/20 rounded-lg">🔥</div>
-                Current Streak
+                Habit Streak
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -333,7 +333,7 @@ export default function Index() {
                   {totalStreak} days
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Keep the momentum going!
+                  Keep building those habits!
                 </p>
               </div>
             </CardContent>
@@ -344,7 +344,7 @@ export default function Index() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="p-2 bg-success/20 rounded-lg">🎯</div>
-                Today's Progress
+                Today's Habits
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -374,7 +374,7 @@ export default function Index() {
                   {weeklyProgress}%
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Weekly completion
+                  Weekly consistency
                 </p>
                 <Progress value={weeklyProgress} className="h-2" />
               </div>
@@ -394,24 +394,24 @@ export default function Index() {
         </Card>
 
         <div className="grid gap-8 lg:grid-cols-3">
-          {/* Today's Targets */}
+          {/* Today's Habits */}
           <div className="lg:col-span-2 space-y-6">
             <Card>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <Target className="h-5 w-5 text-primary" />
-                      Today's Targets
+                      <Repeat className="h-5 w-5 text-primary" />
+                      Today's Habits
                     </CardTitle>
                     <CardDescription>
-                      Focus on what matters most today
+                      Your daily routine - building consistency one day at a time
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button
-                      variant="ghost"
-                      size="sm"
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
                       onClick={loadDashboardData}
                       disabled={loading}
                     >
@@ -424,83 +424,121 @@ export default function Index() {
                     <Button asChild variant="outline" size="sm">
                       <Link to="/goals">
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Target
+                        Add Habit
                       </Link>
                     </Button>
                   </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {todaysTargets.length === 0 ? (
+                {recurringHabits.length === 0 ? (
                   <div className="text-center py-12">
-                    <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <Repeat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">
-                      No targets for today
+                      No daily habits yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Create your first goal to get started on your journey!
+                      Start building life-changing habits! Create consistent daily routines.
                     </p>
                     <Button asChild>
                       <Link to="/goals">
                         <Plus className="h-4 w-4 mr-2" />
-                        Create Your First Goal
+                        Create Your First Habit
                       </Link>
                     </Button>
                   </div>
                 ) : (
-                  todaysTargets.map((target) => (
-                    <div
-                      key={target.id}
-                      className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                        target.completed
-                          ? "border-success/30 bg-success/5"
-                          : "border-border hover:border-primary/30"
-                      } ${toggling === target.id ? "opacity-50" : ""}`}
-                      onClick={() => toggleTarget(target.id)}
-                    >
-                      <div className="flex items-center gap-3">
-                        {toggling === target.id ? (
-                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                        ) : (
-                          <CheckCircle2
-                            className={`h-6 w-6 ${
-                              target.completed
-                                ? "text-success fill-current"
-                                : "text-muted-foreground"
-                            }`}
-                          />
-                        )}
-                        <div className="flex-1">
-                          <h3
-                            className={`font-semibold ${
-                              target.completed
-                                ? "line-through text-muted-foreground"
-                                : ""
-                            }`}
-                          >
-                            {target.title}
-                          </h3>
-                          <p className="text-sm text-muted-foreground">
-                            {target.description}
-                          </p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant={
-                              target.type === "daily" ? "default" : "secondary"
-                            }
-                          >
-                            {target.type}
-                          </Badge>
-                          {target.streak > 0 && (
-                            <Badge variant="outline" className="text-warning">
-                              🔥 {target.streak}
-                            </Badge>
+                  <>
+                    {recurringHabits.map((target) => (
+                      <div
+                        key={target.id}
+                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                          target.completed
+                            ? "border-success/30 bg-success/5"
+                            : "border-border hover:border-primary/30"
+                        } ${toggling === target.id ? "opacity-50" : ""}`}
+                        onClick={() => toggleTarget(target.id)}
+                      >
+                        <div className="flex items-center gap-3">
+                          {toggling === target.id ? (
+                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                          ) : (
+                            <CheckCircle2
+                              className={`h-6 w-6 ${
+                                target.completed
+                                  ? "text-success fill-current"
+                                  : "text-muted-foreground"
+                              }`}
+                            />
                           )}
+                          <div className="flex-1">
+                            <h3
+                              className={`font-semibold ${
+                                target.completed
+                                  ? "line-through text-muted-foreground"
+                                  : ""
+                              }`}
+                            >
+                              {target.title}
+                            </h3>
+                            <p className="text-sm text-muted-foreground">
+                              {target.description}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Badge className="bg-primary/10 text-primary border-primary/20">
+                              <Repeat className="h-3 w-3 mr-1" />
+                              Daily
+                            </Badge>
+                            {target.streak > 0 && (
+                              <Badge variant="outline" className="text-warning">
+                                🔥 {target.streak}
+                              </Badge>
+                            )}
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))
+                    ))}
+
+                    {/* Weekly/Monthly Goals Section */}
+                    {(weeklyGoals.length > 0 || monthlyGoals.length > 0) && (
+                      <div className="mt-8 pt-6 border-t">
+                        <h4 className="font-semibold text-sm text-muted-foreground mb-4 flex items-center gap-2">
+                          <Clock className="h-4 w-4" />
+                          Longer-term Goals
+                        </h4>
+                        {[...weeklyGoals, ...monthlyGoals].map((target) => (
+                          <div
+                            key={target.id}
+                            className={`p-3 rounded-lg border mb-2 ${
+                              target.completed
+                                ? "border-success/30 bg-success/5"
+                                : "border-border"
+                            }`}
+                          >
+                            <div className="flex items-center gap-3">
+                              <CheckCircle2
+                                className={`h-5 w-5 ${
+                                  target.completed
+                                    ? "text-success fill-current"
+                                    : "text-muted-foreground"
+                                }`}
+                              />
+                              <div className="flex-1">
+                                <h4 className="font-medium">{target.title}</h4>
+                                <p className="text-xs text-muted-foreground">
+                                  {target.description}
+                                </p>
+                              </div>
+                              <Badge variant="secondary">
+                                {target.type}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </>
                 )}
               </CardContent>
             </Card>
@@ -514,7 +552,7 @@ export default function Index() {
                   <Star className="h-5 w-5 text-warning fill-current" />
                   Achievements
                 </CardTitle>
-                <CardDescription>Your recent accomplishments</CardDescription>
+                <CardDescription>Your habit-building milestones</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -548,12 +586,7 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <Button
-                  asChild
-                  variant="outline"
-                  className="w-full mt-4"
-                  size="sm"
-                >
+                <Button asChild variant="outline" className="w-full mt-4" size="sm">
                   <Link to="/analytics">View All Achievements</Link>
                 </Button>
               </CardContent>
