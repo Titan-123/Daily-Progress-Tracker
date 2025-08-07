@@ -95,6 +95,38 @@ export const handleCreateGoal = async (req, res) => {
 
     await goal.save();
 
+    // If it's a daily goal, automatically create a target for today
+    if (type === 'daily' && goal.isActive) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      // Check if a target already exists for today
+      const existingTarget = await Target.findOne({
+        userId,
+        goalId: goal._id,
+        date: { $gte: today, $lt: tomorrow }
+      });
+
+      if (!existingTarget) {
+        const newTarget = new Target({
+          title: goal.title,
+          description: goal.description,
+          type: goal.type,
+          userId: goal.userId,
+          goalId: goal._id,
+          date: today,
+          completed: false,
+          streak: 0
+        });
+
+        await newTarget.save();
+        console.log(`✅ Created today's target for new daily goal: ${goal.title}`);
+      }
+    }
+
     res.status(201).json({
       id: goal._id.toString(),
       title: goal.title,
