@@ -6,8 +6,9 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "seed": "node seed.js"
+    "dev": "nodemon server.js",
+    "seed": "node seed.js",
+    "test": "curl http://localhost:3000/api/ping"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -18,5 +19,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.0",
     "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
   }
 }
