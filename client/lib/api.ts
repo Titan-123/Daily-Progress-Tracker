@@ -46,7 +46,19 @@ async function apiRequest<T>(
       );
     }
 
-    return await response.json();
+    // Handle 204 No Content responses (like delete operations)
+    if (response.status === 204) {
+      return null;
+    }
+
+    // Handle responses with content
+    const contentType = response.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await response.json();
+    }
+
+    // Fallback for other content types
+    return null;
   } catch (error) {
     console.error(`API request failed for ${endpoint}:`, error);
     throw error;
