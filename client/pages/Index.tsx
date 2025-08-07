@@ -408,12 +408,26 @@ export default function Index() {
                       Focus on what matters most today
                     </CardDescription>
                   </div>
-                  <Button asChild variant="outline" size="sm">
-                    <Link to="/goals">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Target
-                    </Link>
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={loadDashboardData}
+                      disabled={loading}
+                    >
+                      {loading ? (
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                      ) : (
+                        <TrendingUp className="h-4 w-4" />
+                      )}
+                    </Button>
+                    <Button asChild variant="outline" size="sm">
+                      <Link to="/goals">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Add Target
+                      </Link>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
