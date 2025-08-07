@@ -38,7 +38,13 @@ export function createServer() {
   // Health check endpoint
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "pong";
-    res.json({ message: ping, database: "MongoDB Connected" });
+    const dbStatus = mongoose.connection.readyState === 1 ? "MongoDB Connected" : "Using Fallback Data";
+    res.json({
+      message: ping,
+      database: dbStatus,
+      connectionState: mongoose.connection.readyState,
+      timestamp: new Date().toISOString()
+    });
   });
 
   // Example API route
