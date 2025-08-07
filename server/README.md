@@ -18,6 +18,8 @@ From the `server` directory:
 npm install
 ```
 
+This will install all dependencies including **nodemon** for development.
+
 ### 2. Configure Environment
 
 Copy the environment template and configure your settings:
