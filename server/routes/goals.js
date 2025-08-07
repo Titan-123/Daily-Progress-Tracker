@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 // Only import MongoDB models if mongoose is connected
 let Goal, Target;
@@ -12,16 +12,16 @@ const loadMongoModules = async () => {
   if (isMongoConnected()) {
     try {
       const [goalModule, targetModule] = await Promise.all([
-        import('../models/Goal.js'),
-        import('../models/Target.js'),
+        import("../models/Goal.js"),
+        import("../models/Target.js"),
       ]);
-      
+
       Goal = goalModule.default;
       Target = targetModule.default;
-      
+
       return true;
     } catch (error) {
-      console.error('Error loading MongoDB modules:', error);
+      console.error("Error loading MongoDB modules:", error);
       return false;
     }
   }
@@ -30,21 +30,21 @@ const loadMongoModules = async () => {
 
 export const handleGetGoals = async (req, res) => {
   const mongoReady = await loadMongoModules();
-  
+
   if (!mongoReady) {
-    return res.status(500).json({ error: 'Database not connected' });
+    return res.status(500).json({ error: "Database not connected" });
   }
 
   try {
     const userId = req.userId;
-    
+
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
-    
+
     const goals = await Goal.find({ userId }).sort({ createdAt: -1 });
-    
-    const formattedGoals = goals.map(goal => ({
+
+    const formattedGoals = goals.map((goal) => ({
       id: goal._id.toString(),
       title: goal.title,
       description: goal.description,
@@ -53,21 +53,21 @@ export const handleGetGoals = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     }));
 
     res.json(formattedGoals);
   } catch (error) {
-    console.error('Get goals error:', error);
-    res.status(500).json({ error: 'Failed to fetch goals' });
+    console.error("Get goals error:", error);
+    res.status(500).json({ error: "Failed to fetch goals" });
   }
 };
 
 export const handleCreateGoal = async (req, res) => {
   const mongoReady = await loadMongoModules();
-  
+
   if (!mongoReady) {
-    return res.status(500).json({ error: 'Database not connected' });
+    return res.status(500).json({ error: "Database not connected" });
   }
 
   try {
@@ -75,11 +75,11 @@ export const handleCreateGoal = async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     if (!title || !description || !type || !category || !target) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
     const goal = new Goal({
@@ -90,7 +90,7 @@ export const handleCreateGoal = async (req, res) => {
       target,
       userId,
       streak: 0,
-      isActive: true
+      isActive: true,
     });
 
     await goal.save();
@@ -104,20 +104,19 @@ export const handleCreateGoal = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Create goal error:', error);
-    res.status(500).json({ error: 'Failed to create goal' });
+    console.error("Create goal error:", error);
+    res.status(500).json({ error: "Failed to create goal" });
   }
 };
 
 export const handleUpdateGoal = async (req, res) => {
   const mongoReady = await loadMongoModules();
-  
+
   if (!mongoReady) {
-    return res.status(500).json({ error: 'Database not connected' });
+    return res.status(500).json({ error: "Database not connected" });
   }
 
   try {
@@ -126,12 +125,12 @@ export const handleUpdateGoal = async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     Object.assign(goal, updates);
@@ -146,20 +145,19 @@ export const handleUpdateGoal = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Update goal error:', error);
-    res.status(500).json({ error: 'Failed to update goal' });
+    console.error("Update goal error:", error);
+    res.status(500).json({ error: "Failed to update goal" });
   }
 };
 
 export const handleDeleteGoal = async (req, res) => {
   const mongoReady = await loadMongoModules();
-  
+
   if (!mongoReady) {
-    return res.status(500).json({ error: 'Database not connected' });
+    return res.status(500).json({ error: "Database not connected" });
   }
 
   try {
@@ -167,7 +165,7 @@ export const handleDeleteGoal = async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     console.log(`Attempting to delete goal ${goalId} for user ${userId}`);
@@ -175,30 +173,29 @@ export const handleDeleteGoal = async (req, res) => {
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
       console.log(`Goal ${goalId} not found for user ${userId}`);
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     // Delete related targets first
     const deletedTargets = await Target.deleteMany({ goalId: goal._id });
     console.log(`Deleted ${deletedTargets.deletedCount} related targets`);
-    
+
     // Delete the goal
     await Goal.findByIdAndDelete(goalId);
     console.log(`Successfully deleted goal ${goalId}`);
-    
-    res.status(204).send();
 
+    res.status(204).send();
   } catch (error) {
-    console.error('Delete goal error:', error);
-    res.status(500).json({ error: 'Failed to delete goal' });
+    console.error("Delete goal error:", error);
+    res.status(500).json({ error: "Failed to delete goal" });
   }
 };
 
 export const handleToggleGoalStatus = async (req, res) => {
   const mongoReady = await loadMongoModules();
-  
+
   if (!mongoReady) {
-    return res.status(500).json({ error: 'Database not connected' });
+    return res.status(500).json({ error: "Database not connected" });
   }
 
   try {
@@ -206,12 +203,12 @@ export const handleToggleGoalStatus = async (req, res) => {
     const userId = req.userId;
 
     if (!userId) {
-      return res.status(401).json({ error: 'Authentication required' });
+      return res.status(401).json({ error: "Authentication required" });
     }
 
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     goal.isActive = !goal.isActive;
@@ -226,11 +223,10 @@ export const handleToggleGoalStatus = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Toggle goal status error:', error);
-    res.status(500).json({ error: 'Failed to toggle goal status' });
+    console.error("Toggle goal status error:", error);
+    res.status(500).json({ error: "Failed to toggle goal status" });
   }
 };

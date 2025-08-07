@@ -172,9 +172,15 @@ export default function Index() {
     );
   }
 
-  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } =
-    dashboardData;
-  const completedCount = todaysTargets.filter((target) => target.completed).length;
+  const {
+    targets: todaysTargets,
+    achievements,
+    weeklyProgress,
+    totalStreak,
+  } = dashboardData;
+  const completedCount = todaysTargets.filter(
+    (target) => target.completed,
+  ).length;
   const totalCount = todaysTargets.length;
   const completionRate =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
@@ -229,29 +235,29 @@ export default function Index() {
 
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
               >
                 <Target className="h-4 w-4" />
                 Dashboard
               </Link>
-              <Link 
-                to="/goals" 
+              <Link
+                to="/goals"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Plus className="h-4 w-4" />
                 Goals
               </Link>
-              <Link 
-                to="/analytics" 
+              <Link
+                to="/analytics"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <BarChart3 className="h-4 w-4" />
                 Analytics
               </Link>
-              <Link 
-                to="/calendar" 
+              <Link
+                to="/calendar"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Calendar className="h-4 w-4" />
@@ -291,7 +297,9 @@ export default function Index() {
                 day: "numeric",
               })}
             </p>
-            <h2 className="text-2xl font-bold">Welcome back, {user?.name}! 👋</h2>
+            <h2 className="text-2xl font-bold">
+              Welcome back, {user?.name}! 👋
+            </h2>
           </div>
         </div>
 
@@ -301,15 +309,15 @@ export default function Index() {
           <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <div className="p-2 bg-primary/20 rounded-lg">
-                  🔥
-                </div>
+                <div className="p-2 bg-primary/20 rounded-lg">🔥</div>
                 Current Streak
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-2">
-                <div className="text-3xl font-bold text-primary">{totalStreak} days</div>
+                <div className="text-3xl font-bold text-primary">
+                  {totalStreak} days
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Keep the momentum going!
                 </p>
@@ -321,15 +329,15 @@ export default function Index() {
           <Card className="border-success/20 bg-gradient-to-br from-success/5 to-success/10">
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
-                <div className="p-2 bg-success/20 rounded-lg">
-                  🎯
-                </div>
+                <div className="p-2 bg-success/20 rounded-lg">🎯</div>
                 Today's Progress
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-2">
-                <div className="text-3xl font-bold text-success">{completionRate}%</div>
+                <div className="text-3xl font-bold text-success">
+                  {completionRate}%
+                </div>
                 <p className="text-sm text-muted-foreground">
                   {completedCount} of {totalCount} completed
                 </p>
@@ -348,7 +356,9 @@ export default function Index() {
             </CardHeader>
             <CardContent>
               <div className="text-center space-y-2">
-                <div className="text-3xl font-bold text-warning">{weeklyProgress}%</div>
+                <div className="text-3xl font-bold text-warning">
+                  {weeklyProgress}%
+                </div>
                 <p className="text-sm text-muted-foreground">
                   Weekly completion
                 </p>
@@ -396,7 +406,9 @@ export default function Index() {
                 {todaysTargets.length === 0 ? (
                   <div className="text-center py-12">
                     <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">No targets for today</h3>
+                    <h3 className="text-lg font-semibold mb-2">
+                      No targets for today
+                    </h3>
                     <p className="text-muted-foreground mb-4">
                       Create your first goal to get started on your journey!
                     </p>
@@ -508,10 +520,13 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <Button asChild variant="outline" className="w-full mt-4" size="sm">
-                  <Link to="/analytics">
-                    View All Achievements
-                  </Link>
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full mt-4"
+                  size="sm"
+                >
+                  <Link to="/analytics">View All Achievements</Link>
                 </Button>
               </CardContent>
             </Card>
