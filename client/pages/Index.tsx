@@ -47,6 +47,20 @@ export default function Index() {
     loadDashboardData();
   }, []);
 
+  // Refresh dashboard data when page becomes visible (user returns from other pages)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadDashboardData();
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, []);
+
   const loadDashboardData = async () => {
     try {
       setLoading(true);
