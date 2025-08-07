@@ -12,6 +12,7 @@ import {
   Loader2,
   LogOut,
   User,
+  Menu,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -171,15 +172,9 @@ export default function Index() {
     );
   }
 
-  const {
-    targets: todaysTargets,
-    achievements,
-    weeklyProgress,
-    totalStreak,
-  } = dashboardData;
-  const completedCount = todaysTargets.filter(
-    (target) => target.completed,
-  ).length;
+  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } =
+    dashboardData;
+  const completedCount = todaysTargets.filter((target) => target.completed).length;
   const totalCount = todaysTargets.length;
   const completionRate =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
@@ -218,52 +213,157 @@ export default function Index() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5">
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        {/* User Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-full">
-              <User className="h-5 w-5 text-primary" />
+      {/* Navigation Header */}
+      <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            {/* Logo & App Name */}
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 text-primary">
+                <Heart className="h-6 w-6 fill-current" />
+                <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                  Daily Progress
+                </h1>
+              </div>
             </div>
-            <div>
-              <p className="text-sm text-muted-foreground">Welcome back,</p>
-              <p className="font-semibold">{user?.name}</p>
+
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center gap-6">
+              <Link 
+                to="/" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
+              >
+                <Target className="h-4 w-4" />
+                Dashboard
+              </Link>
+              <Link 
+                to="/goals" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Plus className="h-4 w-4" />
+                Goals
+              </Link>
+              <Link 
+                to="/analytics" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Analytics
+              </Link>
+              <Link 
+                to="/calendar" 
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Calendar className="h-4 w-4" />
+                Calendar
+              </Link>
+            </nav>
+
+            {/* User Menu */}
+            <div className="flex items-center gap-3">
+              <div className="hidden sm:flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">{user?.name}</p>
+                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                </div>
+                <div className="p-2 bg-primary/10 rounded-full">
+                  <User className="h-4 w-4 text-primary" />
+                </div>
+              </div>
+              <Button variant="outline" size="sm" onClick={logout}>
+                <LogOut className="h-4 w-4" />
+                <span className="hidden sm:ml-2 sm:inline">Logout</span>
+              </Button>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={logout}>
-            <LogOut className="h-4 w-4 mr-2" />
-            Logout
-          </Button>
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* Welcome Section */}
+        <div className="text-center space-y-4">
+          <div className="space-y-2">
+            <p className="text-lg text-muted-foreground">
+              {currentDate.toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
+            </p>
+            <h2 className="text-2xl font-bold">Welcome back, {user?.name}! 👋</h2>
+          </div>
         </div>
 
-        {/* Header */}
-        <div className="text-center space-y-4">
-          <div className="flex items-center justify-center gap-2 text-primary">
-            <Heart className="h-8 w-8 fill-current" />
-            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-              Daily Progress Companion
-            </h1>
-          </div>
-          <p className="text-xl text-muted-foreground">
-            Your gentle guide to building amazing habits, one day at a time
-          </p>
+        {/* Stats Overview */}
+        <div className="grid gap-6 md:grid-cols-3">
+          {/* Current Streak */}
+          <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-primary/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <div className="p-2 bg-primary/20 rounded-lg">
+                  🔥
+                </div>
+                Current Streak
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-bold text-primary">{totalStreak} days</div>
+                <p className="text-sm text-muted-foreground">
+                  Keep the momentum going!
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Today's Progress */}
+          <Card className="border-success/20 bg-gradient-to-br from-success/5 to-success/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <div className="p-2 bg-success/20 rounded-lg">
+                  🎯
+                </div>
+                Today's Progress
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-bold text-success">{completionRate}%</div>
+                <p className="text-sm text-muted-foreground">
+                  {completedCount} of {totalCount} completed
+                </p>
+                <Progress value={completionRate} className="h-2" />
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Weekly Progress */}
+          <Card className="border-warning/20 bg-gradient-to-br from-warning/5 to-warning/10">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg flex items-center gap-2">
+                <TrendingUp className="h-5 w-5 text-warning" />
+                This Week
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-center space-y-2">
+                <div className="text-3xl font-bold text-warning">{weeklyProgress}%</div>
+                <p className="text-sm text-muted-foreground">
+                  Weekly completion
+                </p>
+                <Progress value={weeklyProgress} className="h-2" />
+              </div>
+            </CardContent>
+          </Card>
         </div>
 
         {/* Motivational Message */}
         <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
           <CardContent className="pt-6">
             <div className="text-center space-y-2">
-              <p className="text-2xl font-semibold text-primary">
+              <p className="text-xl font-semibold text-primary">
                 {getCurrentMessage()}
-              </p>
-              <p className="text-muted-foreground">
-                Today is{" "}
-                {currentDate.toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
               </p>
             </div>
           </CardContent>
@@ -281,8 +381,7 @@ export default function Index() {
                       Today's Targets
                     </CardTitle>
                     <CardDescription>
-                      {completedCount} of {totalCount} completed (
-                      {completionRate}%)
+                      Focus on what matters most today
                     </CardDescription>
                   </div>
                   <Button asChild variant="outline" size="sm">
@@ -292,75 +391,94 @@ export default function Index() {
                     </Link>
                   </Button>
                 </div>
-                <Progress value={completionRate} className="h-2" />
               </CardHeader>
               <CardContent className="space-y-4">
-                {todaysTargets.map((target) => (
-                  <div
-                    key={target.id}
-                    className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                      target.completed
-                        ? "border-success/30 bg-success/5"
-                        : "border-border hover:border-primary/30"
-                    } ${toggling === target.id ? "opacity-50" : ""}`}
-                    onClick={() => toggleTarget(target.id)}
-                  >
-                    <div className="flex items-center gap-3">
-                      {toggling === target.id ? (
-                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                      ) : (
-                        <CheckCircle2
-                          className={`h-6 w-6 ${
-                            target.completed
-                              ? "text-success fill-current"
-                              : "text-muted-foreground"
-                          }`}
-                        />
-                      )}
-                      <div className="flex-1">
-                        <h3
-                          className={`font-semibold ${target.completed ? "line-through text-muted-foreground" : ""}`}
-                        >
-                          {target.title}
-                        </h3>
-                        <p className="text-sm text-muted-foreground">
-                          {target.description}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Badge
-                          variant={
-                            target.type === "daily" ? "default" : "secondary"
-                          }
-                        >
-                          {target.type}
-                        </Badge>
-                        {target.streak > 0 && (
-                          <Badge variant="outline" className="text-warning">
-                            🔥 {target.streak}
-                          </Badge>
+                {todaysTargets.length === 0 ? (
+                  <div className="text-center py-12">
+                    <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <h3 className="text-lg font-semibold mb-2">No targets for today</h3>
+                    <p className="text-muted-foreground mb-4">
+                      Create your first goal to get started on your journey!
+                    </p>
+                    <Button asChild>
+                      <Link to="/goals">
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Your First Goal
+                      </Link>
+                    </Button>
+                  </div>
+                ) : (
+                  todaysTargets.map((target) => (
+                    <div
+                      key={target.id}
+                      className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                        target.completed
+                          ? "border-success/30 bg-success/5"
+                          : "border-border hover:border-primary/30"
+                      } ${toggling === target.id ? "opacity-50" : ""}`}
+                      onClick={() => toggleTarget(target.id)}
+                    >
+                      <div className="flex items-center gap-3">
+                        {toggling === target.id ? (
+                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        ) : (
+                          <CheckCircle2
+                            className={`h-6 w-6 ${
+                              target.completed
+                                ? "text-success fill-current"
+                                : "text-muted-foreground"
+                            }`}
+                          />
                         )}
+                        <div className="flex-1">
+                          <h3
+                            className={`font-semibold ${
+                              target.completed
+                                ? "line-through text-muted-foreground"
+                                : ""
+                            }`}
+                          >
+                            {target.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {target.description}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            variant={
+                              target.type === "daily" ? "default" : "secondary"
+                            }
+                          >
+                            {target.type}
+                          </Badge>
+                          {target.streak > 0 && (
+                            <Badge variant="outline" className="text-warning">
+                              🔥 {target.streak}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </CardContent>
             </Card>
+          </div>
 
-            {/* Recent Achievements */}
+          {/* Recent Achievements */}
+          <div className="space-y-6">
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   <Star className="h-5 w-5 text-warning fill-current" />
-                  Recent Achievements
+                  Achievements
                 </CardTitle>
-                <CardDescription>
-                  Celebrating your amazing progress!
-                </CardDescription>
+                <CardDescription>Your recent accomplishments</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="grid gap-3 sm:grid-cols-2">
-                  {achievements.map((achievement) => (
+                <div className="space-y-3">
+                  {achievements.slice(0, 3).map((achievement) => (
                     <div
                       key={achievement.id}
                       className={`p-3 rounded-lg border ${
@@ -371,107 +489,28 @@ export default function Index() {
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">{achievement.icon}</span>
-                        <div>
+                        <div className="flex-1">
                           <h4
-                            className={`font-medium ${!achievement.earned && "text-muted-foreground"}`}
+                            className={`font-medium ${
+                              !achievement.earned && "text-muted-foreground"
+                            }`}
                           >
                             {achievement.title}
                           </h4>
-                          <p className="text-sm text-muted-foreground">
+                          <p className="text-xs text-muted-foreground">
                             {achievement.description}
                           </p>
                         </div>
                         {achievement.earned && (
-                          <Badge className="ml-auto">Earned!</Badge>
+                          <Badge className="text-xs">Earned!</Badge>
                         )}
                       </div>
                     </div>
                   ))}
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-
-          {/* Stats Sidebar */}
-          <div className="space-y-6">
-            {/* Current Streak */}
-            <Card className="border-primary/20">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <div className="p-2 bg-primary/10 rounded-lg">🔥</div>
-                  Current Streak
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center space-y-2">
-                  <div className="text-3xl font-bold text-primary">
-                    {totalStreak} days
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    You're on fire! Keep the momentum going!
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Weekly Progress */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <TrendingUp className="h-5 w-5 text-primary" />
-                  This Week
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div>
-                  <div className="flex justify-between text-sm mb-2">
-                    <span>Overall Progress</span>
-                    <span>{weeklyProgress}%</span>
-                  </div>
-                  <Progress value={weeklyProgress} />
-                </div>
-                <div className="text-center">
-                  <p className="text-sm text-muted-foreground">
-                    Amazing consistency this week! 🌟
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-
-            {/* Quick Actions */}
-            <Card>
-              <CardHeader className="pb-3">
-                <CardTitle className="text-lg">Quick Actions</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                <Button
-                  asChild
-                  className="w-full justify-start"
-                  variant="outline"
-                >
-                  <Link to="/calendar">
-                    <Calendar className="h-4 w-4 mr-2" />
-                    View Calendar
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  className="w-full justify-start"
-                  variant="outline"
-                >
+                <Button asChild variant="outline" className="w-full mt-4" size="sm">
                   <Link to="/analytics">
-                    <BarChart3 className="h-4 w-4 mr-2" />
-                    Analytics
-                  </Link>
-                </Button>
-                <Button
-                  asChild
-                  className="w-full justify-start"
-                  variant="outline"
-                >
-                  <Link to="/goals">
-                    <Target className="h-4 w-4 mr-2" />
-                    Set New Goals
+                    View All Achievements
                   </Link>
                 </Button>
               </CardContent>
