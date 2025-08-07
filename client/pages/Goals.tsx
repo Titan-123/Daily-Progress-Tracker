@@ -147,8 +147,10 @@ export default function Goals() {
         target: "",
       });
       setIsDialogOpen(false);
-      if (createdGoal.type === 'daily') {
-        toast.success("Daily goal created! Check your dashboard for today's target. 🎯");
+      if (createdGoal.type === "daily") {
+        toast.success(
+          "Daily goal created! Check your dashboard for today's target. 🎯",
+        );
       } else {
         toast.success("Goal created successfully! 🎯");
       }
