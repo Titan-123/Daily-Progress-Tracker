@@ -73,24 +73,24 @@ export function createServer() {
   app.get("/api/dashboard", authenticateToken, handleGetDashboard);
   app.post("/api/targets/:targetId/toggle", authenticateToken, handleToggleTarget);
 
-  // Goals API routes
-  app.get("/api/goals", handleGetGoals);
-  app.post("/api/goals", handleCreateGoal);
-  app.patch("/api/goals/:goalId", handleUpdateGoal);
-  app.delete("/api/goals/:goalId", handleDeleteGoal);
-  app.post("/api/goals/:goalId/toggle", handleToggleGoalStatus);
+  // Goals API routes (authentication required)
+  app.get("/api/goals", authenticateToken, handleGetGoals);
+  app.post("/api/goals", authenticateToken, handleCreateGoal);
+  app.patch("/api/goals/:goalId", authenticateToken, handleUpdateGoal);
+  app.delete("/api/goals/:goalId", authenticateToken, handleDeleteGoal);
+  app.post("/api/goals/:goalId/toggle", authenticateToken, handleToggleGoalStatus);
 
-  // Analytics API routes
-  app.get("/api/analytics", handleGetAnalytics);
-  app.get("/api/analytics/weekly", handleGetWeeklyData);
-  app.get("/api/analytics/monthly", handleGetMonthlyTrends);
+  // Analytics API routes (authentication required)
+  app.get("/api/analytics", authenticateToken, handleGetAnalytics);
+  app.get("/api/analytics/weekly", authenticateToken, handleGetWeeklyData);
+  app.get("/api/analytics/monthly", authenticateToken, handleGetMonthlyTrends);
 
-  // Calendar API routes
-  app.get("/api/calendar", handleGetCalendarData);
-  app.get("/api/calendar/day/:date", handleGetDayData);
-  app.post("/api/calendar/day/:date/reflection", handleSaveReflection);
-  app.post("/api/calendar/day/:date/mood", handleUpdateMood);
-  app.post("/api/calendar/day/:date/highlights", handleAddHighlight);
+  // Calendar API routes (authentication required)
+  app.get("/api/calendar", authenticateToken, handleGetCalendarData);
+  app.get("/api/calendar/day/:date", authenticateToken, handleGetDayData);
+  app.post("/api/calendar/day/:date/reflection", authenticateToken, handleSaveReflection);
+  app.post("/api/calendar/day/:date/mood", authenticateToken, handleUpdateMood);
+  app.post("/api/calendar/day/:date/highlights", authenticateToken, handleAddHighlight);
 
   // Error handling middleware
   app.use((error, req, res, next) => {
