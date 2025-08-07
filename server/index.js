@@ -61,9 +61,17 @@ export function createServer() {
   // Example API route
   app.get("/api/demo", handleDemo);
 
-  // Dashboard API routes
-  app.get("/api/dashboard", handleGetDashboard);
-  app.post("/api/targets/:targetId/toggle", handleToggleTarget);
+  // Auth routes (no authentication required)
+  app.post("/api/auth/register", handleRegister);
+  app.post("/api/auth/login", handleLogin);
+
+  // Protected routes (authentication required)
+  app.get("/api/auth/profile", authenticateToken, handleGetProfile);
+  app.patch("/api/auth/profile", authenticateToken, handleUpdateProfile);
+
+  // Dashboard API routes (authentication required)
+  app.get("/api/dashboard", authenticateToken, handleGetDashboard);
+  app.post("/api/targets/:targetId/toggle", authenticateToken, handleToggleTarget);
 
   // Goals API routes
   app.get("/api/goals", handleGetGoals);
