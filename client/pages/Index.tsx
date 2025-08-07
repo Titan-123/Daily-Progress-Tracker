@@ -39,6 +39,7 @@ export default function Index() {
   );
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
+  const { user, logout } = useAuth();
 
   // Load dashboard data on component mount
   useEffect(() => {
@@ -93,7 +94,7 @@ export default function Index() {
             id: "2",
             title: "Early Bird",
             description: "Started progress tracking before 8 AM",
-            icon: "🌅",
+            icon: "��",
             earned: true,
           },
           {
