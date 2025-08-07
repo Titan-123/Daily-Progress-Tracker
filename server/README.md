@@ -4,7 +4,7 @@ A Node.js Express server with MongoDB integration for the Daily Progress Report 
 
 ## Prerequisites
 
-- **Node.js** v16+ 
+- **Node.js** v16+
 - **MongoDB** running locally or connection to MongoDB Atlas
 - **npm** or **yarn**
 
@@ -27,6 +27,7 @@ cp .env.example .env
 ```
 
 Edit `.env` file:
+
 ```env
 MONGODB_URI=mongodb://localhost:27017/daily-progress-tracker
 PORT=3000
@@ -64,13 +65,16 @@ The server will start on http://localhost:3000
 ## API Endpoints
 
 ### Health Check
+
 - `GET /api/ping` - Server status and MongoDB connection
 
 ### Dashboard
+
 - `GET /api/dashboard` - Get dashboard data (targets, achievements, stats)
 - `POST /api/targets/:id/toggle` - Toggle target completion
 
 ### Goals
+
 - `GET /api/goals` - Get all goals
 - `POST /api/goals` - Create new goal
 - `PATCH /api/goals/:id` - Update goal
@@ -78,11 +82,13 @@ The server will start on http://localhost:3000
 - `POST /api/goals/:id/toggle` - Toggle goal active status
 
 ### Analytics
+
 - `GET /api/analytics` - Get analytics data
 - `GET /api/analytics/weekly` - Get weekly data
 - `GET /api/analytics/monthly` - Get monthly trends
 
 ### Calendar
+
 - `GET /api/calendar` - Get calendar data
 - `GET /api/calendar/day/:date` - Get specific day data
 - `POST /api/calendar/day/:date/reflection` - Save daily reflection
@@ -129,6 +135,7 @@ pm2 start server.js --name "dpr-api"
 ### Port Already in Use
 
 Change the port in `.env`:
+
 ```env
 PORT=3001
 ```
@@ -136,6 +143,7 @@ PORT=3001
 ### Module Import Errors
 
 Make sure all dependencies are installed:
+
 ```bash
 npm install
 ```
