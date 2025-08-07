@@ -1,5 +1,3 @@
-import { RequestHandler } from "express";
-
 export const handleDemo = (req, res) => {
   res.json({
     message: "Demo endpoint working!",
