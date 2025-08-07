@@ -1,6 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import mongoose from "mongoose";
 import connectDB from "./config/database.js";
 import { handleDemo } from "./routes/demo.js";
 import { handleGetDashboard, handleToggleTarget } from "./routes/dashboard.js";
