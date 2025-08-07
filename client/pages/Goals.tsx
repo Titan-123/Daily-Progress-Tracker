@@ -147,7 +147,11 @@ export default function Goals() {
         target: "",
       });
       setIsDialogOpen(false);
-      toast.success("Goal created successfully! 🎯");
+      if (createdGoal.type === 'daily') {
+        toast.success("Daily goal created! Check your dashboard for today's target. 🎯");
+      } else {
+        toast.success("Goal created successfully! 🎯");
+      }
     } catch (error) {
       console.error("Failed to create goal:", error);
       toast.error("Failed to create goal. Please try again.");
