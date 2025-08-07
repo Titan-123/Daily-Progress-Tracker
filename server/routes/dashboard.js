@@ -1,13 +1,51 @@
-import Target from '../models/Target.js';
-import Goal from '../models/Goal.js';
-import { UserAchievement, Achievement } from '../models/Achievement.js';
-import { calculateStreaks, calculateWeeklyCompletion } from '../utils/analytics.js';
+import mongoose from 'mongoose';
+import { handleGetDashboardFallback, handleToggleTargetFallback } from './dashboard-fallback.js';
+
+// Only import MongoDB models if mongoose is connected
+let Target, Goal, UserAchievement, Achievement, calculateStreaks, calculateWeeklyCompletion;
+
+const isMongoConnected = () => {
+  return mongoose.connection.readyState === 1;
+};
+
+// Dynamically import MongoDB-dependent modules
+const loadMongoModules = async () => {
+  if (isMongoConnected()) {
+    try {
+      const [targetModule, goalModule, achievementModule, analyticsModule] = await Promise.all([
+        import('../models/Target.js'),
+        import('../models/Goal.js'),
+        import('../models/Achievement.js'),
+        import('../utils/analytics.js')
+      ]);
+      
+      Target = targetModule.default;
+      Goal = goalModule.default;
+      UserAchievement = achievementModule.UserAchievement;
+      Achievement = achievementModule.Achievement;
+      calculateStreaks = analyticsModule.calculateStreaks;
+      calculateWeeklyCompletion = analyticsModule.calculateWeeklyCompletion;
+      
+      return true;
+    } catch (error) {
+      console.error('Error loading MongoDB modules:', error);
+      return false;
+    }
+  }
+  return false;
+};
 
 // For demo purposes, we'll use a default user ID
-// In a real app, this would come from authentication middleware
 const DEFAULT_USER_ID = '60d0fe4f5311236168a109ca';
 
 export const handleGetDashboard = async (req, res) => {
+  // Check if MongoDB is connected and modules are loaded
+  const mongoReady = await loadMongoModules();
+  
+  if (!mongoReady) {
+    return handleGetDashboardFallback(req, res);
+  }
+
   try {
     const userId = req.user?.id || DEFAULT_USER_ID;
     const today = new Date();
@@ -101,6 +139,7 @@ export const handleGetDashboard = async (req, res) => {
     const currentStreak = await calculateStreaks(userId);
     const weeklyProgress = await calculateWeeklyCompletion(userId);
 
+    console.log('✅ Dashboard data loaded from MongoDB');
     res.json({
       targets,
       achievements,
@@ -109,12 +148,18 @@ export const handleGetDashboard = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Dashboard error:', error);
-    res.status(500).json({ error: 'Failed to load dashboard data' });
+    console.error('❌ MongoDB dashboard error:', error);
+    return handleGetDashboardFallback(req, res);
   }
 };
 
 export const handleToggleTarget = async (req, res) => {
+  const mongoReady = await loadMongoModules();
+  
+  if (!mongoReady) {
+    return handleToggleTargetFallback(req, res);
+  }
+
   try {
     const { targetId } = req.params;
     
@@ -138,13 +183,11 @@ export const handleToggleTarget = async (req, res) => {
         goal.lastCompletedDate = new Date();
         await goal.save();
       }
-    } else {
-      // If uncompleting, we might want to adjust streak
-      // For simplicity, we'll keep the streak as is
     }
 
     await target.save();
 
+    console.log(`✅ Target ${targetId} toggled in MongoDB`);
     res.json({
       id: target._id.toString(),
       title: target.title,
@@ -155,7 +198,7 @@ export const handleToggleTarget = async (req, res) => {
     });
 
   } catch (error) {
-    console.error('Toggle target error:', error);
-    res.status(500).json({ error: 'Failed to toggle target' });
+    console.error('❌ MongoDB toggle target error:', error);
+    return handleToggleTargetFallback(req, res);
   }
 };
