@@ -1,16 +1,16 @@
-import Goal from '../models/Goal.js';
-import Target from '../models/Target.js';
+import Goal from "../models/Goal.js";
+import Target from "../models/Target.js";
 
 // For demo purposes, we'll use a default user ID
-const DEFAULT_USER_ID = '60d0fe4f5311236168a109ca';
+const DEFAULT_USER_ID = "60d0fe4f5311236168a109ca";
 
 export const handleGetGoals = async (req, res) => {
   try {
     const userId = req.user?.id || DEFAULT_USER_ID;
-    
+
     const goals = await Goal.find({ userId }).sort({ createdAt: -1 });
-    
-    const formattedGoals = goals.map(goal => ({
+
+    const formattedGoals = goals.map((goal) => ({
       id: goal._id.toString(),
       title: goal.title,
       description: goal.description,
@@ -19,13 +19,13 @@ export const handleGetGoals = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     }));
 
     res.json(formattedGoals);
   } catch (error) {
-    console.error('Get goals error:', error);
-    res.status(500).json({ error: 'Failed to fetch goals' });
+    console.error("Get goals error:", error);
+    res.status(500).json({ error: "Failed to fetch goals" });
   }
 };
 
@@ -35,7 +35,7 @@ export const handleCreateGoal = async (req, res) => {
     const userId = req.user?.id || DEFAULT_USER_ID;
 
     if (!title || !description || !type || !category || !target) {
-      return res.status(400).json({ error: 'Missing required fields' });
+      return res.status(400).json({ error: "Missing required fields" });
     }
 
     const goal = new Goal({
@@ -46,7 +46,7 @@ export const handleCreateGoal = async (req, res) => {
       target,
       userId,
       streak: 0,
-      isActive: true
+      isActive: true,
     });
 
     await goal.save();
@@ -60,12 +60,11 @@ export const handleCreateGoal = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Create goal error:', error);
-    res.status(500).json({ error: 'Failed to create goal' });
+    console.error("Create goal error:", error);
+    res.status(500).json({ error: "Failed to create goal" });
   }
 };
 
@@ -77,7 +76,7 @@ export const handleUpdateGoal = async (req, res) => {
 
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     Object.assign(goal, updates);
@@ -92,12 +91,11 @@ export const handleUpdateGoal = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Update goal error:', error);
-    res.status(500).json({ error: 'Failed to update goal' });
+    console.error("Update goal error:", error);
+    res.status(500).json({ error: "Failed to update goal" });
   }
 };
 
@@ -108,19 +106,18 @@ export const handleDeleteGoal = async (req, res) => {
 
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     // Also delete related targets
     await Target.deleteMany({ goalId: goal._id });
-    
-    await Goal.findByIdAndDelete(goalId);
-    
-    res.status(204).send();
 
+    await Goal.findByIdAndDelete(goalId);
+
+    res.status(204).send();
   } catch (error) {
-    console.error('Delete goal error:', error);
-    res.status(500).json({ error: 'Failed to delete goal' });
+    console.error("Delete goal error:", error);
+    res.status(500).json({ error: "Failed to delete goal" });
   }
 };
 
@@ -131,7 +128,7 @@ export const handleToggleGoalStatus = async (req, res) => {
 
     const goal = await Goal.findOne({ _id: goalId, userId });
     if (!goal) {
-      return res.status(404).json({ error: 'Goal not found' });
+      return res.status(404).json({ error: "Goal not found" });
     }
 
     goal.isActive = !goal.isActive;
@@ -146,11 +143,10 @@ export const handleToggleGoalStatus = async (req, res) => {
       target: goal.target,
       streak: goal.streak,
       isActive: goal.isActive,
-      createdAt: goal.createdAt.toISOString()
+      createdAt: goal.createdAt.toISOString(),
     });
-
   } catch (error) {
-    console.error('Toggle goal status error:', error);
-    res.status(500).json({ error: 'Failed to toggle goal status' });
+    console.error("Toggle goal status error:", error);
+    res.status(500).json({ error: "Failed to toggle goal status" });
   }
 };

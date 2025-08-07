@@ -1,23 +1,23 @@
-import Target from '../models/Target.js';
-import DayEntry from '../models/DayEntry.js';
-import Goal from '../models/Goal.js';
+import Target from "../models/Target.js";
+import DayEntry from "../models/DayEntry.js";
+import Goal from "../models/Goal.js";
 
 export const calculateStreaks = async (userId) => {
   try {
     // Get all targets for the user, sorted by date descending
     const targets = await Target.find({ userId })
       .sort({ date: -1 })
-      .populate('goalId');
+      .populate("goalId");
 
     // Calculate current streak
     let currentStreak = 0;
     let lastDate = new Date();
     lastDate.setHours(0, 0, 0, 0);
-    
+
     // Group targets by date
     const targetsByDate = {};
-    targets.forEach(target => {
-      const dateKey = target.date.toISOString().split('T')[0];
+    targets.forEach((target) => {
+      const dateKey = target.date.toISOString().split("T")[0];
       if (!targetsByDate[dateKey]) {
         targetsByDate[dateKey] = { completed: 0, total: 0 };
       }
@@ -31,9 +31,11 @@ export const calculateStreaks = async (userId) => {
     const sortedDates = Object.keys(targetsByDate).sort().reverse();
     for (const dateKey of sortedDates) {
       const dayData = targetsByDate[dateKey];
-      const completionRate = dayData.total > 0 ? dayData.completed / dayData.total : 0;
-      
-      if (completionRate >= 0.8) { // 80% completion rate considered a streak day
+      const completionRate =
+        dayData.total > 0 ? dayData.completed / dayData.total : 0;
+
+      if (completionRate >= 0.8) {
+        // 80% completion rate considered a streak day
         currentStreak++;
       } else {
         break;
@@ -42,7 +44,7 @@ export const calculateStreaks = async (userId) => {
 
     return currentStreak;
   } catch (error) {
-    console.error('Error calculating streaks:', error);
+    console.error("Error calculating streaks:", error);
     return 0;
   }
 };
@@ -50,24 +52,26 @@ export const calculateStreaks = async (userId) => {
 export const calculateWeeklyCompletion = async (userId, weekOffset = 0) => {
   try {
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() - (weekOffset * 7));
+    endDate.setDate(endDate.getDate() - weekOffset * 7);
     endDate.setHours(23, 59, 59, 999);
-    
+
     const startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - 6);
     startDate.setHours(0, 0, 0, 0);
 
     const targets = await Target.find({
       userId,
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
     });
 
     if (targets.length === 0) return 0;
 
-    const completedTargets = targets.filter(target => target.completed).length;
+    const completedTargets = targets.filter(
+      (target) => target.completed,
+    ).length;
     return Math.round((completedTargets / targets.length) * 100);
   } catch (error) {
-    console.error('Error calculating weekly completion:', error);
+    console.error("Error calculating weekly completion:", error);
     return 0;
   }
 };
@@ -78,22 +82,24 @@ export const calculateMonthlyCompletion = async (userId, monthOffset = 0) => {
     endDate.setMonth(endDate.getMonth() - monthOffset);
     endDate.setDate(0); // Last day of previous month
     endDate.setHours(23, 59, 59, 999);
-    
+
     const startDate = new Date(endDate);
     startDate.setDate(1);
     startDate.setHours(0, 0, 0, 0);
 
     const targets = await Target.find({
       userId,
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
     });
 
     if (targets.length === 0) return 0;
 
-    const completedTargets = targets.filter(target => target.completed).length;
+    const completedTargets = targets.filter(
+      (target) => target.completed,
+    ).length;
     return Math.round((completedTargets / targets.length) * 100);
   } catch (error) {
-    console.error('Error calculating monthly completion:', error);
+    console.error("Error calculating monthly completion:", error);
     return 0;
   }
 };
@@ -101,45 +107,47 @@ export const calculateMonthlyCompletion = async (userId, monthOffset = 0) => {
 export const getWeeklyData = async (userId, weekOffset = 0) => {
   try {
     const endDate = new Date();
-    endDate.setDate(endDate.getDate() - (weekOffset * 7));
+    endDate.setDate(endDate.getDate() - weekOffset * 7);
     endDate.setHours(23, 59, 59, 999);
-    
+
     const startDate = new Date(endDate);
     startDate.setDate(startDate.getDate() - 6);
     startDate.setHours(0, 0, 0, 0);
 
     const targets = await Target.find({
       userId,
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
     }).sort({ date: 1 });
 
     // Group by day
     const weekData = [];
-    const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-    
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
     for (let i = 0; i < 7; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(startDate.getDate() + i);
-      
-      const dayTargets = targets.filter(target => 
-        target.date.toISOString().split('T')[0] === currentDate.toISOString().split('T')[0]
+
+      const dayTargets = targets.filter(
+        (target) =>
+          target.date.toISOString().split("T")[0] ===
+          currentDate.toISOString().split("T")[0],
       );
-      
-      const completed = dayTargets.filter(target => target.completed).length;
+
+      const completed = dayTargets.filter((target) => target.completed).length;
       const total = dayTargets.length;
       const completion = total > 0 ? Math.round((completed / total) * 100) : 0;
-      
+
       weekData.push({
         day: days[currentDate.getDay()],
         completion,
         completed,
-        total
+        total,
       });
     }
 
     return weekData;
   } catch (error) {
-    console.error('Error getting weekly data:', error);
+    console.error("Error getting weekly data:", error);
     return [];
   }
 };
@@ -156,13 +164,17 @@ export const analyzeStrengthsAndWeaknesses = async (userId) => {
       const targets = await Target.find({
         userId,
         goalId: goal._id,
-        date: { $gte: thirtyDaysAgo }
+        date: { $gte: thirtyDaysAgo },
       });
 
       if (targets.length > 0) {
-        const completedTargets = targets.filter(target => target.completed).length;
-        const completionRate = Math.round((completedTargets / targets.length) * 100);
-        
+        const completedTargets = targets.filter(
+          (target) => target.completed,
+        ).length;
+        const completionRate = Math.round(
+          (completedTargets / targets.length) * 100,
+        );
+
         if (!categoryStats[goal.category]) {
           categoryStats[goal.category] = [];
         }
@@ -172,10 +184,10 @@ export const analyzeStrengthsAndWeaknesses = async (userId) => {
 
     // Calculate average completion rate per category
     const categoryAverages = {};
-    Object.keys(categoryStats).forEach(category => {
+    Object.keys(categoryStats).forEach((category) => {
       const rates = categoryStats[category];
       categoryAverages[category] = Math.round(
-        rates.reduce((sum, rate) => sum + rate, 0) / rates.length
+        rates.reduce((sum, rate) => sum + rate, 0) / rates.length,
       );
     });
 
@@ -193,7 +205,7 @@ export const analyzeStrengthsAndWeaknesses = async (userId) => {
 
     return { strengths, improvementAreas };
   } catch (error) {
-    console.error('Error analyzing strengths and weaknesses:', error);
+    console.error("Error analyzing strengths and weaknesses:", error);
     return { strengths: [], improvementAreas: [] };
   }
 };

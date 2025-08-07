@@ -1,8 +1,8 @@
-import DayEntry from '../models/DayEntry.js';
-import Target from '../models/Target.js';
+import DayEntry from "../models/DayEntry.js";
+import Target from "../models/Target.js";
 
 // For demo purposes, we'll use a default user ID
-const DEFAULT_USER_ID = '60d0fe4f5311236168a109ca';
+const DEFAULT_USER_ID = "60d0fe4f5311236168a109ca";
 
 export const handleGetCalendarData = async (req, res) => {
   try {
@@ -11,7 +11,7 @@ export const handleGetCalendarData = async (req, res) => {
     const year = parseInt(req.query.year);
 
     let startDate, endDate;
-    
+
     if (month && year) {
       startDate = new Date(year, month - 1, 1);
       endDate = new Date(year, month, 0);
@@ -27,33 +27,33 @@ export const handleGetCalendarData = async (req, res) => {
     // Get all day entries for the month
     const dayEntries = await DayEntry.find({
       userId,
-      date: { $gte: startDate, $lte: endDate }
+      date: { $gte: startDate, $lte: endDate },
     }).sort({ date: 1 });
 
     // Convert to the format expected by frontend
     const calendarData = {};
-    
+
     for (const entry of dayEntries) {
-      const dateKey = entry.date.toISOString().split('T')[0];
-      
+      const dateKey = entry.date.toISOString().split("T")[0];
+
       // Get targets for this day to populate the targets array
       const dayStart = new Date(entry.date);
       dayStart.setHours(0, 0, 0, 0);
       const dayEnd = new Date(entry.date);
       dayEnd.setHours(23, 59, 59, 999);
-      
+
       const targets = await Target.find({
         userId,
-        date: { $gte: dayStart, $lte: dayEnd }
-      }).populate('goalId');
-      
-      const formattedTargets = targets.map(target => ({
+        date: { $gte: dayStart, $lte: dayEnd },
+      }).populate("goalId");
+
+      const formattedTargets = targets.map((target) => ({
         id: target._id.toString(),
         title: target.title,
         completed: target.completed,
-        category: target.goalId?.category || 'General'
+        category: target.goalId?.category || "General",
       }));
-      
+
       calendarData[dateKey] = {
         date: dateKey,
         completed: entry.completed,
@@ -61,20 +61,20 @@ export const handleGetCalendarData = async (req, res) => {
         targets: formattedTargets,
         reflection: entry.reflection,
         mood: entry.mood,
-        highlights: entry.highlights
+        highlights: entry.highlights,
       };
     }
 
     // Also get days that have targets but no day entry
     const allTargets = await Target.find({
       userId,
-      date: { $gte: startDate, $lte: endDate }
-    }).populate('goalId');
+      date: { $gte: startDate, $lte: endDate },
+    }).populate("goalId");
 
     // Group targets by date
     const targetsByDate = {};
-    allTargets.forEach(target => {
-      const dateKey = target.date.toISOString().split('T')[0];
+    allTargets.forEach((target) => {
+      const dateKey = target.date.toISOString().split("T")[0];
       if (!targetsByDate[dateKey]) {
         targetsByDate[dateKey] = [];
       }
@@ -82,34 +82,33 @@ export const handleGetCalendarData = async (req, res) => {
     });
 
     // Add calendar entries for dates with targets but no day entry
-    Object.keys(targetsByDate).forEach(dateKey => {
+    Object.keys(targetsByDate).forEach((dateKey) => {
       if (!calendarData[dateKey]) {
         const dayTargets = targetsByDate[dateKey];
-        const completed = dayTargets.filter(t => t.completed).length;
+        const completed = dayTargets.filter((t) => t.completed).length;
         const total = dayTargets.length;
-        
+
         calendarData[dateKey] = {
           date: dateKey,
           completed,
           total,
-          targets: dayTargets.map(target => ({
+          targets: dayTargets.map((target) => ({
             id: target._id.toString(),
             title: target.title,
             completed: target.completed,
-            category: target.goalId?.category || 'General'
+            category: target.goalId?.category || "General",
           })),
-          reflection: '',
+          reflection: "",
           mood: undefined,
-          highlights: []
+          highlights: [],
         };
       }
     });
 
     res.json(calendarData);
-
   } catch (error) {
-    console.error('Calendar data error:', error);
-    res.status(500).json({ error: 'Failed to load calendar data' });
+    console.error("Calendar data error:", error);
+    res.status(500).json({ error: "Failed to load calendar data" });
   }
 };
 
@@ -117,60 +116,59 @@ export const handleGetDayData = async (req, res) => {
   try {
     const { date } = req.params;
     const userId = req.user?.id || DEFAULT_USER_ID;
-    
+
     const dayDate = new Date(date);
-    
+
     // Try to find existing day entry
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
-    
+
     // If no day entry exists, create one from targets
     if (!dayEntry) {
       const dayStart = new Date(dayDate);
       dayStart.setHours(0, 0, 0, 0);
       const dayEnd = new Date(dayDate);
       dayEnd.setHours(23, 59, 59, 999);
-      
+
       const targets = await Target.find({
         userId,
-        date: { $gte: dayStart, $lte: dayEnd }
-      }).populate('goalId');
-      
+        date: { $gte: dayStart, $lte: dayEnd },
+      }).populate("goalId");
+
       if (targets.length > 0) {
-        const completed = targets.filter(t => t.completed).length;
+        const completed = targets.filter((t) => t.completed).length;
         const total = targets.length;
-        
+
         dayEntry = new DayEntry({
           date: dayDate,
           userId,
           completed,
           total,
-          targets: targets.map(target => ({
+          targets: targets.map((target) => ({
             id: target._id,
             title: target.title,
             completed: target.completed,
-            category: target.goalId?.category || 'General'
-          }))
+            category: target.goalId?.category || "General",
+          })),
         });
-        
+
         await dayEntry.save();
       } else {
-        return res.status(404).json({ error: 'Day data not found' });
+        return res.status(404).json({ error: "Day data not found" });
       }
     }
 
     res.json({
-      date: dayEntry.date.toISOString().split('T')[0],
+      date: dayEntry.date.toISOString().split("T")[0],
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
       reflection: dayEntry.reflection,
       mood: dayEntry.mood,
-      highlights: dayEntry.highlights
+      highlights: dayEntry.highlights,
     });
-
   } catch (error) {
-    console.error('Day data error:', error);
-    res.status(500).json({ error: 'Failed to load day data' });
+    console.error("Day data error:", error);
+    res.status(500).json({ error: "Failed to load day data" });
   }
 };
 
@@ -181,13 +179,13 @@ export const handleSaveReflection = async (req, res) => {
     const userId = req.user?.id || DEFAULT_USER_ID;
 
     if (!reflection) {
-      return res.status(400).json({ error: 'Reflection is required' });
+      return res.status(400).json({ error: "Reflection is required" });
     }
 
     const dayDate = new Date(date);
-    
+
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
-    
+
     if (!dayEntry) {
       // Create new day entry
       dayEntry = new DayEntry({
@@ -196,7 +194,7 @@ export const handleSaveReflection = async (req, res) => {
         reflection,
         completed: 0,
         total: 0,
-        targets: []
+        targets: [],
       });
     } else {
       dayEntry.reflection = reflection;
@@ -205,18 +203,17 @@ export const handleSaveReflection = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split('T')[0],
+      date: dayEntry.date.toISOString().split("T")[0],
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
       reflection: dayEntry.reflection,
       mood: dayEntry.mood,
-      highlights: dayEntry.highlights
+      highlights: dayEntry.highlights,
     });
-
   } catch (error) {
-    console.error('Save reflection error:', error);
-    res.status(500).json({ error: 'Failed to save reflection' });
+    console.error("Save reflection error:", error);
+    res.status(500).json({ error: "Failed to save reflection" });
   }
 };
 
@@ -227,13 +224,13 @@ export const handleUpdateMood = async (req, res) => {
     const userId = req.user?.id || DEFAULT_USER_ID;
 
     if (!mood) {
-      return res.status(400).json({ error: 'Mood is required' });
+      return res.status(400).json({ error: "Mood is required" });
     }
 
     const dayDate = new Date(date);
-    
+
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
-    
+
     if (!dayEntry) {
       dayEntry = new DayEntry({
         date: dayDate,
@@ -241,7 +238,7 @@ export const handleUpdateMood = async (req, res) => {
         mood,
         completed: 0,
         total: 0,
-        targets: []
+        targets: [],
       });
     } else {
       dayEntry.mood = mood;
@@ -250,18 +247,17 @@ export const handleUpdateMood = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split('T')[0],
+      date: dayEntry.date.toISOString().split("T")[0],
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
       reflection: dayEntry.reflection,
       mood: dayEntry.mood,
-      highlights: dayEntry.highlights
+      highlights: dayEntry.highlights,
     });
-
   } catch (error) {
-    console.error('Update mood error:', error);
-    res.status(500).json({ error: 'Failed to update mood' });
+    console.error("Update mood error:", error);
+    res.status(500).json({ error: "Failed to update mood" });
   }
 };
 
@@ -272,13 +268,13 @@ export const handleAddHighlight = async (req, res) => {
     const userId = req.user?.id || DEFAULT_USER_ID;
 
     if (!highlight) {
-      return res.status(400).json({ error: 'Highlight is required' });
+      return res.status(400).json({ error: "Highlight is required" });
     }
 
     const dayDate = new Date(date);
-    
+
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
-    
+
     if (!dayEntry) {
       dayEntry = new DayEntry({
         date: dayDate,
@@ -286,7 +282,7 @@ export const handleAddHighlight = async (req, res) => {
         highlights: [highlight],
         completed: 0,
         total: 0,
-        targets: []
+        targets: [],
       });
     } else {
       if (!dayEntry.highlights) {
@@ -298,17 +294,16 @@ export const handleAddHighlight = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split('T')[0],
+      date: dayEntry.date.toISOString().split("T")[0],
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
       reflection: dayEntry.reflection,
       mood: dayEntry.mood,
-      highlights: dayEntry.highlights
+      highlights: dayEntry.highlights,
     });
-
   } catch (error) {
-    console.error('Add highlight error:', error);
-    res.status(500).json({ error: 'Failed to add highlight' });
+    console.error("Add highlight error:", error);
+    res.status(500).json({ error: "Failed to add highlight" });
   }
 };

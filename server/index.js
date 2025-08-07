@@ -5,24 +5,24 @@ import mongoose from "mongoose";
 import connectDB from "./config/database.js";
 import { handleDemo } from "./routes/demo.js";
 import { handleGetDashboard, handleToggleTarget } from "./routes/dashboard.js";
-import { 
-  handleGetGoals, 
-  handleCreateGoal, 
-  handleUpdateGoal, 
-  handleDeleteGoal, 
-  handleToggleGoalStatus 
+import {
+  handleGetGoals,
+  handleCreateGoal,
+  handleUpdateGoal,
+  handleDeleteGoal,
+  handleToggleGoalStatus,
 } from "./routes/goals.js";
-import { 
-  handleGetAnalytics, 
-  handleGetWeeklyData, 
-  handleGetMonthlyTrends 
+import {
+  handleGetAnalytics,
+  handleGetWeeklyData,
+  handleGetMonthlyTrends,
 } from "./routes/analytics.js";
-import { 
-  handleGetCalendarData, 
-  handleGetDayData, 
-  handleSaveReflection, 
-  handleUpdateMood, 
-  handleAddHighlight 
+import {
+  handleGetCalendarData,
+  handleGetDayData,
+  handleSaveReflection,
+  handleUpdateMood,
+  handleAddHighlight,
 } from "./routes/calendar.js";
 
 export function createServer() {
@@ -39,12 +39,15 @@ export function createServer() {
   // Health check endpoint
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "pong";
-    const dbStatus = mongoose.connection.readyState === 1 ? "MongoDB Connected" : "Using Fallback Data";
+    const dbStatus =
+      mongoose.connection.readyState === 1
+        ? "MongoDB Connected"
+        : "Using Fallback Data";
     res.json({
       message: ping,
       database: dbStatus,
       connectionState: mongoose.connection.readyState,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
     });
   });
 
@@ -76,8 +79,8 @@ export function createServer() {
 
   // Error handling middleware
   app.use((error, req, res, next) => {
-    console.error('Server error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Server error:", error);
+    res.status(500).json({ error: "Internal server error" });
   });
 
   return app;
