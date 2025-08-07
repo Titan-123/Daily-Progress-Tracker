@@ -1,7 +1,6 @@
 // API base URL - you can configure this for your backend
-const API_BASE_URL = process.env.NODE_ENV === 'production'
-  ? "/api"
-  : "http://localhost:3000/api";
+const API_BASE_URL =
+  process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3000/api";
 
 // API utility function to handle requests
 async function apiRequest<T>(
