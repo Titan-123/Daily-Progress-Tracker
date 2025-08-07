@@ -94,7 +94,7 @@ export default function Index() {
             id: "2",
             title: "Early Bird",
             description: "Started progress tracking before 8 AM",
-            icon: "��",
+            icon: "🌅",
             earned: true,
           },
           {
@@ -219,6 +219,23 @@ export default function Index() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5">
       <div className="container mx-auto px-4 py-8 space-y-8">
+        {/* User Header */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-primary/10 rounded-full">
+              <User className="h-5 w-5 text-primary" />
+            </div>
+            <div>
+              <p className="text-sm text-muted-foreground">Welcome back,</p>
+              <p className="font-semibold">{user?.name}</p>
+            </div>
+          </div>
+          <Button variant="outline" size="sm" onClick={logout}>
+            <LogOut className="h-4 w-4 mr-2" />
+            Logout
+          </Button>
+        </div>
+
         {/* Header */}
         <div className="text-center space-y-4">
           <div className="flex items-center justify-center gap-2 text-primary">
