@@ -12,6 +12,7 @@ import Analytics from "./pages/Analytics";
 import Goals from "./pages/Goals";
 import Calendar from "./pages/Calendar";
 import Pricing from "./pages/Pricing";
+import Checkout from "./pages/Checkout";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
