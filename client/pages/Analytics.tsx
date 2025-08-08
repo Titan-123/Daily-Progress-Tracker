@@ -216,9 +216,11 @@ export default function Analytics() {
                       </div>
                     </div>
                   </div>
-                  <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
-                    <Crown className="h-5 w-5 mr-2" />
-                    Upgrade to Premium - $9.99/month
+                  <Button asChild size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                    <Link to="/pricing">
+                      <Crown className="h-5 w-5 mr-2" />
+                      Upgrade to Premium - $9.99/month
+                    </Link>
                   </Button>
                   <p className="text-xs text-muted-foreground">
                     30-day money-back guarantee • Cancel anytime
