@@ -120,16 +120,17 @@ export default function Pricing() {
             variant={isCurrentPlan ? "outline" : tier === "premium" ? "default" : "outline"}
             onClick={() => handleUpgrade(tier)}
             disabled={loading || isCurrentPlan}
+            asChild={tier === "premium" && !isCurrentPlan}
           >
             {isCurrentPlan ? (
               "Current Plan"
             ) : tier === "free" ? (
               "Downgrade to Free"
             ) : (
-              <>
+              <a href={`/checkout?plan=${tier}`} target="_blank" rel="noopener noreferrer">
                 <Crown className="h-4 w-4 mr-2" />
                 Upgrade to {plan.name}
-              </>
+              </a>
             )}
           </Button>
         </CardContent>
