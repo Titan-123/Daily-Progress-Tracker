@@ -67,8 +67,8 @@ export default function Analytics() {
         strengths: ["Morning routine", "Exercise habits", "Writing practice"],
         habitStrength: {
           "Morning Routine": 92,
-          "Exercise": 85,
-          "Writing": 78,
+          Exercise: 85,
+          Writing: 78,
           "Study Time": 65,
         },
         weeklyData: [
@@ -405,7 +405,7 @@ export default function Analytics() {
                   <div className="space-y-3">
                     {Object.entries(analyticsData.habitStrength).length > 0 ? (
                       Object.entries(analyticsData.habitStrength)
-                        .sort(([,a], [,b]) => b - a) // Sort by completion rate descending
+                        .sort(([, a], [, b]) => b - a) // Sort by completion rate descending
                         .map(([habitName, completionRate]) => (
                           <div key={habitName}>
                             <div className="flex justify-between text-sm mb-1">
@@ -419,7 +419,9 @@ export default function Analytics() {
                       <div className="text-center py-6 text-muted-foreground">
                         <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
                         <p>No daily goals found</p>
-                        <p className="text-sm">Create some daily goals to see habit strength!</p>
+                        <p className="text-sm">
+                          Create some daily goals to see habit strength!
+                        </p>
                       </div>
                     )}
                   </div>
