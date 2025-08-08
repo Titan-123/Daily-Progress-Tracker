@@ -157,8 +157,11 @@ export const handleGetDayData = async (req, res) => {
           targets: targets.map((target) => ({
             id: target._id,
             title: target.title,
+            description: target.description,
             completed: target.completed,
             category: target.goalId?.category || "General",
+            type: target.type,
+            streak: target.streak,
           })),
         });
 
