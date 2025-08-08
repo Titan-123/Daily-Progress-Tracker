@@ -69,7 +69,7 @@ export const handleGetDashboard = async (req, res) => {
     // Get today's targets
     let todayTargets = await Target.find({
       userId,
-      date: { $gte: today, $lt: tomorrow },
+      date: { $gte: localToday, $lt: tomorrow },
     }).populate("goalId");
 
     // If no targets for today, create them from active daily goals
