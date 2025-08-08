@@ -356,7 +356,7 @@ export default function Index() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="p-2 bg-success/20 rounded-lg">🎯</div>
-                Today's Habits
+                Today's Progress
               </CardTitle>
             </CardHeader>
             <CardContent>
