@@ -396,35 +396,112 @@ export default function Analytics() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Habit Strength</CardTitle>
+                  <CardTitle>Goal Insights</CardTitle>
                   <CardDescription>
-                    How well-established are your habits?
+                    Your goal performance and patterns
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    {Object.entries(analyticsData.habitStrength).length > 0 ? (
-                      Object.entries(analyticsData.habitStrength)
-                        .sort(([, a], [, b]) => b - a) // Sort by completion rate descending
-                        .map(([habitName, completionRate]) => (
-                          <div key={habitName}>
-                            <div className="flex justify-between text-sm mb-1">
-                              <span>{habitName}</span>
-                              <span>{completionRate}%</span>
-                            </div>
-                            <Progress value={completionRate} className="h-2" />
+                  {Object.entries(analyticsData.habitStrength).length > 0 ? (
+                    <div className="space-y-4">
+                      {/* Top Performers */}
+                      {Object.entries(analyticsData.habitStrength)
+                        .filter(([, rate]) => rate >= 80)
+                        .length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-success flex items-center gap-2 mb-2">
+                            <Trophy className="h-4 w-4" />
+                            Crushing It! (80%+ completion)
+                          </h4>
+                          <div className="space-y-2">
+                            {Object.entries(analyticsData.habitStrength)
+                              .filter(([, rate]) => rate >= 80)
+                              .sort(([, a], [, b]) => b - a)
+                              .map(([goalName, rate]) => (
+                                <div key={goalName} className="flex items-center justify-between p-2 bg-success/5 rounded-lg border border-success/20">
+                                  <span className="text-sm font-medium">{goalName}</span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm text-success font-semibold">{rate}%</span>
+                                    <Star className="h-3 w-3 text-warning fill-current" />
+                                  </div>
+                                </div>
+                              ))}
                           </div>
-                        ))
-                    ) : (
-                      <div className="text-center py-6 text-muted-foreground">
-                        <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                        <p>No daily goals found</p>
-                        <p className="text-sm">
-                          Create some daily goals to see habit strength!
-                        </p>
+                        </div>
+                      )}
+
+                      {/* Needs Attention */}
+                      {Object.entries(analyticsData.habitStrength)
+                        .filter(([, rate]) => rate < 60)
+                        .length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-warning flex items-center gap-2 mb-2">
+                            <Zap className="h-4 w-4" />
+                            Needs Focus (Under 60%)
+                          </h4>
+                          <div className="space-y-2">
+                            {Object.entries(analyticsData.habitStrength)
+                              .filter(([, rate]) => rate < 60)
+                              .sort(([, a], [, b]) => a - b) // Sort lowest first
+                              .map(([goalName, rate]) => (
+                                <div key={goalName} className="flex items-center justify-between p-2 bg-warning/5 rounded-lg border border-warning/20">
+                                  <span className="text-sm">{goalName}</span>
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-sm text-warning">{rate}%</span>
+                                    <Target className="h-3 w-3 text-warning" />
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Steady Progress */}
+                      {Object.entries(analyticsData.habitStrength)
+                        .filter(([, rate]) => rate >= 60 && rate < 80)
+                        .length > 0 && (
+                        <div>
+                          <h4 className="text-sm font-semibold text-primary flex items-center gap-2 mb-2">
+                            <TrendingUp className="h-4 w-4" />
+                            Steady Progress (60-79%)
+                          </h4>
+                          <div className="space-y-2">
+                            {Object.entries(analyticsData.habitStrength)
+                              .filter(([, rate]) => rate >= 60 && rate < 80)
+                              .sort(([, a], [, b]) => b - a)
+                              .map(([goalName, rate]) => (
+                                <div key={goalName} className="flex items-center justify-between p-2 bg-primary/5 rounded-lg border border-primary/20">
+                                  <span className="text-sm">{goalName}</span>
+                                  <span className="text-sm text-primary">{rate}%</span>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Quick Insights */}
+                      <div className="mt-4 p-3 bg-accent/10 rounded-lg">
+                        <h4 className="text-sm font-semibold mb-2">💡 Quick Insights</h4>
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          {Object.entries(analyticsData.habitStrength).length > 0 && (
+                            <>
+                              <p>• You have {Object.values(analyticsData.habitStrength).filter(rate => rate >= 80).length} goals performing excellently</p>
+                              <p>• Focus on improving {Object.values(analyticsData.habitStrength).filter(rate => rate < 60).length || 0} goals that need attention</p>
+                              <p>• Your average completion rate is {Math.round(Object.values(analyticsData.habitStrength).reduce((sum, rate) => sum + rate, 0) / Object.values(analyticsData.habitStrength).length)}%</p>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="text-center py-6 text-muted-foreground">
+                      <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p>No daily goals found</p>
+                      <p className="text-sm">
+                        Create some daily goals to see insights!
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             </div>
