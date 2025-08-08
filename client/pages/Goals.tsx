@@ -306,7 +306,8 @@ export default function Goals() {
                 Habits & Goals
               </h1>
               <p className="text-muted-foreground">
-                Build life-changing habits and set meaningful goals for your journey
+                Build life-changing habits and set meaningful goals for your
+                journey
               </p>
             </div>
           </div>
