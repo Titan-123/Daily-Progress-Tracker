@@ -97,10 +97,11 @@ export const handleCreateGoal = async (req, res) => {
 
     // If it's a daily goal, automatically create a target for today
     if (type === "daily" && goal.isActive) {
+      // Use local date to avoid timezone issues
       const today = new Date();
-      today.setHours(0, 0, 0, 0);
+      const localToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-      const tomorrow = new Date(today);
+      const tomorrow = new Date(localToday);
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       // Check if a target already exists for today
