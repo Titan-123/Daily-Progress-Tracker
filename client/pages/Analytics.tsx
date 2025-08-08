@@ -67,9 +67,11 @@ export default function Analytics() {
         strengths: ["Morning routine", "Exercise habits", "Writing practice"],
         habitStrength: {
           "Morning Routine": 92,
-          Exercise: 85,
-          Writing: 78,
-          "Study Time": 65,
+          "Exercise": 85,
+          "Writing": 78,
+          "Study Time": 45,
+          "Drink Water": 95,
+          "Read Books": 55,
         },
         weeklyData: [
           { day: "Mon", completion: 100, completed: 3, total: 3 },
