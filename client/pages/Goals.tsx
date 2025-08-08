@@ -322,13 +322,14 @@ export default function Goals() {
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>
-                  {activeTab === "habits" ? "Create a New Habit" : "Add Daily Target"}
+                  {activeTab === "habits"
+                    ? "Create a New Habit"
+                    : "Add Daily Target"}
                 </DialogTitle>
                 <DialogDescription>
                   {activeTab === "habits"
                     ? "Set up a recurring daily routine that builds consistency and streaks!"
-                    : "Add a specific task you want to complete today."
-                  }
+                    : "Add a specific task you want to complete today."}
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
@@ -443,7 +444,12 @@ export default function Goals() {
         </Card>
 
         {/* Habits vs Targets */}
-        <Tabs defaultValue="habits" className="space-y-6" value={activeTab} onValueChange={setActiveTab}>
+        <Tabs
+          defaultValue="habits"
+          className="space-y-6"
+          value={activeTab}
+          onValueChange={setActiveTab}
+        >
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="habits" className="flex items-center gap-2">
               <Repeat className="h-4 w-4" />
@@ -465,7 +471,8 @@ export default function Goals() {
                       No daily habits yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Daily habits help build consistent routines that transform your life through repetition and streaks!
+                      Daily habits help build consistent routines that transform
+                      your life through repetition and streaks!
                     </p>
                     <Button onClick={() => setIsDialogOpen(true)}>
                       Create Your First Habit
@@ -489,7 +496,8 @@ export default function Goals() {
                     No daily targets yet
                   </h3>
                   <p className="text-muted-foreground mb-4">
-                    Daily targets are specific tasks you want to complete today - they don't repeat!
+                    Daily targets are specific tasks you want to complete today
+                    - they don't repeat!
                   </p>
                   <Button onClick={() => setIsDialogOpen(true)}>
                     Add Your First Target

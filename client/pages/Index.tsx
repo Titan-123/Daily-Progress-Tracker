@@ -187,17 +187,29 @@ export default function Index() {
     );
   }
 
-  const { targets: todaysTargets, achievements, weeklyProgress, totalStreak } =
-    dashboardData;
-  const completedCount = todaysTargets.filter((target) => target.completed).length;
+  const {
+    targets: todaysTargets,
+    achievements,
+    weeklyProgress,
+    totalStreak,
+  } = dashboardData;
+  const completedCount = todaysTargets.filter(
+    (target) => target.completed,
+  ).length;
   const totalCount = todaysTargets.length;
   const completionRate =
     totalCount === 0 ? 0 : Math.round((completedCount / totalCount) * 100);
 
   // Separate recurring habits from one-off tasks (for future implementation)
-  const recurringHabits = todaysTargets.filter(target => target.type === 'daily');
-  const weeklyGoals = todaysTargets.filter(target => target.type === 'weekly');
-  const monthlyGoals = todaysTargets.filter(target => target.type === 'monthly');
+  const recurringHabits = todaysTargets.filter(
+    (target) => target.type === "daily",
+  );
+  const weeklyGoals = todaysTargets.filter(
+    (target) => target.type === "weekly",
+  );
+  const monthlyGoals = todaysTargets.filter(
+    (target) => target.type === "monthly",
+  );
 
   const motivationalMessages = {
     excellent: [
@@ -249,29 +261,29 @@ export default function Index() {
 
             {/* Navigation Links */}
             <nav className="hidden md:flex items-center gap-6">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/10 text-primary font-medium"
               >
                 <Target className="h-4 w-4" />
                 Dashboard
               </Link>
-              <Link 
-                to="/goals" 
+              <Link
+                to="/goals"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Repeat className="h-4 w-4" />
                 Habits & Goals
               </Link>
-              <Link 
-                to="/analytics" 
+              <Link
+                to="/analytics"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <BarChart3 className="h-4 w-4" />
                 Analytics
               </Link>
-              <Link 
-                to="/calendar" 
+              <Link
+                to="/calendar"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
                 <Calendar className="h-4 w-4" />
@@ -405,13 +417,14 @@ export default function Index() {
                       Today's Habits
                     </CardTitle>
                     <CardDescription>
-                      Your daily routine - building consistency one day at a time
+                      Your daily routine - building consistency one day at a
+                      time
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm" 
+                    <Button
+                      variant="ghost"
+                      size="sm"
                       onClick={loadDashboardData}
                       disabled={loading}
                     >
@@ -438,7 +451,8 @@ export default function Index() {
                       No daily habits yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Start building life-changing habits! Create consistent daily routines.
+                      Start building life-changing habits! Create consistent
+                      daily routines.
                     </p>
                     <Button asChild>
                       <Link to="/goals">
@@ -530,9 +544,7 @@ export default function Index() {
                                   {target.description}
                                 </p>
                               </div>
-                              <Badge variant="secondary">
-                                {target.type}
-                              </Badge>
+                              <Badge variant="secondary">{target.type}</Badge>
                             </div>
                           </div>
                         ))}
@@ -590,7 +602,9 @@ export default function Index() {
                   <Star className="h-5 w-5 text-warning fill-current" />
                   Achievements
                 </CardTitle>
-                <CardDescription>Your habit-building milestones</CardDescription>
+                <CardDescription>
+                  Your habit-building milestones
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
@@ -624,7 +638,12 @@ export default function Index() {
                     </div>
                   ))}
                 </div>
-                <Button asChild variant="outline" className="w-full mt-4" size="sm">
+                <Button
+                  asChild
+                  variant="outline"
+                  className="w-full mt-4"
+                  size="sm"
+                >
                   <Link to="/analytics">View All Achievements</Link>
                 </Button>
               </CardContent>
