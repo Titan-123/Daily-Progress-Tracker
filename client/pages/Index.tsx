@@ -303,6 +303,13 @@ export default function Index() {
                 <Calendar className="h-4 w-4" />
                 Calendar
               </Link>
+              <Link
+                to="/pricing"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Crown className="h-4 w-4" />
+                Pricing
+              </Link>
             </nav>
 
             {/* User Menu */}
