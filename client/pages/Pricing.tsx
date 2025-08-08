@@ -247,12 +247,12 @@ export default function Pricing() {
             
             <Card>
               <CardHeader>
-                <CardTitle className="text-lg">Is there a money-back guarantee?</CardTitle>
+                <CardTitle className="text-lg">How does billing work?</CardTitle>
               </CardHeader>
               <CardContent>
                 <p className="text-muted-foreground">
-                  Absolutely! We offer a 30-day money-back guarantee. If you're not completely satisfied 
-                  with Premium, we'll refund your payment, no questions asked.
+                  You'll be billed monthly for your Premium subscription. Your subscription will automatically
+                  renew each month unless you choose to cancel. You can cancel anytime from your account settings.
                 </p>
               </CardContent>
             </Card>
