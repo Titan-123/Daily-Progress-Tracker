@@ -14,7 +14,10 @@ import {
   CheckCircle2,
   Save,
   Loader2,
+  Crown,
+  Lock,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
