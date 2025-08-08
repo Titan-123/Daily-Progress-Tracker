@@ -537,31 +537,65 @@ export default function Analytics() {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="space-y-4">
-                  {analyticsData.weeklyData.map((day) => (
-                    <div key={day.day} className="space-y-2">
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="font-medium">{day.day}</span>
-                        <div className="flex items-center gap-2">
-                          <span className="text-muted-foreground">
-                            {day.completed}/{day.total} targets
-                          </span>
-                          <Badge
-                            variant={
-                              day.completion === 100
-                                ? "default"
-                                : day.completion >= 67
-                                  ? "secondary"
-                                  : "outline"
-                            }
-                          >
-                            {day.completion}%
-                          </Badge>
+                <div className="mb-6">
+                  <ResponsiveContainer width="100%" height={200}>
+                    <LineChart data={analyticsData.weeklyData}>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <XAxis
+                        dataKey="day"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        domain={[0, 100]}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                        formatter={(value: any) => [`${value}%`, "Completion"]}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="completion"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
+                        dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 6 }}
+                        activeDot={{ r: 8, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </div>
+
+                {/* Detailed breakdown */}
+                <div className="space-y-3">
+                  <h4 className="font-semibold text-sm">Detailed Breakdown</h4>
+                  <div className="grid grid-cols-7 gap-2">
+                    {analyticsData.weeklyData.map((day) => (
+                      <div key={day.day} className="text-center">
+                        <div className="text-xs font-medium mb-1">{day.day}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {day.completed}/{day.total}
                         </div>
+                        <Badge
+                          variant={
+                            day.completion === 100
+                              ? "default"
+                              : day.completion >= 67
+                                ? "secondary"
+                                : "outline"
+                          }
+                          className="text-xs"
+                        >
+                          {day.completion}%
+                        </Badge>
                       </div>
-                      <Progress value={day.completion} className="h-2" />
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </CardContent>
             </Card>
