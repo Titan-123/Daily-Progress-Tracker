@@ -458,10 +458,10 @@ export default function Goals() {
                   </div>
                 </div>
                 <Button asChild variant="outline" className="border-warning text-warning hover:bg-warning/10">
-                  <Link to="/pricing">
+                  <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
                     <Crown className="h-4 w-4 mr-2" />
                     Upgrade to Premium
-                  </Link>
+                  </a>
                 </Button>
               </div>
             </CardContent>
