@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { UserSubscription, SubscriptionTier, SUBSCRIPTION_PLANS } from "@shared/api";
+import {
+  UserSubscription,
+  SubscriptionTier,
+  SUBSCRIPTION_PLANS,
+} from "@shared/api";
 
 interface User {
   id: string;
@@ -203,7 +207,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const canCreateMoreGoals = (currentGoalCount: number) => {
     if (!user || !user.subscription) return false;
     const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
-    return plan.limitations.maxDailyGoals === null || currentGoalCount < plan.limitations.maxDailyGoals;
+    return (
+      plan.limitations.maxDailyGoals === null ||
+      currentGoalCount < plan.limitations.maxDailyGoals
+    );
   };
 
   const value = {

@@ -37,22 +37,23 @@ export default function Checkout() {
   const { user, refreshUser } = useAuth();
   const [processing, setProcessing] = useState(false);
   const [purchaseComplete, setPurchaseComplete] = useState(false);
-  
-  const planParam = searchParams.get('plan') as SubscriptionTier;
-  const selectedPlan = planParam && SUBSCRIPTION_PLANS[planParam] ? planParam : 'premium';
+
+  const planParam = searchParams.get("plan") as SubscriptionTier;
+  const selectedPlan =
+    planParam && SUBSCRIPTION_PLANS[planParam] ? planParam : "premium";
   const plan = SUBSCRIPTION_PLANS[selectedPlan];
 
   // Mock payment form state
   const [paymentForm, setPaymentForm] = useState({
-    cardNumber: '',
-    expiryDate: '',
-    cvv: '',
-    cardholderName: '',
-    email: user?.email || '',
+    cardNumber: "",
+    expiryDate: "",
+    cvv: "",
+    cardholderName: "",
+    email: user?.email || "",
   });
 
   const handleInputChange = (field: string, value: string) => {
-    setPaymentForm(prev => ({ ...prev, [field]: value }));
+    setPaymentForm((prev) => ({ ...prev, [field]: value }));
   };
 
   const handlePurchase = async () => {
@@ -62,39 +63,44 @@ export default function Checkout() {
     }
 
     // Basic validation
-    if (!paymentForm.cardNumber || !paymentForm.expiryDate || !paymentForm.cvv || !paymentForm.cardholderName) {
+    if (
+      !paymentForm.cardNumber ||
+      !paymentForm.expiryDate ||
+      !paymentForm.cvv ||
+      !paymentForm.cardholderName
+    ) {
       toast.error("Please fill in all payment details");
       return;
     }
 
     setProcessing(true);
-    
+
     try {
       // Simulate payment processing
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Call backend to update subscription
-      const response = await fetch('/api/subscription/upgrade', {
-        method: 'POST',
+      const response = await fetch("/api/subscription/upgrade", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         body: JSON.stringify({
           planTier: selectedPlan,
           paymentDetails: {
             last4: paymentForm.cardNumber.slice(-4),
             cardholderName: paymentForm.cardholderName,
-          }
+          },
         }),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to process upgrade');
+        throw new Error("Failed to process upgrade");
       }
 
       const result = await response.json();
-      
+
       // Update user data in auth context
       if (refreshUser) {
         await refreshUser();
@@ -102,9 +108,8 @@ export default function Checkout() {
 
       setPurchaseComplete(true);
       toast.success("🎉 Welcome to Premium! Your subscription is now active.");
-      
     } catch (error) {
-      console.error('Purchase failed:', error);
+      console.error("Purchase failed:", error);
       toast.error("Payment processing failed. Please try again.");
     } finally {
       setProcessing(false);
@@ -121,16 +126,21 @@ export default function Checkout() {
                 <CheckCircle2 className="h-16 w-16 text-success" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold mb-4">Welcome to Premium! 🎉</h1>
+                <h1 className="text-3xl font-bold mb-4">
+                  Welcome to Premium! 🎉
+                </h1>
                 <p className="text-muted-foreground text-lg">
-                  Your subscription has been activated successfully. You now have access to all Premium features!
+                  Your subscription has been activated successfully. You now
+                  have access to all Premium features!
                 </p>
               </div>
             </div>
 
             <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-accent/10">
               <CardContent className="p-8">
-                <h2 className="text-xl font-semibold mb-4">What's now available:</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  What's now available:
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-left">
                   <div className="flex items-center gap-3">
                     <Target className="h-5 w-5 text-success" />
@@ -161,15 +171,16 @@ export default function Checkout() {
             </Card>
 
             <div className="space-y-4">
-              <Button 
-                size="lg" 
-                onClick={() => navigate('/')}
+              <Button
+                size="lg"
+                onClick={() => navigate("/")}
                 className="bg-gradient-to-r from-primary to-primary/80"
               >
                 Start Using Premium Features
               </Button>
               <p className="text-sm text-muted-foreground">
-                You can manage your subscription anytime from your account settings
+                You can manage your subscription anytime from your account
+                settings
               </p>
             </div>
           </div>
@@ -189,7 +200,9 @@ export default function Checkout() {
           </Button>
           <div>
             <h1 className="text-2xl font-bold">Checkout</h1>
-            <p className="text-muted-foreground">Complete your Premium upgrade</p>
+            <p className="text-muted-foreground">
+              Complete your Premium upgrade
+            </p>
           </div>
         </div>
 
@@ -207,15 +220,17 @@ export default function Checkout() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h3 className="font-semibold">{plan.name} Plan</h3>
-                    <p className="text-sm text-muted-foreground">Monthly subscription</p>
+                    <p className="text-sm text-muted-foreground">
+                      Monthly subscription
+                    </p>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">${plan.price}/month</p>
                   </div>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div className="flex items-center justify-between font-semibold">
                   <span>Total</span>
                   <span>${plan.price}/month</span>
@@ -238,7 +253,8 @@ export default function Checkout() {
                   <span className="font-medium text-sm">Secure Payment</span>
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Your payment information is encrypted and secure. This is a demo checkout process.
+                  Your payment information is encrypted and secure. This is a
+                  demo checkout process.
                 </p>
               </div>
             </CardContent>
@@ -263,7 +279,7 @@ export default function Checkout() {
                     id="email"
                     type="email"
                     value={paymentForm.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="your@email.com"
                   />
                 </div>
@@ -273,7 +289,9 @@ export default function Checkout() {
                   <Input
                     id="cardholderName"
                     value={paymentForm.cardholderName}
-                    onChange={(e) => handleInputChange('cardholderName', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("cardholderName", e.target.value)
+                    }
                     placeholder="John Doe"
                   />
                 </div>
@@ -283,7 +301,9 @@ export default function Checkout() {
                   <Input
                     id="cardNumber"
                     value={paymentForm.cardNumber}
-                    onChange={(e) => handleInputChange('cardNumber', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("cardNumber", e.target.value)
+                    }
                     placeholder="4242 4242 4242 4242"
                     maxLength={19}
                   />
@@ -295,7 +315,9 @@ export default function Checkout() {
                     <Input
                       id="expiryDate"
                       value={paymentForm.expiryDate}
-                      onChange={(e) => handleInputChange('expiryDate', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("expiryDate", e.target.value)
+                      }
                       placeholder="MM/YY"
                       maxLength={5}
                     />
@@ -305,7 +327,7 @@ export default function Checkout() {
                     <Input
                       id="cvv"
                       value={paymentForm.cvv}
-                      onChange={(e) => handleInputChange('cvv', e.target.value)}
+                      onChange={(e) => handleInputChange("cvv", e.target.value)}
                       placeholder="123"
                       maxLength={4}
                     />
@@ -333,7 +355,7 @@ export default function Checkout() {
               </Button>
 
               <p className="text-xs text-center text-muted-foreground">
-                By completing this purchase, you agree to our Terms of Service. 
+                By completing this purchase, you agree to our Terms of Service.
                 Your subscription will auto-renew monthly.
               </p>
             </CardContent>

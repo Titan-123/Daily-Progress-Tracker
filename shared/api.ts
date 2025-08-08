@@ -46,7 +46,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
       "Up to 3 daily goals",
       "Basic progress tracking",
       "Calendar view",
-      "Daily reflections"
+      "Daily reflections",
     ],
     limitations: {
       maxDailyGoals: 3,
@@ -65,7 +65,7 @@ export const SUBSCRIPTION_PLANS: Record<SubscriptionTier, SubscriptionPlan> = {
       "Data export",
       "Custom categories",
       "Priority support",
-      "Everything in Free"
+      "Everything in Free",
     ],
     limitations: {
       maxDailyGoals: null,

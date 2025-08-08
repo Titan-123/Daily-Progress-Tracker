@@ -1,6 +1,5 @@
 // API base URL - you can configure this for your backend
-const API_BASE_URL =
-  process.env.NODE_ENV === "production" ? "/api" : "/api";
+const API_BASE_URL = process.env.NODE_ENV === "production" ? "/api" : "/api";
 
 // Get token from localStorage
 const getAuthToken = () => {
@@ -145,38 +144,101 @@ const getDemoData = (endpoint: string) => {
     const currentYear = today.getFullYear();
 
     return {
-      [`${currentYear}-${currentMonth.toString().padStart(2, '0')}-16`]: {
-        date: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-16`,
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`,
         completed: 3,
         total: 3,
         targets: [
-          { id: "1", title: "Write 500 words", completed: true, category: "Creative", type: "daily", streak: 7 },
-          { id: "2", title: "Exercise 30 minutes", completed: true, category: "Health", type: "daily", streak: 12 },
-          { id: "3", title: "Read for 1 hour", completed: true, category: "Learning", type: "daily", streak: 5 },
+          {
+            id: "1",
+            title: "Write 500 words",
+            completed: true,
+            category: "Creative",
+            type: "daily",
+            streak: 7,
+          },
+          {
+            id: "2",
+            title: "Exercise 30 minutes",
+            completed: true,
+            category: "Health",
+            type: "daily",
+            streak: 12,
+          },
+          {
+            id: "3",
+            title: "Read for 1 hour",
+            completed: true,
+            category: "Learning",
+            type: "daily",
+            streak: 5,
+          },
         ],
         reflection: "Amazing day! Felt so productive and energized.",
         mood: "excellent" as const,
         highlights: ["Finished a short story", "Great workout session"],
       },
-      [`${currentYear}-${currentMonth.toString().padStart(2, '0')}-15`]: {
-        date: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-15`,
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-15`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-15`,
         completed: 2,
         total: 3,
         targets: [
-          { id: "1", title: "Write 500 words", completed: true, category: "Creative", type: "daily", streak: 6 },
-          { id: "2", title: "Exercise 30 minutes", completed: false, category: "Health", type: "daily", streak: 11 },
-          { id: "3", title: "Read for 1 hour", completed: true, category: "Learning", type: "daily", streak: 4 },
+          {
+            id: "1",
+            title: "Write 500 words",
+            completed: true,
+            category: "Creative",
+            type: "daily",
+            streak: 6,
+          },
+          {
+            id: "2",
+            title: "Exercise 30 minutes",
+            completed: false,
+            category: "Health",
+            type: "daily",
+            streak: 11,
+          },
+          {
+            id: "3",
+            title: "Read for 1 hour",
+            completed: true,
+            category: "Learning",
+            type: "daily",
+            streak: 4,
+          },
         ],
         mood: "good" as const,
       },
-      [`${currentYear}-${currentMonth.toString().padStart(2, '0')}-14`]: {
-        date: `${currentYear}-${currentMonth.toString().padStart(2, '0')}-14`,
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-14`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-14`,
         completed: 1,
         total: 3,
         targets: [
-          { id: "1", title: "Write 500 words", completed: false, category: "Creative", type: "daily", streak: 5 },
-          { id: "2", title: "Exercise 30 minutes", completed: true, category: "Health", type: "daily", streak: 11 },
-          { id: "3", title: "Read for 1 hour", completed: false, category: "Learning", type: "daily", streak: 3 },
+          {
+            id: "1",
+            title: "Write 500 words",
+            completed: false,
+            category: "Creative",
+            type: "daily",
+            streak: 5,
+          },
+          {
+            id: "2",
+            title: "Exercise 30 minutes",
+            completed: true,
+            category: "Health",
+            type: "daily",
+            streak: 11,
+          },
+          {
+            id: "3",
+            title: "Read for 1 hour",
+            completed: false,
+            category: "Learning",
+            type: "daily",
+            streak: 3,
+          },
         ],
         mood: "okay" as const,
       },

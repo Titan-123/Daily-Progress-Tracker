@@ -31,21 +31,20 @@ export const handleUpgradeSubscription: RequestHandler = async (req, res) => {
       startDate: new Date().toISOString(),
       paymentMethod: {
         last4: paymentDetails?.last4 || "****",
-        type: "card"
-      }
+        type: "card",
+      },
     };
 
     res.status(200).json({
       success: true,
       message: "Subscription upgraded successfully",
-      subscription: subscriptionData
+      subscription: subscriptionData,
     });
-
   } catch (error) {
     console.error("Subscription upgrade error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to process subscription upgrade",
-      details: error instanceof Error ? error.message : "Unknown error"
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
@@ -63,16 +62,15 @@ export const handleGetSubscription: RequestHandler = async (req, res) => {
       userId,
       tier: userId === "demo-user-123" ? "free" : "free", // Default to free for demo
       status: "active",
-      startDate: new Date().toISOString()
+      startDate: new Date().toISOString(),
     };
 
     res.status(200).json({ subscription });
-
   } catch (error) {
     console.error("Get subscription error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to fetch subscription",
-      details: error instanceof Error ? error.message : "Unknown error"
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };
@@ -94,14 +92,13 @@ export const handleCancelSubscription: RequestHandler = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Subscription canceled successfully"
+      message: "Subscription canceled successfully",
     });
-
   } catch (error) {
     console.error("Cancel subscription error:", error);
-    res.status(500).json({ 
+    res.status(500).json({
       error: "Failed to cancel subscription",
-      details: error instanceof Error ? error.message : "Unknown error"
+      details: error instanceof Error ? error.message : "Unknown error",
     });
   }
 };

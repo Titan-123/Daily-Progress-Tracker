@@ -293,7 +293,9 @@ export default function Index() {
                 >
                   <Lock className="h-4 w-4" />
                   Analytics
-                  <Badge variant="outline" className="text-xs">Premium</Badge>
+                  <Badge variant="outline" className="text-xs">
+                    Premium
+                  </Badge>
                 </Link>
               )}
               <Link
@@ -315,8 +317,17 @@ export default function Index() {
             {/* User Menu */}
             <div className="flex items-center gap-3">
               {!isPremium && (
-                <Button asChild variant="outline" size="sm" className="border-warning text-warning hover:bg-warning/10">
-                  <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="border-warning text-warning hover:bg-warning/10"
+                >
+                  <a
+                    href="/checkout?plan=premium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     <Crown className="h-4 w-4 mr-2" />
                     Upgrade
                   </a>
@@ -329,8 +340,13 @@ export default function Index() {
                     {isPremium && <Crown className="h-3 w-3 text-warning" />}
                   </div>
                   <div className="flex items-center gap-2">
-                    <p className="text-xs text-muted-foreground">{user?.email}</p>
-                    <Badge variant={isPremium ? "default" : "outline"} className="text-xs">
+                    <p className="text-xs text-muted-foreground">
+                      {user?.email}
+                    </p>
+                    <Badge
+                      variant={isPremium ? "default" : "outline"}
+                      className="text-xs"
+                    >
                       {isPremium ? "Premium" : "Free"}
                     </Badge>
                   </div>

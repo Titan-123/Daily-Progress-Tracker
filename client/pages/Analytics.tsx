@@ -188,19 +188,27 @@ export default function Analytics() {
                     </p>
                   </div>
                   <div className="space-y-3 text-left bg-background/50 rounded-lg p-6">
-                    <h3 className="font-semibold mb-3">With Premium Analytics, you get:</h3>
+                    <h3 className="font-semibold mb-3">
+                      With Premium Analytics, you get:
+                    </h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-success" />
-                        <span className="text-sm">Weekly completion trends</span>
+                        <span className="text-sm">
+                          Weekly completion trends
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-success" />
-                        <span className="text-sm">Monthly progress analysis</span>
+                        <span className="text-sm">
+                          Monthly progress analysis
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-success" />
-                        <span className="text-sm">Streak tracking & insights</span>
+                        <span className="text-sm">
+                          Streak tracking & insights
+                        </span>
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-success" />
@@ -212,12 +220,22 @@ export default function Analytics() {
                       </div>
                       <div className="flex items-center gap-2">
                         <CheckCircle2 className="h-4 w-4 text-success" />
-                        <span className="text-sm">Data export capabilities</span>
+                        <span className="text-sm">
+                          Data export capabilities
+                        </span>
                       </div>
                     </div>
                   </div>
-                  <Button asChild size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
-                    <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
+                  <Button
+                    asChild
+                    size="lg"
+                    className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70"
+                  >
+                    <a
+                      href="/checkout?plan=premium"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       <Crown className="h-5 w-5 mr-2" />
                       Upgrade to Premium - $9.99/month
                     </a>
@@ -334,12 +352,29 @@ export default function Analytics() {
                   <ResponsiveContainer width="100%" height={250}>
                     <AreaChart data={analyticsData.weeklyData}>
                       <defs>
-                        <linearGradient id="colorCompletion" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                        <linearGradient
+                          id="colorCompletion"
+                          x1="0"
+                          y1="0"
+                          x2="0"
+                          y2="1"
+                        >
+                          <stop
+                            offset="5%"
+                            stopColor="hsl(var(--primary))"
+                            stopOpacity={0.3}
+                          />
+                          <stop
+                            offset="95%"
+                            stopColor="hsl(var(--primary))"
+                            stopOpacity={0}
+                          />
                         </linearGradient>
                       </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
                       <XAxis
                         dataKey="day"
                         stroke="hsl(var(--muted-foreground))"
@@ -384,19 +419,25 @@ export default function Analytics() {
                       <Pie
                         data={[
                           {
-                            name: 'Crushing It',
-                            value: Object.values(analyticsData.habitStrength).filter(rate => rate >= 80).length,
-                            color: 'hsl(var(--success))'
+                            name: "Crushing It",
+                            value: Object.values(
+                              analyticsData.habitStrength,
+                            ).filter((rate) => rate >= 80).length,
+                            color: "hsl(var(--success))",
                           },
                           {
-                            name: 'Steady Progress',
-                            value: Object.values(analyticsData.habitStrength).filter(rate => rate >= 60 && rate < 80).length,
-                            color: 'hsl(var(--primary))'
+                            name: "Steady Progress",
+                            value: Object.values(
+                              analyticsData.habitStrength,
+                            ).filter((rate) => rate >= 60 && rate < 80).length,
+                            color: "hsl(var(--primary))",
                           },
                           {
-                            name: 'Needs Focus',
-                            value: Object.values(analyticsData.habitStrength).filter(rate => rate < 60).length,
-                            color: 'hsl(var(--warning))'
+                            name: "Needs Focus",
+                            value: Object.values(
+                              analyticsData.habitStrength,
+                            ).filter((rate) => rate < 60).length,
+                            color: "hsl(var(--warning))",
                           },
                         ]}
                         cx="50%"
@@ -407,9 +448,9 @@ export default function Analytics() {
                         dataKey="value"
                       >
                         {[
-                          { color: 'hsl(142 76% 36%)' }, // success
-                          { color: 'hsl(221 83% 53%)' }, // primary
-                          { color: 'hsl(38 92% 50%)' },  // warning
+                          { color: "hsl(142 76% 36%)" }, // success
+                          { color: "hsl(221 83% 53%)" }, // primary
+                          { color: "hsl(38 92% 50%)" }, // warning
                         ].map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -440,7 +481,10 @@ export default function Analytics() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart data={analyticsData.monthlyTrends}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="hsl(var(--muted))"
+                    />
                     <XAxis
                       dataKey="week"
                       stroke="hsl(var(--muted-foreground))"
@@ -457,7 +501,10 @@ export default function Analytics() {
                         border: "1px solid hsl(var(--border))",
                         borderRadius: "8px",
                       }}
-                      formatter={(value: any) => [`${value}%`, "Completion Rate"]}
+                      formatter={(value: any) => [
+                        `${value}%`,
+                        "Completion Rate",
+                      ]}
                     />
                     <Bar
                       dataKey="completion"
@@ -480,15 +527,23 @@ export default function Analytics() {
               <CardContent>
                 <ResponsiveContainer width="100%" height={300}>
                   <BarChart
-                    data={Object.entries(analyticsData.habitStrength).map(([name, rate]) => ({
-                      name: name.length > 15 ? name.substring(0, 15) + '...' : name,
-                      fullName: name,
-                      rate: rate
-                    })).sort((a, b) => b.rate - a.rate)}
+                    data={Object.entries(analyticsData.habitStrength)
+                      .map(([name, rate]) => ({
+                        name:
+                          name.length > 15
+                            ? name.substring(0, 15) + "..."
+                            : name,
+                        fullName: name,
+                        rate: rate,
+                      }))
+                      .sort((a, b) => b.rate - a.rate)}
                     layout="horizontal"
                     margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
                   >
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      stroke="hsl(var(--muted))"
+                    />
                     <XAxis
                       type="number"
                       domain={[0, 100]}
@@ -510,7 +565,7 @@ export default function Analytics() {
                       }}
                       formatter={(value: any, name: any, props: any) => [
                         `${value}%`,
-                        props.payload.fullName
+                        props.payload.fullName,
                       ]}
                     />
                     <Bar
@@ -628,7 +683,10 @@ export default function Analytics() {
                 <div className="mb-6">
                   <ResponsiveContainer width="100%" height={200}>
                     <LineChart data={analyticsData.weeklyData}>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
                       <XAxis
                         dataKey="day"
                         stroke="hsl(var(--muted-foreground))"
@@ -652,8 +710,16 @@ export default function Analytics() {
                         dataKey="completion"
                         stroke="hsl(var(--primary))"
                         strokeWidth={3}
-                        dot={{ fill: "hsl(var(--primary))", strokeWidth: 2, r: 6 }}
-                        activeDot={{ r: 8, stroke: "hsl(var(--primary))", strokeWidth: 2 }}
+                        dot={{
+                          fill: "hsl(var(--primary))",
+                          strokeWidth: 2,
+                          r: 6,
+                        }}
+                        activeDot={{
+                          r: 8,
+                          stroke: "hsl(var(--primary))",
+                          strokeWidth: 2,
+                        }}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -665,7 +731,9 @@ export default function Analytics() {
                   <div className="grid grid-cols-7 gap-2">
                     {analyticsData.weeklyData.map((day) => (
                       <div key={day.day} className="text-center">
-                        <div className="text-xs font-medium mb-1">{day.day}</div>
+                        <div className="text-xs font-medium mb-1">
+                          {day.day}
+                        </div>
                         <div className="text-xs text-muted-foreground">
                           {day.completed}/{day.total}
                         </div>
