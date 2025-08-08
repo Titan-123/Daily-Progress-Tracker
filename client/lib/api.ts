@@ -7,11 +7,155 @@ const getAuthToken = () => {
   return localStorage.getItem("token");
 };
 
+// Check if we're in demo mode
+const isDemoMode = () => {
+  const token = getAuthToken();
+  return token === "demo-token-123";
+};
+
+// Demo data
+const getDemoData = (endpoint: string) => {
+  if (endpoint === "/dashboard") {
+    return {
+      targets: [
+        {
+          id: "1",
+          title: "Write 500 words",
+          description: "Creative writing practice",
+          type: "daily",
+          completed: true,
+          streak: 7,
+        },
+        {
+          id: "2",
+          title: "Exercise 30 minutes",
+          description: "Morning workout routine",
+          type: "daily",
+          completed: false,
+          streak: 12,
+        },
+        {
+          id: "3",
+          title: "Read for 1 hour",
+          description: "Daily reading habit",
+          type: "daily",
+          completed: true,
+          streak: 5,
+        },
+      ],
+      achievements: [
+        {
+          id: "1",
+          title: "Week Warrior",
+          description: "Completed goals for 7 days straight!",
+          icon: "🔥",
+          earned: true,
+        },
+        {
+          id: "2",
+          title: "Early Bird",
+          description: "Started progress tracking before 8 AM",
+          icon: "🌅",
+          earned: true,
+        },
+      ],
+      weeklyProgress: 85,
+      totalStreak: 12,
+    };
+  }
+
+  if (endpoint === "/analytics") {
+    return {
+      weeklyCompletion: 78,
+      monthlyCompletion: 82,
+      currentStreak: 12,
+      bestStreak: 21,
+      totalTargetsCompleted: 156,
+      consistencyScore: 85,
+      improvementAreas: ["Weekend consistency", "Evening targets"],
+      strengths: ["Morning routine", "Exercise habits", "Writing practice"],
+      habitStrength: {
+        "Write 500 words": 92,
+        "Exercise 30 minutes": 85,
+        "Read for 1 hour": 78,
+        "Drink 8 glasses of water": 95,
+        "Meditate 10 minutes": 65,
+        "Study programming": 55,
+      },
+      weeklyData: [
+        { day: "Mon", completion: 100, completed: 3, total: 3 },
+        { day: "Tue", completion: 67, completed: 2, total: 3 },
+        { day: "Wed", completion: 100, completed: 3, total: 3 },
+        { day: "Thu", completion: 100, completed: 3, total: 3 },
+        { day: "Fri", completion: 33, completed: 1, total: 3 },
+        { day: "Sat", completion: 67, completed: 2, total: 3 },
+        { day: "Sun", completion: 100, completed: 3, total: 3 },
+      ],
+      monthlyTrends: [
+        { week: "Week 1", completion: 85 },
+        { week: "Week 2", completion: 72 },
+        { week: "Week 3", completion: 91 },
+        { week: "Week 4", completion: 78 },
+      ],
+    };
+  }
+
+  if (endpoint === "/goals") {
+    return [
+      {
+        id: "1",
+        title: "Write 500 words",
+        description: "Creative writing practice to develop storytelling skills",
+        type: "daily",
+        category: "Creative",
+        target: "500 words",
+        streak: 7,
+        isActive: true,
+        createdAt: "2024-01-01T00:00:00Z",
+      },
+      {
+        id: "2",
+        title: "Exercise 30 minutes",
+        description: "Morning workout to stay healthy and energized",
+        type: "daily",
+        category: "Health",
+        target: "30 minutes",
+        streak: 12,
+        isActive: true,
+        createdAt: "2024-01-02T00:00:00Z",
+      },
+      {
+        id: "3",
+        title: "Read for 1 hour",
+        description: "Daily reading to expand knowledge and perspective",
+        type: "daily",
+        category: "Learning",
+        target: "1 hour",
+        streak: 5,
+        isActive: true,
+        createdAt: "2024-01-03T00:00:00Z",
+      },
+    ];
+  }
+
+  return null;
+};
+
 // API utility function to handle requests
 async function apiRequest<T>(
   endpoint: string,
   options: RequestInit = {},
 ): Promise<T> {
+  // Demo mode - return mock data
+  if (isDemoMode()) {
+    const demoData = getDemoData(endpoint);
+    if (demoData) {
+      return new Promise((resolve) => {
+        setTimeout(() => resolve(demoData as T), 300); // Simulate network delay
+      });
+    }
+  }
+
   const url = `${API_BASE_URL}${endpoint}`;
 
   // Get auth token and add to headers
