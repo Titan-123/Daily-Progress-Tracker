@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { UserSubscription, SubscriptionTier, SUBSCRIPTION_PLANS } from "@shared/api";
 
 interface User {
   id: string;
