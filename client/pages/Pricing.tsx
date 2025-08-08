@@ -11,8 +11,6 @@ import {
   Palette,
   HeadphonesIcon,
   Zap,
-  Calendar,
-  TrendingUp,
   Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
