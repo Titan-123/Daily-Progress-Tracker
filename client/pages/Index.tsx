@@ -307,10 +307,26 @@ export default function Index() {
 
             {/* User Menu */}
             <div className="flex items-center gap-3">
+              {!isPremium && (
+                <Button asChild variant="outline" size="sm" className="border-warning text-warning hover:bg-warning/10">
+                  <Link to="/pricing">
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrade
+                  </Link>
+                </Button>
+              )}
               <div className="hidden sm:flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    {isPremium && <Crown className="h-3 w-3 text-warning" />}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                    <Badge variant={isPremium ? "default" : "outline"} className="text-xs">
+                      {isPremium ? "Premium" : "Free"}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="p-2 bg-primary/10 rounded-full">
                   <User className="h-4 w-4 text-primary" />
