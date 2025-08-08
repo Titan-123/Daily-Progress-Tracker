@@ -397,34 +397,25 @@ export default function Analytics() {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Morning Routine</span>
-                        <span>92%</span>
+                    {Object.entries(analyticsData.habitStrength).length > 0 ? (
+                      Object.entries(analyticsData.habitStrength)
+                        .sort(([,a], [,b]) => b - a) // Sort by completion rate descending
+                        .map(([habitName, completionRate]) => (
+                          <div key={habitName}>
+                            <div className="flex justify-between text-sm mb-1">
+                              <span>{habitName}</span>
+                              <span>{completionRate}%</span>
+                            </div>
+                            <Progress value={completionRate} className="h-2" />
+                          </div>
+                        ))
+                    ) : (
+                      <div className="text-center py-6 text-muted-foreground">
+                        <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                        <p>No daily goals found</p>
+                        <p className="text-sm">Create some daily goals to see habit strength!</p>
                       </div>
-                      <Progress value={92} className="h-2" />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Exercise</span>
-                        <span>85%</span>
-                      </div>
-                      <Progress value={85} className="h-2" />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Writing</span>
-                        <span>78%</span>
-                      </div>
-                      <Progress value={78} className="h-2" />
-                    </div>
-                    <div>
-                      <div className="flex justify-between text-sm mb-1">
-                        <span>Study Time</span>
-                        <span>65%</span>
-                      </div>
-                      <Progress value={65} className="h-2" />
-                    </div>
+                    )}
                   </div>
                 </CardContent>
               </Card>
