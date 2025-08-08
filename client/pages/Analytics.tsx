@@ -67,8 +67,8 @@ export default function Analytics() {
         strengths: ["Morning routine", "Exercise habits", "Writing practice"],
         habitStrength: {
           "Morning Routine": 92,
-          "Exercise": 85,
-          "Writing": 78,
+          Exercise: 85,
+          Writing: 78,
           "Study Time": 45,
           "Drink Water": 95,
           "Read Books": 55,
@@ -407,9 +407,9 @@ export default function Analytics() {
                   {Object.entries(analyticsData.habitStrength).length > 0 ? (
                     <div className="space-y-4">
                       {/* Top Performers */}
-                      {Object.entries(analyticsData.habitStrength)
-                        .filter(([, rate]) => rate >= 80)
-                        .length > 0 && (
+                      {Object.entries(analyticsData.habitStrength).filter(
+                        ([, rate]) => rate >= 80,
+                      ).length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-success flex items-center gap-2 mb-2">
                             <Trophy className="h-4 w-4" />
@@ -420,10 +420,17 @@ export default function Analytics() {
                               .filter(([, rate]) => rate >= 80)
                               .sort(([, a], [, b]) => b - a)
                               .map(([goalName, rate]) => (
-                                <div key={goalName} className="flex items-center justify-between p-2 bg-success/5 rounded-lg border border-success/20">
-                                  <span className="text-sm font-medium">{goalName}</span>
+                                <div
+                                  key={goalName}
+                                  className="flex items-center justify-between p-2 bg-success/5 rounded-lg border border-success/20"
+                                >
+                                  <span className="text-sm font-medium">
+                                    {goalName}
+                                  </span>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-sm text-success font-semibold">{rate}%</span>
+                                    <span className="text-sm text-success font-semibold">
+                                      {rate}%
+                                    </span>
                                     <Star className="h-3 w-3 text-warning fill-current" />
                                   </div>
                                 </div>
@@ -433,9 +440,9 @@ export default function Analytics() {
                       )}
 
                       {/* Needs Attention */}
-                      {Object.entries(analyticsData.habitStrength)
-                        .filter(([, rate]) => rate < 60)
-                        .length > 0 && (
+                      {Object.entries(analyticsData.habitStrength).filter(
+                        ([, rate]) => rate < 60,
+                      ).length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-warning flex items-center gap-2 mb-2">
                             <Zap className="h-4 w-4" />
@@ -446,10 +453,15 @@ export default function Analytics() {
                               .filter(([, rate]) => rate < 60)
                               .sort(([, a], [, b]) => a - b) // Sort lowest first
                               .map(([goalName, rate]) => (
-                                <div key={goalName} className="flex items-center justify-between p-2 bg-warning/5 rounded-lg border border-warning/20">
+                                <div
+                                  key={goalName}
+                                  className="flex items-center justify-between p-2 bg-warning/5 rounded-lg border border-warning/20"
+                                >
                                   <span className="text-sm">{goalName}</span>
                                   <div className="flex items-center gap-2">
-                                    <span className="text-sm text-warning">{rate}%</span>
+                                    <span className="text-sm text-warning">
+                                      {rate}%
+                                    </span>
                                     <Target className="h-3 w-3 text-warning" />
                                   </div>
                                 </div>
@@ -459,9 +471,9 @@ export default function Analytics() {
                       )}
 
                       {/* Steady Progress */}
-                      {Object.entries(analyticsData.habitStrength)
-                        .filter(([, rate]) => rate >= 60 && rate < 80)
-                        .length > 0 && (
+                      {Object.entries(analyticsData.habitStrength).filter(
+                        ([, rate]) => rate >= 60 && rate < 80,
+                      ).length > 0 && (
                         <div>
                           <h4 className="text-sm font-semibold text-primary flex items-center gap-2 mb-2">
                             <TrendingUp className="h-4 w-4" />
@@ -472,9 +484,14 @@ export default function Analytics() {
                               .filter(([, rate]) => rate >= 60 && rate < 80)
                               .sort(([, a], [, b]) => b - a)
                               .map(([goalName, rate]) => (
-                                <div key={goalName} className="flex items-center justify-between p-2 bg-primary/5 rounded-lg border border-primary/20">
+                                <div
+                                  key={goalName}
+                                  className="flex items-center justify-between p-2 bg-primary/5 rounded-lg border border-primary/20"
+                                >
                                   <span className="text-sm">{goalName}</span>
-                                  <span className="text-sm text-primary">{rate}%</span>
+                                  <span className="text-sm text-primary">
+                                    {rate}%
+                                  </span>
                                 </div>
                               ))}
                           </div>
@@ -483,13 +500,40 @@ export default function Analytics() {
 
                       {/* Quick Insights */}
                       <div className="mt-4 p-3 bg-accent/10 rounded-lg">
-                        <h4 className="text-sm font-semibold mb-2">💡 Quick Insights</h4>
+                        <h4 className="text-sm font-semibold mb-2">
+                          💡 Quick Insights
+                        </h4>
                         <div className="text-xs text-muted-foreground space-y-1">
-                          {Object.entries(analyticsData.habitStrength).length > 0 && (
+                          {Object.entries(analyticsData.habitStrength).length >
+                            0 && (
                             <>
-                              <p>• You have {Object.values(analyticsData.habitStrength).filter(rate => rate >= 80).length} goals performing excellently</p>
-                              <p>• Focus on improving {Object.values(analyticsData.habitStrength).filter(rate => rate < 60).length || 0} goals that need attention</p>
-                              <p>• Your average completion rate is {Math.round(Object.values(analyticsData.habitStrength).reduce((sum, rate) => sum + rate, 0) / Object.values(analyticsData.habitStrength).length)}%</p>
+                              <p>
+                                • You have{" "}
+                                {
+                                  Object.values(
+                                    analyticsData.habitStrength,
+                                  ).filter((rate) => rate >= 80).length
+                                }{" "}
+                                goals performing excellently
+                              </p>
+                              <p>
+                                • Focus on improving{" "}
+                                {Object.values(
+                                  analyticsData.habitStrength,
+                                ).filter((rate) => rate < 60).length || 0}{" "}
+                                goals that need attention
+                              </p>
+                              <p>
+                                • Your average completion rate is{" "}
+                                {Math.round(
+                                  Object.values(
+                                    analyticsData.habitStrength,
+                                  ).reduce((sum, rate) => sum + rate, 0) /
+                                    Object.values(analyticsData.habitStrength)
+                                      .length,
+                                )}
+                                %
+                              </p>
                             </>
                           )}
                         </div>
