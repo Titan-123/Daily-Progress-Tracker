@@ -321,9 +321,14 @@ export default function Goals() {
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Create a New Goal</DialogTitle>
+                <DialogTitle>
+                  {activeTab === "habits" ? "Create a New Habit" : "Add Daily Target"}
+                </DialogTitle>
                 <DialogDescription>
-                  Set up a meaningful target that will help you grow and thrive!
+                  {activeTab === "habits"
+                    ? "Set up a recurring daily routine that builds consistency and streaks!"
+                    : "Add a specific task you want to complete today."
+                  }
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4 py-4">
