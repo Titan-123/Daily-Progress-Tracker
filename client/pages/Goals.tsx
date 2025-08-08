@@ -326,10 +326,10 @@ export default function Goals() {
 
           {!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? (
             <Button asChild className="relative">
-              <Link to="/pricing">
+              <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
                 <Lock className="h-4 w-4 mr-2" />
                 Upgrade for More Goals
-              </Link>
+              </a>
             </Button>
           ) : (
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
