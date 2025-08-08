@@ -232,6 +232,210 @@ export default function Analytics() {
             <TabsTrigger value="insights">Insights</TabsTrigger>
           </TabsList>
 
+          <TabsContent value="charts" className="space-y-6">
+            {/* Weekly Progress Line Chart */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Weekly Progress Trend</CardTitle>
+                  <CardDescription>
+                    Your daily completion rates this week
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <AreaChart data={analyticsData.weeklyData}>
+                      <defs>
+                        <linearGradient id="colorCompletion" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <XAxis
+                        dataKey="day"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        domain={[0, 100]}
+                      />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                        formatter={(value: any) => [`${value}%`, "Completion"]}
+                      />
+                      <Area
+                        type="monotone"
+                        dataKey="completion"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={2}
+                        fill="url(#colorCompletion)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Goal Performance Pie Chart */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Goal Performance Distribution</CardTitle>
+                  <CardDescription>
+                    How your goals are performing
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie
+                        data={[
+                          {
+                            name: 'Crushing It',
+                            value: Object.values(analyticsData.habitStrength).filter(rate => rate >= 80).length,
+                            color: 'hsl(var(--success))'
+                          },
+                          {
+                            name: 'Steady Progress',
+                            value: Object.values(analyticsData.habitStrength).filter(rate => rate >= 60 && rate < 80).length,
+                            color: 'hsl(var(--primary))'
+                          },
+                          {
+                            name: 'Needs Focus',
+                            value: Object.values(analyticsData.habitStrength).filter(rate => rate < 60).length,
+                            color: 'hsl(var(--warning))'
+                          },
+                        ]}
+                        cx="50%"
+                        cy="50%"
+                        innerRadius={60}
+                        outerRadius={100}
+                        paddingAngle={5}
+                        dataKey="value"
+                      >
+                        {[
+                          { color: 'hsl(142 76% 36%)' }, // success
+                          { color: 'hsl(221 83% 53%)' }, // primary
+                          { color: 'hsl(38 92% 50%)' },  // warning
+                        ].map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                        formatter={(value: any) => [`${value} goals`, ""]}
+                      />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Monthly Trends Bar Chart */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Monthly Completion Trends</CardTitle>
+                <CardDescription>
+                  Weekly completion rates over the past month
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart data={analyticsData.monthlyTrends}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <XAxis
+                      dataKey="week"
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                    />
+                    <YAxis
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      domain={[0, 100]}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "8px",
+                      }}
+                      formatter={(value: any) => [`${value}%`, "Completion Rate"]}
+                    />
+                    <Bar
+                      dataKey="completion"
+                      fill="hsl(var(--primary))"
+                      radius={[4, 4, 0, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            {/* Individual Goal Performance */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Individual Goal Performance</CardTitle>
+                <CardDescription>
+                  Completion rates for each of your goals
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <ResponsiveContainer width="100%" height={300}>
+                  <BarChart
+                    data={Object.entries(analyticsData.habitStrength).map(([name, rate]) => ({
+                      name: name.length > 15 ? name.substring(0, 15) + '...' : name,
+                      fullName: name,
+                      rate: rate
+                    })).sort((a, b) => b.rate - a.rate)}
+                    layout="horizontal"
+                    margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                    <XAxis
+                      type="number"
+                      domain={[0, 100]}
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      stroke="hsl(var(--muted-foreground))"
+                      fontSize={12}
+                      width={120}
+                    />
+                    <Tooltip
+                      contentStyle={{
+                        backgroundColor: "hsl(var(--card))",
+                        border: "1px solid hsl(var(--border))",
+                        borderRadius: "8px",
+                      }}
+                      formatter={(value: any, name: any, props: any) => [
+                        `${value}%`,
+                        props.payload.fullName
+                      ]}
+                    />
+                    <Bar
+                      dataKey="rate"
+                      fill="hsl(var(--primary))"
+                      radius={[0, 4, 4, 0]}
+                    />
+                  </BarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
           <TabsContent value="overview" className="space-y-6">
             {/* Key Metrics */}
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
