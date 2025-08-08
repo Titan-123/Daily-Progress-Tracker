@@ -267,9 +267,11 @@ export default function Pricing() {
                 <p className="text-muted-foreground">
                   Join thousands of users who have already unlocked their potential with Premium
                 </p>
-                <Button size="lg" onClick={() => handleUpgrade("premium")}>
-                  <Crown className="h-5 w-5 mr-2" />
-                  Start Your Premium Journey
+                <Button asChild size="lg">
+                  <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
+                    <Crown className="h-5 w-5 mr-2" />
+                    Start Your Premium Journey
+                  </a>
                 </Button>
               </div>
             </CardContent>
