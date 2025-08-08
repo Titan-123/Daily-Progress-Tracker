@@ -24,7 +24,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/contexts/AuthContext";
 import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@shared/api";
 import { toast } from "sonner";
