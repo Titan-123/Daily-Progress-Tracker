@@ -272,8 +272,8 @@ export default function Index() {
                 to="/goals"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
-                <Repeat className="h-4 w-4" />
-                Habits & Goals
+                <Target className="h-4 w-4" />
+                Goals
               </Link>
               <Link
                 to="/analytics"
