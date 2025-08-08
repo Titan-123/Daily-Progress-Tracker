@@ -118,7 +118,7 @@ export const handleCreateGoal = async (req, res) => {
           type: goal.type,
           userId: goal.userId,
           goalId: goal._id,
-          date: today,
+          date: localToday,
           completed: false,
           streak: 0,
         });
