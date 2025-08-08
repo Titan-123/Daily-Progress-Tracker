@@ -85,12 +85,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       body: JSON.stringify({ name, email, password }),
     });
 
-    const data = await response.json();
-
     if (!response.ok) {
-      throw new Error(data.error || "Registration failed");
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || "Registration failed");
     }
 
+    const data = await response.json();
     setToken(data.token);
     setUser(data.user);
     localStorage.setItem("token", data.token);
