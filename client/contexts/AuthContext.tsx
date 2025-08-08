@@ -78,6 +78,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           best: 21,
           lastActiveDate: new Date().toISOString(),
         },
+        subscription: {
+          tier: "free" as SubscriptionTier,
+          status: "active" as const,
+          startDate: new Date().toISOString(),
+        },
       };
 
       const demoToken = "demo-token-123";
