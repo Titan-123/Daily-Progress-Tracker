@@ -1,12 +1,13 @@
 import DayEntry from "../models/DayEntry.js";
 import Target from "../models/Target.js";
 
-// For demo purposes, we'll use a default user ID
-const DEFAULT_USER_ID = "60d0fe4f5311236168a109ca";
-
 export const handleGetCalendarData = async (req, res) => {
   try {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
     const month = parseInt(req.query.month);
     const year = parseInt(req.query.year);
 
