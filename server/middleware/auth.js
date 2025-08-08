@@ -59,6 +59,22 @@ export const optionalAuth = async (req, res, next) => {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (token) {
+      // Handle demo token
+      if (token === "demo-token-123") {
+        req.userId = "demo-user-123";
+        req.user = {
+          _id: "demo-user-123",
+          name: "Demo User",
+          email: "demo@example.com",
+          preferences: {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+        };
+        return next();
+      }
+
       const decoded = jwt.verify(token, JWT_SECRET);
       const user = await User.findById(decoded.userId);
 
