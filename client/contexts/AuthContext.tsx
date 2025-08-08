@@ -144,12 +144,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Helper methods for subscription checks
-  const isPremium = user?.subscription.tier === "premium";
-  const subscriptionTier = user?.subscription.tier || "free";
+  const isPremium = user?.subscription?.tier === "premium";
+  const subscriptionTier = user?.subscription?.tier || "free";
   const hasAnalyticsAccess = isPremium;
 
   const canCreateMoreGoals = (currentGoalCount: number) => {
-    if (!user) return false;
+    if (!user || !user.subscription) return false;
     const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
     return plan.limitations.maxDailyGoals === null || currentGoalCount < plan.limitations.maxDailyGoals;
   };
