@@ -449,21 +449,20 @@ export default function Goals() {
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="daily" className="space-y-4">
+          <TabsContent value="habits" className="space-y-4">
             <div className="space-y-4">
               {getGoalsByType("daily").length === 0 ? (
                 <Card className="text-center py-12">
                   <CardContent>
-                    <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <Repeat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">
-                      No daily goals yet
+                      No daily habits yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Daily goals help build consistent habits that transform
-                      your life!
+                      Daily habits help build consistent routines that transform your life through repetition and streaks!
                     </p>
                     <Button onClick={() => setIsDialogOpen(true)}>
-                      Create Your First Daily Goal
+                      Create Your First Habit
                     </Button>
                   </CardContent>
                 </Card>
@@ -475,55 +474,22 @@ export default function Goals() {
             </div>
           </TabsContent>
 
-          <TabsContent value="weekly" className="space-y-4">
+          <TabsContent value="targets" className="space-y-4">
             <div className="space-y-4">
-              {getGoalsByType("weekly").length === 0 ? (
-                <Card className="text-center py-12">
-                  <CardContent>
-                    <Calendar className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">
-                      No weekly goals yet
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Weekly goals help you focus on bigger achievements and
-                      milestones!
-                    </p>
-                    <Button onClick={() => setIsDialogOpen(true)}>
-                      Create Your First Weekly Goal
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                getGoalsByType("weekly").map((goal) => (
-                  <GoalCard key={goal.id} goal={goal} />
-                ))
-              )}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="monthly" className="space-y-4">
-            <div className="space-y-4">
-              {getGoalsByType("monthly").length === 0 ? (
-                <Card className="text-center py-12">
-                  <CardContent>
-                    <Repeat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                    <h3 className="text-lg font-semibold mb-2">
-                      No monthly goals yet
-                    </h3>
-                    <p className="text-muted-foreground mb-4">
-                      Monthly goals help you achieve substantial progress and
-                      meaningful changes!
-                    </p>
-                    <Button onClick={() => setIsDialogOpen(true)}>
-                      Create Your First Monthly Goal
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                getGoalsByType("monthly").map((goal) => (
-                  <GoalCard key={goal.id} goal={goal} />
-                ))
-              )}
+              <Card className="text-center py-12">
+                <CardContent>
+                  <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2">
+                    No daily targets yet
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Daily targets are specific tasks you want to complete today - they don't repeat!
+                  </p>
+                  <Button onClick={() => setIsDialogOpen(true)}>
+                    Add Your First Target
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
         </Tabs>
