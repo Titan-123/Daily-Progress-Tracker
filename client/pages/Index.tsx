@@ -542,6 +542,44 @@ export default function Index() {
                 )}
               </CardContent>
             </Card>
+
+            {/* Daily Targets Section */}
+            <Card>
+              <CardHeader>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <CardTitle className="flex items-center gap-2">
+                      <Target className="h-5 w-5 text-warning" />
+                      Today's Targets
+                    </CardTitle>
+                    <CardDescription>
+                      One-off tasks and objectives for today
+                    </CardDescription>
+                  </div>
+                  <Button asChild variant="outline" size="sm">
+                    <Link to="/goals">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Target
+                    </Link>
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="text-center py-8">
+                  <Target className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
+                  <h4 className="font-medium mb-2">No daily targets yet</h4>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Add specific tasks you want to complete today
+                  </p>
+                  <Button asChild size="sm">
+                    <Link to="/goals">
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Your First Target
+                    </Link>
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           {/* Recent Achievements */}
