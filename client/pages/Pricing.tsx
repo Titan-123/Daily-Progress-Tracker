@@ -1,0 +1,323 @@
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  ArrowLeft,
+  Check,
+  Crown,
+  Star,
+  Target,
+  BarChart3,
+  Download,
+  Palette,
+  HeadphonesIcon,
+  Zap,
+  Calendar,
+  TrendingUp,
+  Sparkles,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useAuth } from "@/contexts/AuthContext";
+import { SUBSCRIPTION_PLANS, type SubscriptionTier } from "@shared/api";
+import { toast } from "sonner";
+
+export default function Pricing() {
+  const { isPremium, subscriptionTier } = useAuth();
+  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
+  const [loading, setLoading] = useState(false);
+
+  const handleUpgrade = async (tier: SubscriptionTier) => {
+    if (tier === "free") return;
+    
+    setLoading(true);
+    try {
+      // In a real app, this would integrate with Stripe/payment processor
+      toast.success("Redirecting to payment processor...");
+      // Simulate payment flow
+      setTimeout(() => {
+        toast.success("Upgrade successful! Welcome to Premium! 🎉");
+        setLoading(false);
+      }, 2000);
+    } catch (error) {
+      toast.error("Failed to process upgrade. Please try again.");
+      setLoading(false);
+    }
+  };
+
+  const getPrice = (tier: SubscriptionTier) => {
+    if (tier === "free") return 0;
+    const basePrice = SUBSCRIPTION_PLANS[tier].price;
+    return billingCycle === "yearly" ? basePrice * 10 : basePrice; // 2 months free with yearly
+  };
+
+  const PricingCard = ({ tier }: { tier: SubscriptionTier }) => {
+    const plan = SUBSCRIPTION_PLANS[tier];
+    const price = getPrice(tier);
+    const isCurrentPlan = subscriptionTier === tier;
+    const isPopular = tier === "premium";
+
+    return (
+      <Card 
+        className={`relative transition-all duration-300 ${
+          isPopular 
+            ? "border-2 border-primary shadow-lg scale-105" 
+            : "border border-border hover:border-primary/50"
+        } ${isCurrentPlan ? "ring-2 ring-primary/20" : ""}`}
+      >
+        {isPopular && (
+          <Badge className="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-primary text-primary-foreground">
+            <Star className="h-3 w-3 mr-1" />
+            Most Popular
+          </Badge>
+        )}
+        
+        <CardHeader className="text-center pb-4">
+          <div className="space-y-2">
+            <div className={`w-12 h-12 mx-auto rounded-lg flex items-center justify-center ${
+              tier === "premium" ? "bg-primary/10" : "bg-muted"
+            }`}>
+              {tier === "premium" ? (
+                <Crown className="h-6 w-6 text-primary" />
+              ) : (
+                <Target className="h-6 w-6 text-muted-foreground" />
+              )}
+            </div>
+            <CardTitle className="text-2xl">{plan.name}</CardTitle>
+            <div className="space-y-1">
+              <div className="text-3xl font-bold">
+                ${price}
+                {tier !== "free" && (
+                  <span className="text-lg font-normal text-muted-foreground">
+                    /{billingCycle === "yearly" ? "year" : "month"}
+                  </span>
+                )}
+              </div>
+              {tier !== "free" && billingCycle === "yearly" && (
+                <p className="text-sm text-success">Save $23.88 per year!</p>
+              )}
+            </div>
+          </div>
+        </CardHeader>
+
+        <CardContent className="space-y-6">
+          <div className="space-y-3">
+            {plan.features.map((feature, index) => (
+              <div key={index} className="flex items-center gap-3">
+                <Check className="h-4 w-4 text-success flex-shrink-0" />
+                <span className="text-sm">{feature}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="space-y-2">
+            <div className="text-sm font-medium">Limitations:</div>
+            <div className="space-y-1 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2">
+                <Target className="h-3 w-3" />
+                Daily Goals: {plan.limitations.maxDailyGoals ? `${plan.limitations.maxDailyGoals} max` : "Unlimited"}
+              </div>
+              <div className="flex items-center gap-2">
+                <BarChart3 className="h-3 w-3" />
+                Analytics: {plan.limitations.analytics ? "Full access" : "Not included"}
+              </div>
+              <div className="flex items-center gap-2">
+                <Download className="h-3 w-3" />
+                Data Export: {plan.limitations.exportData ? "Available" : "Not available"}
+              </div>
+            </div>
+          </div>
+
+          <Button
+            className="w-full"
+            variant={isCurrentPlan ? "outline" : tier === "premium" ? "default" : "outline"}
+            onClick={() => handleUpgrade(tier)}
+            disabled={loading || isCurrentPlan}
+          >
+            {isCurrentPlan ? (
+              "Current Plan"
+            ) : tier === "free" ? (
+              "Downgrade to Free"
+            ) : (
+              <>
+                <Crown className="h-4 w-4 mr-2" />
+                Upgrade to {plan.name}
+              </>
+            )}
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5">
+      <div className="container mx-auto px-4 py-8 space-y-12">
+        {/* Header */}
+        <div className="text-center space-y-6">
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Link>
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+              Choose Your Plan
+            </h1>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Unlock your full potential with the perfect plan for your journey
+            </p>
+          </div>
+
+          {/* Billing Toggle */}
+          <Tabs defaultValue="monthly" className="w-fit mx-auto">
+            <TabsList className="grid w-full grid-cols-2">
+              <TabsTrigger 
+                value="monthly" 
+                onClick={() => setBillingCycle("monthly")}
+                className="flex items-center gap-2"
+              >
+                <Calendar className="h-4 w-4" />
+                Monthly
+              </TabsTrigger>
+              <TabsTrigger 
+                value="yearly" 
+                onClick={() => setBillingCycle("yearly")}
+                className="flex items-center gap-2"
+              >
+                <TrendingUp className="h-4 w-4" />
+                Yearly
+                <Badge variant="secondary" className="ml-1">-20%</Badge>
+              </TabsTrigger>
+            </TabsList>
+          </Tabs>
+        </div>
+
+        {/* Pricing Cards */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <PricingCard tier="free" />
+          <PricingCard tier="premium" />
+        </div>
+
+        {/* Features Comparison */}
+        <div className="max-w-4xl mx-auto">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-center text-2xl">Feature Comparison</CardTitle>
+              <CardDescription className="text-center">
+                See what you get with each plan
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-4 text-sm">
+                <div className="font-medium">Feature</div>
+                <div className="font-medium text-center">Free</div>
+                <div className="font-medium text-center">Premium</div>
+                
+                <div className="py-3 border-t">Daily Goals</div>
+                <div className="py-3 border-t text-center">Up to 3</div>
+                <div className="py-3 border-t text-center">Unlimited</div>
+                
+                <div className="py-3">Calendar View</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                
+                <div className="py-3">Daily Reflections</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                
+                <div className="py-3">Advanced Analytics</div>
+                <div className="py-3 text-center text-muted-foreground">×</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                
+                <div className="py-3">Data Export</div>
+                <div className="py-3 text-center text-muted-foreground">×</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                
+                <div className="py-3">Custom Categories</div>
+                <div className="py-3 text-center text-muted-foreground">×</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+                
+                <div className="py-3">Priority Support</div>
+                <div className="py-3 text-center text-muted-foreground">×</div>
+                <div className="py-3 text-center"><Check className="h-4 w-4 text-success mx-auto" /></div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* FAQ Section */}
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-2xl font-bold text-center mb-8">Frequently Asked Questions</h2>
+          <div className="space-y-6">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Can I change my plan anytime?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Yes! You can upgrade or downgrade your plan at any time. Changes take effect immediately, 
+                  and we'll prorate any billing adjustments.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">What happens to my data if I downgrade?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Your data is always safe! If you downgrade from Premium to Free, you'll lose access to premium features 
+                  but all your existing goals and progress will remain intact.
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">Is there a money-back guarantee?</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Absolutely! We offer a 30-day money-back guarantee. If you're not completely satisfied 
+                  with Premium, we'll refund your payment, no questions asked.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center space-y-6">
+          <Card className="max-w-2xl mx-auto border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
+            <CardContent className="p-8">
+              <div className="space-y-4">
+                <Sparkles className="h-12 w-12 text-primary mx-auto" />
+                <h3 className="text-2xl font-bold">Ready to transform your habits?</h3>
+                <p className="text-muted-foreground">
+                  Join thousands of users who have already unlocked their potential with Premium
+                </p>
+                <Button size="lg" onClick={() => handleUpgrade("premium")}>
+                  <Crown className="h-5 w-5 mr-2" />
+                  Start Your Premium Journey
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
