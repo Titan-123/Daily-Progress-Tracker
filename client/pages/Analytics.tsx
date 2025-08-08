@@ -150,6 +150,88 @@ export default function Analytics() {
     );
   }
 
+  // Premium access gate
+  if (!hasAnalyticsAccess) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5">
+        <div className="container mx-auto px-4 py-8">
+          {/* Header */}
+          <div className="flex items-center gap-4 mb-8">
+            <Button asChild variant="outline" size="sm">
+              <Link to="/">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Link>
+            </Button>
+            <div>
+              <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+                Analytics
+              </h1>
+              <p className="text-muted-foreground">
+                Advanced insights into your progress
+              </p>
+            </div>
+          </div>
+
+          {/* Premium Upgrade Card */}
+          <div className="max-w-2xl mx-auto mt-20">
+            <Card className="border-2 border-warning/20 bg-gradient-to-br from-warning/5 to-accent/10 text-center">
+              <CardContent className="p-12">
+                <div className="space-y-6">
+                  <div className="p-4 rounded-full bg-warning/10 w-fit mx-auto">
+                    <Crown className="h-12 w-12 text-warning" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold mb-2">Premium Feature</h2>
+                    <p className="text-muted-foreground text-lg">
+                      Advanced analytics are available with Premium subscription
+                    </p>
+                  </div>
+                  <div className="space-y-3 text-left bg-background/50 rounded-lg p-6">
+                    <h3 className="font-semibold mb-3">With Premium Analytics, you get:</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Weekly completion trends</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Monthly progress analysis</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Streak tracking & insights</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Habit strength analysis</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Performance predictions</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <CheckCircle2 className="h-4 w-4 text-success" />
+                        <span className="text-sm">Data export capabilities</span>
+                      </div>
+                    </div>
+                  </div>
+                  <Button size="lg" className="bg-gradient-to-r from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70">
+                    <Crown className="h-5 w-5 mr-2" />
+                    Upgrade to Premium - $9.99/month
+                  </Button>
+                  <p className="text-xs text-muted-foreground">
+                    30-day money-back guarantee • Cancel anytime
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   if (!analyticsData) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-background via-accent/10 to-primary/5 flex items-center justify-center">
