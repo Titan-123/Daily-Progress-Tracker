@@ -26,6 +26,10 @@ interface AuthContextType {
   logout: () => void;
   loading: boolean;
   isAuthenticated: boolean;
+  isPremium: boolean;
+  subscriptionTier: SubscriptionTier;
+  canCreateMoreGoals: (currentGoalCount: number) => boolean;
+  hasAnalyticsAccess: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
