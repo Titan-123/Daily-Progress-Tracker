@@ -89,7 +89,7 @@ export const handleGetDashboard = async (req, res) => {
             type: goal.type,
             userId: goal.userId,
             goalId: goal._id,
-            date: today,
+            date: localToday,
             completed: false,
             streak: 0, // Start fresh for new day
           });
