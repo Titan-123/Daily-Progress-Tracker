@@ -116,7 +116,11 @@ export const handleGetCalendarData = async (req, res) => {
 export const handleGetDayData = async (req, res) => {
   try {
     const { date } = req.params;
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     const dayDate = new Date(date);
 
@@ -177,7 +181,11 @@ export const handleSaveReflection = async (req, res) => {
   try {
     const { date } = req.params;
     const { reflection } = req.body;
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     if (!reflection) {
       return res.status(400).json({ error: "Reflection is required" });
@@ -222,7 +230,11 @@ export const handleUpdateMood = async (req, res) => {
   try {
     const { date } = req.params;
     const { mood } = req.body;
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     if (!mood) {
       return res.status(400).json({ error: "Mood is required" });
@@ -266,7 +278,11 @@ export const handleAddHighlight = async (req, res) => {
   try {
     const { date } = req.params;
     const { highlight } = req.body;
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     if (!highlight) {
       return res.status(400).json({ error: "Highlight is required" });
