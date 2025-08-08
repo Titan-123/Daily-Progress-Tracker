@@ -438,7 +438,7 @@ export default function Goals() {
         </Card>
 
         {/* Habits vs Targets */}
-        <Tabs defaultValue="habits" className="space-y-6">
+        <Tabs defaultValue="habits" className="space-y-6" value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="habits" className="flex items-center gap-2">
               <Repeat className="h-4 w-4" />
