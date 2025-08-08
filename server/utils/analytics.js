@@ -203,9 +203,43 @@ export const analyzeStrengthsAndWeaknesses = async (userId) => {
       }
     });
 
-    return { strengths, improvementAreas };
+    return { strengths, improvementAreas, categoryAverages };
   } catch (error) {
     console.error("Error analyzing strengths and weaknesses:", error);
-    return { strengths: [], improvementAreas: [] };
+    return { strengths: [], improvementAreas: [], categoryAverages: {} };
+  }
+};
+
+export const calculateHabitStrength = async (userId) => {
+  try {
+    const goals = await Goal.find({ userId, isActive: true, type: "daily" });
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+    const habitStrength = {};
+
+    for (const goal of goals) {
+      const targets = await Target.find({
+        userId,
+        goalId: goal._id,
+        date: { $gte: thirtyDaysAgo },
+      });
+
+      if (targets.length > 0) {
+        const completedTargets = targets.filter(
+          (target) => target.completed,
+        ).length;
+        const completionRate = Math.round(
+          (completedTargets / targets.length) * 100,
+        );
+
+        habitStrength[goal.title] = completionRate;
+      }
+    }
+
+    return habitStrength;
+  } catch (error) {
+    console.error("Error calculating habit strength:", error);
+    return {};
   }
 };
