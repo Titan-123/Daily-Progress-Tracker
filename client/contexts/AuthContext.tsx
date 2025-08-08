@@ -143,6 +143,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("user");
   };
 
+  // Helper methods for subscription checks
+  const isPremium = user?.subscription.tier === "premium";
+  const subscriptionTier = user?.subscription.tier || "free";
+  const hasAnalyticsAccess = isPremium;
+
+  const canCreateMoreGoals = (currentGoalCount: number) => {
+    if (!user) return false;
+    const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
+    return plan.limitations.maxDailyGoals === null || currentGoalCount < plan.limitations.maxDailyGoals;
+  };
+
   const value = {
     user,
     token,
@@ -151,6 +162,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     logout,
     loading,
     isAuthenticated: !!user,
+    isPremium,
+    subscriptionTier,
+    canCreateMoreGoals,
+    hasAnalyticsAccess,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
