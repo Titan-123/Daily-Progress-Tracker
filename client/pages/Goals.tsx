@@ -303,10 +303,10 @@ export default function Goals() {
             </Button>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-                Goal Setting
+                Habits & Goals
               </h1>
               <p className="text-muted-foreground">
-                Create meaningful targets that inspire your daily journey
+                Build life-changing habits and set meaningful goals for your journey
               </p>
             </div>
           </div>
