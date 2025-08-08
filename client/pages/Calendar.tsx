@@ -503,14 +503,17 @@ export default function Calendar() {
                                                     target.type === "daily"
                                                       ? "bg-primary/10 text-primary border-primary/20"
                                                       : target.type === "weekly"
-                                                      ? "bg-warning/10 text-warning border-warning/20"
-                                                      : "bg-success/10 text-success border-success/20"
+                                                        ? "bg-warning/10 text-warning border-warning/20"
+                                                        : "bg-success/10 text-success border-success/20"
                                                   }`}
                                                 >
                                                   {target.type}
                                                 </Badge>
                                                 {target.streak > 0 && (
-                                                  <Badge variant="outline" className="text-warning">
+                                                  <Badge
+                                                    variant="outline"
+                                                    className="text-warning"
+                                                  >
                                                     🔥 {target.streak}
                                                   </Badge>
                                                 )}
