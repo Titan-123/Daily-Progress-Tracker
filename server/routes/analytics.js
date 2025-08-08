@@ -6,6 +6,7 @@ import {
   calculateMonthlyCompletion,
   getWeeklyData,
   analyzeStrengthsAndWeaknesses,
+  calculateHabitStrength,
 } from "../utils/analytics.js";
 
 export const handleGetAnalytics = async (req, res) => {
