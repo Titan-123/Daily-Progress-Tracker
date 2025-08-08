@@ -442,6 +442,33 @@ export default function Goals() {
           </Dialog>
         </div>
 
+        {/* Subscription Status */}
+        {!isPremium && (
+          <Card className="border-2 border-warning/20 bg-gradient-to-r from-warning/5 to-accent/10">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-lg bg-warning/10">
+                    <Crown className="h-6 w-6 text-warning" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold">
+                      Free Plan: {goals.filter(g => g.type === "daily").length}/3 Daily Goals Used
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Upgrade to Premium for unlimited daily goals and advanced analytics
+                    </p>
+                  </div>
+                </div>
+                <Button variant="outline" className="border-warning text-warning hover:bg-warning/10">
+                  <Crown className="h-4 w-4 mr-2" />
+                  Upgrade to Premium
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
         {/* Motivational Message */}
         <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
           <CardContent className="pt-6">
