@@ -51,8 +51,11 @@ export const handleGetCalendarData = async (req, res) => {
       const formattedTargets = targets.map((target) => ({
         id: target._id.toString(),
         title: target.title,
+        description: target.description,
         completed: target.completed,
         category: target.goalId?.category || "General",
+        type: target.type,
+        streak: target.streak,
       }));
 
       calendarData[dateKey] = {
