@@ -436,20 +436,16 @@ export default function Goals() {
           </CardContent>
         </Card>
 
-        {/* Goals by Type */}
-        <Tabs defaultValue="daily" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="daily" className="flex items-center gap-2">
-              <Clock className="h-4 w-4" />
-              Daily ({getGoalsByType("daily").length})
-            </TabsTrigger>
-            <TabsTrigger value="weekly" className="flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              Weekly ({getGoalsByType("weekly").length})
-            </TabsTrigger>
-            <TabsTrigger value="monthly" className="flex items-center gap-2">
+        {/* Habits vs Targets */}
+        <Tabs defaultValue="habits" className="space-y-6">
+          <TabsList className="grid w-full grid-cols-2">
+            <TabsTrigger value="habits" className="flex items-center gap-2">
               <Repeat className="h-4 w-4" />
-              Monthly ({getGoalsByType("monthly").length})
+              Daily Habits ({getGoalsByType("daily").length})
+            </TabsTrigger>
+            <TabsTrigger value="targets" className="flex items-center gap-2">
+              <Target className="h-4 w-4" />
+              Daily Targets (0)
             </TabsTrigger>
           </TabsList>
 
