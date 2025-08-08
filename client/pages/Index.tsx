@@ -450,7 +450,8 @@ export default function Index() {
                       No goals set yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Start setting daily, weekly, and monthly goals to track your progress!
+                      Start setting daily, weekly, and monthly goals to track
+                      your progress!
                     </p>
                     <Button asChild>
                       <Link to="/goals">
@@ -502,8 +503,8 @@ export default function Index() {
                               target.type === "daily"
                                 ? "bg-primary/10 text-primary border-primary/20"
                                 : target.type === "weekly"
-                                ? "bg-warning/10 text-warning border-warning/20"
-                                : "bg-success/10 text-success border-success/20"
+                                  ? "bg-warning/10 text-warning border-warning/20"
+                                  : "bg-success/10 text-success border-success/20"
                             }`}
                           >
                             {target.type}
@@ -520,7 +521,6 @@ export default function Index() {
                 )}
               </CardContent>
             </Card>
-
           </div>
 
           {/* Recent Achievements */}
