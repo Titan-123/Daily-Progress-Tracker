@@ -74,7 +74,11 @@ export const handleGetAnalytics = async (req, res) => {
 
 export const handleGetWeeklyData = async (req, res) => {
   try {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
     const offset = parseInt(req.query.offset) || 0;
 
     const weeklyData = await getWeeklyData(userId, offset);
