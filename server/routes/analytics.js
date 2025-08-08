@@ -8,12 +8,13 @@ import {
   analyzeStrengthsAndWeaknesses,
 } from "../utils/analytics.js";
 
-// For demo purposes, we'll use a default user ID
-const DEFAULT_USER_ID = "60d0fe4f5311236168a109ca";
-
 export const handleGetAnalytics = async (req, res) => {
   try {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     // Calculate all analytics data
     const [
