@@ -213,19 +213,19 @@ export default function Index() {
 
   const motivationalMessages = {
     excellent: [
-      "You're absolutely crushing your habits today! 🌟",
-      "Look at you building amazing routines! Keep it up! ✨",
-      "Your consistency is truly inspiring! 🎉",
+      "You're absolutely crushing your goals today! 🌟",
+      "Amazing progress on your targets! Keep it up! ✨",
+      "Your dedication is truly inspiring! 🎉",
     ],
     good: [
-      "Great habit building! Almost there! 💪",
-      "Fantastic progress on your daily routine! 🚀",
-      "So proud of your consistency! 💫",
+      "Great progress on your goals! Almost there! 💪",
+      "Fantastic work on achieving your targets! 🚀",
+      "So proud of your commitment! 💫",
     ],
     encouraging: [
-      "Every habit counts! You're building something beautiful! 🌱",
-      "Small daily actions create big changes! Keep going! 💚",
-      "Tomorrow is a fresh start for your habits! 🌈",
+      "Every goal achieved is a step forward! 🌱",
+      "Small steps lead to big achievements! Keep going! 💚",
+      "Tomorrow brings new opportunities for progress! 🌈",
     ],
   };
 
