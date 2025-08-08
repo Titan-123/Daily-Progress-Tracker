@@ -63,6 +63,7 @@ export const handleGetAnalytics = async (req, res) => {
       consistencyScore,
       improvementAreas: strengthsAndWeaknesses.improvementAreas,
       strengths: strengthsAndWeaknesses.strengths,
+      habitStrength,
       weeklyData,
       monthlyTrends,
     };
