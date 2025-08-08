@@ -1,6 +1,6 @@
 // API base URL - you can configure this for your backend
 const API_BASE_URL =
-  process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3000/api";
+  process.env.NODE_ENV === "production" ? "/api" : "/api";
 
 // Get token from localStorage
 const getAuthToken = () => {
