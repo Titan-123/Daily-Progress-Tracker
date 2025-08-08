@@ -99,8 +99,11 @@ export const handleGetCalendarData = async (req, res) => {
           targets: dayTargets.map((target) => ({
             id: target._id.toString(),
             title: target.title,
+            description: target.description,
             completed: target.completed,
             category: target.goalId?.category || "General",
+            type: target.type,
+            streak: target.streak,
           })),
           reflection: "",
           mood: undefined,
