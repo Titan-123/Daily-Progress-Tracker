@@ -443,113 +443,80 @@ export default function Index() {
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">
-                {recurringHabits.length === 0 ? (
+                {todaysTargets.length === 0 ? (
                   <div className="text-center py-12">
-                    <Repeat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                    <Target className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                     <h3 className="text-lg font-semibold mb-2">
-                      No daily habits yet
+                      No goals set yet
                     </h3>
                     <p className="text-muted-foreground mb-4">
-                      Start building life-changing habits! Create consistent
-                      daily routines.
+                      Start setting daily, weekly, and monthly goals to track your progress!
                     </p>
                     <Button asChild>
                       <Link to="/goals">
                         <Plus className="h-4 w-4 mr-2" />
-                        Create Your First Habit
+                        Create Your First Goal
                       </Link>
                     </Button>
                   </div>
                 ) : (
-                  <>
-                    {recurringHabits.map((target) => (
-                      <div
-                        key={target.id}
-                        className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
-                          target.completed
-                            ? "border-success/30 bg-success/5"
-                            : "border-border hover:border-primary/30"
-                        } ${toggling === target.id ? "opacity-50" : ""}`}
-                        onClick={() => toggleTarget(target.id)}
-                      >
-                        <div className="flex items-center gap-3">
-                          {toggling === target.id ? (
-                            <Loader2 className="h-6 w-6 animate-spin text-primary" />
-                          ) : (
-                            <CheckCircle2
-                              className={`h-6 w-6 ${
-                                target.completed
-                                  ? "text-success fill-current"
-                                  : "text-muted-foreground"
-                              }`}
-                            />
-                          )}
-                          <div className="flex-1">
-                            <h3
-                              className={`font-semibold ${
-                                target.completed
-                                  ? "line-through text-muted-foreground"
-                                  : ""
-                              }`}
-                            >
-                              {target.title}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              {target.description}
-                            </p>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <Badge className="bg-primary/10 text-primary border-primary/20">
-                              <Repeat className="h-3 w-3 mr-1" />
-                              Daily
-                            </Badge>
-                            {target.streak > 0 && (
-                              <Badge variant="outline" className="text-warning">
-                                🔥 {target.streak}
-                              </Badge>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-
-                    {/* Weekly/Monthly Goals Section */}
-                    {(weeklyGoals.length > 0 || monthlyGoals.length > 0) && (
-                      <div className="mt-8 pt-6 border-t">
-                        <h4 className="font-semibold text-sm text-muted-foreground mb-4 flex items-center gap-2">
-                          <Clock className="h-4 w-4" />
-                          Longer-term Goals
-                        </h4>
-                        {[...weeklyGoals, ...monthlyGoals].map((target) => (
-                          <div
-                            key={target.id}
-                            className={`p-3 rounded-lg border mb-2 ${
+                  todaysTargets.map((target) => (
+                    <div
+                      key={target.id}
+                      className={`p-4 rounded-lg border-2 transition-all cursor-pointer ${
+                        target.completed
+                          ? "border-success/30 bg-success/5"
+                          : "border-border hover:border-primary/30"
+                      } ${toggling === target.id ? "opacity-50" : ""}`}
+                      onClick={() => toggleTarget(target.id)}
+                    >
+                      <div className="flex items-center gap-3">
+                        {toggling === target.id ? (
+                          <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        ) : (
+                          <CheckCircle2
+                            className={`h-6 w-6 ${
                               target.completed
-                                ? "border-success/30 bg-success/5"
-                                : "border-border"
+                                ? "text-success fill-current"
+                                : "text-muted-foreground"
+                            }`}
+                          />
+                        )}
+                        <div className="flex-1">
+                          <h3
+                            className={`font-semibold ${
+                              target.completed
+                                ? "line-through text-muted-foreground"
+                                : ""
                             }`}
                           >
-                            <div className="flex items-center gap-3">
-                              <CheckCircle2
-                                className={`h-5 w-5 ${
-                                  target.completed
-                                    ? "text-success fill-current"
-                                    : "text-muted-foreground"
-                                }`}
-                              />
-                              <div className="flex-1">
-                                <h4 className="font-medium">{target.title}</h4>
-                                <p className="text-xs text-muted-foreground">
-                                  {target.description}
-                                </p>
-                              </div>
-                              <Badge variant="secondary">{target.type}</Badge>
-                            </div>
-                          </div>
-                        ))}
+                            {target.title}
+                          </h3>
+                          <p className="text-sm text-muted-foreground">
+                            {target.description}
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <Badge
+                            className={`${
+                              target.type === "daily"
+                                ? "bg-primary/10 text-primary border-primary/20"
+                                : target.type === "weekly"
+                                ? "bg-warning/10 text-warning border-warning/20"
+                                : "bg-success/10 text-success border-success/20"
+                            }`}
+                          >
+                            {target.type}
+                          </Badge>
+                          {target.streak > 0 && (
+                            <Badge variant="outline" className="text-warning">
+                              🔥 {target.streak}
+                            </Badge>
+                          )}
+                        </div>
                       </div>
-                    )}
-                  </>
+                    </div>
+                  ))
                 )}
               </CardContent>
             </Card>
