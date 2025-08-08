@@ -50,6 +50,7 @@ import { api, type Goal } from "@/lib/api";
 import { toast } from "sonner";
 
 export default function Goals() {
+  const { canCreateMoreGoals, isPremium, subscriptionTier } = useAuth();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
