@@ -139,6 +139,15 @@ export default function Goals() {
       return;
     }
 
+    // Check daily goal limits for free users
+    if (newGoal.type === "daily") {
+      const dailyGoalsCount = goals.filter(goal => goal.type === "daily").length;
+      if (!canCreateMoreGoals(dailyGoalsCount)) {
+        toast.error("You've reached the limit of 3 daily goals on the free plan. Upgrade to Premium for unlimited goals!");
+        return;
+      }
+    }
+
     try {
       setSaving(true);
       const createdGoal = await api.goals.createGoal(newGoal);
