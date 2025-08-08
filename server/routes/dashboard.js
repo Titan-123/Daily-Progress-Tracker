@@ -59,10 +59,11 @@ export const handleGetDashboard = async (req, res) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
+    // Use local date to avoid timezone issues
     const today = new Date();
-    today.setHours(0, 0, 0, 0);
+    const localToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
-    const tomorrow = new Date(today);
+    const tomorrow = new Date(localToday);
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     // Get today's targets
