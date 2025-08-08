@@ -437,7 +437,7 @@ export default function Calendar() {
                           </DialogTrigger>
                           {selectedDay &&
                             selectedDay.date ===
-                              date.toISOString().split("T")[0] && (
+                              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` && (
                               <DialogContent className="sm:max-w-lg">
                                 <DialogHeader>
                                   <DialogTitle className="flex items-center gap-2">
