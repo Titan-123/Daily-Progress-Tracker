@@ -316,10 +316,10 @@ export default function Index() {
             <div className="flex items-center gap-3">
               {!isPremium && (
                 <Button asChild variant="outline" size="sm" className="border-warning text-warning hover:bg-warning/10">
-                  <Link to="/pricing">
+                  <a href="/checkout?plan=premium" target="_blank" rel="noopener noreferrer">
                     <Crown className="h-4 w-4 mr-2" />
                     Upgrade
-                  </Link>
+                  </a>
                 </Button>
               )}
               <div className="hidden sm:flex items-center gap-3">
