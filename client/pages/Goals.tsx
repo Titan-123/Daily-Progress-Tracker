@@ -326,9 +326,21 @@ export default function Goals() {
 
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add New Goal
+              <Button
+                disabled={!isPremium && goals.filter(g => g.type === "daily").length >= 3}
+                className={!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? "relative" : ""}
+              >
+                {!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? (
+                  <>
+                    <Lock className="h-4 w-4 mr-2" />
+                    Upgrade for More Goals
+                  </>
+                ) : (
+                  <>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add New Goal
+                  </>
+                )}
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
