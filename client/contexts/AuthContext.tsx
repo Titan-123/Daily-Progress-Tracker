@@ -56,7 +56,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     if (savedToken && savedUser) {
       setToken(savedToken);
-      setUser(JSON.parse(savedUser));
+      const parsedUser = JSON.parse(savedUser);
+
+      // Add default subscription for existing users who don't have one
+      if (parsedUser && !parsedUser.subscription) {
+        parsedUser.subscription = {
+          tier: "free" as SubscriptionTier,
+          status: "active" as const,
+          startDate: new Date().toISOString(),
+        };
+        // Update localStorage with the new subscription
+        localStorage.setItem("user", JSON.stringify(parsedUser));
+      }
+
+      setUser(parsedUser);
     }
     setLoading(false);
   }, []);
