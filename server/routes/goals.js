@@ -108,7 +108,7 @@ export const handleCreateGoal = async (req, res) => {
       const existingTarget = await Target.findOne({
         userId,
         goalId: goal._id,
-        date: { $gte: today, $lt: tomorrow },
+        date: { $gte: localToday, $lt: tomorrow },
       });
 
       if (!existingTarget) {
