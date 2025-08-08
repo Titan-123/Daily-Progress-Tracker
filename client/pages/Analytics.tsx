@@ -65,6 +65,12 @@ export default function Analytics() {
           "Study goals",
         ],
         strengths: ["Morning routine", "Exercise habits", "Writing practice"],
+        habitStrength: {
+          "Morning Routine": 92,
+          "Exercise": 85,
+          "Writing": 78,
+          "Study Time": 65,
+        },
         weeklyData: [
           { day: "Mon", completion: 100, completed: 3, total: 3 },
           { day: "Tue", completion: 67, completed: 2, total: 3 },
