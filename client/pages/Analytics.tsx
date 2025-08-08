@@ -52,6 +52,7 @@ import {
 } from "recharts";
 
 export default function Analytics() {
+  const { isPremium, hasAnalyticsAccess } = useAuth();
   const [analyticsData, setAnalyticsData] = useState<AnalyticsData | null>(
     null,
   );
