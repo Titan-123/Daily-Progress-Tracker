@@ -41,16 +41,15 @@ export const handleGetAnalytics = async (req, res) => {
       (weeklyCompletion + monthlyCompletion) / 2,
     );
 
-    // Generate monthly trends (simplified)
-    const monthlyTrends = [
-      { week: "Week 1", completion: monthlyCompletion + 5 },
-      { week: "Week 2", completion: monthlyCompletion - 8 },
-      { week: "Week 3", completion: monthlyCompletion + 12 },
-      { week: "Week 4", completion: weeklyCompletion },
-    ].map((item) => ({
-      ...item,
-      completion: Math.max(0, Math.min(100, item.completion)),
-    }));
+    // Generate real monthly trends for the past 4 weeks
+    const monthlyTrends = [];
+    for (let i = 3; i >= 0; i--) {
+      const weekCompletion = await calculateWeeklyCompletion(userId, i);
+      monthlyTrends.push({
+        week: `Week ${4 - i}`,
+        completion: weekCompletion,
+      });
+    }
 
     const analyticsData = {
       weeklyCompletion,
