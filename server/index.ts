@@ -67,5 +67,10 @@ export function createServer() {
   app.post("/api/calendar/day/:date/mood", handleUpdateMood);
   app.post("/api/calendar/day/:date/highlights", handleAddHighlight);
 
+  // Subscription API routes
+  app.post("/api/subscription/upgrade", handleUpgradeSubscription);
+  app.get("/api/subscription", handleGetSubscription);
+  app.post("/api/subscription/cancel", handleCancelSubscription);
+
   return app;
 }
