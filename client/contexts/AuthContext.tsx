@@ -157,6 +157,44 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("user");
   };
 
+  const refreshUser = async () => {
+    const currentToken = token || localStorage.getItem("token");
+    if (!currentToken) return;
+
+    // For demo mode, just update the subscription to premium
+    if (currentToken === "demo-token-123" && user) {
+      const updatedUser = {
+        ...user,
+        subscription: {
+          tier: "premium" as SubscriptionTier,
+          status: "active" as const,
+          startDate: new Date().toISOString(),
+        },
+      };
+
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      return;
+    }
+
+    // For real users, fetch updated user data from API
+    try {
+      const response = await fetch("/api/auth/profile", {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        setUser(userData.user);
+        localStorage.setItem("user", JSON.stringify(userData.user));
+      }
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+  };
+
   // Helper methods for subscription checks
   const isPremium = user?.subscription?.tier === "premium";
   const subscriptionTier = user?.subscription?.tier || "free";
