@@ -24,6 +24,7 @@ export const handleGetAnalytics = async (req, res) => {
       monthlyCompletion,
       weeklyData,
       strengthsAndWeaknesses,
+      habitStrength,
       totalTargetsCompleted,
     ] = await Promise.all([
       calculateStreaks(userId),
@@ -31,6 +32,7 @@ export const handleGetAnalytics = async (req, res) => {
       calculateMonthlyCompletion(userId),
       getWeeklyData(userId),
       analyzeStrengthsAndWeaknesses(userId),
+      calculateHabitStrength(userId),
       Target.countDocuments({ userId, completed: true }),
     ]);
 
