@@ -15,6 +15,7 @@ interface User {
     best: number;
     lastActiveDate: string;
   };
+  subscription: UserSubscription;
 }
 
 interface AuthContextType {
