@@ -413,12 +413,11 @@ export default function Index() {
                 <div className="flex items-center justify-between">
                   <div>
                     <CardTitle className="flex items-center gap-2">
-                      <Repeat className="h-5 w-5 text-primary" />
-                      Today's Habits
+                      <Target className="h-5 w-5 text-primary" />
+                      Today's Goals
                     </CardTitle>
                     <CardDescription>
-                      Your daily routine - building consistency one day at a
-                      time
+                      Your daily, weekly, and monthly targets
                     </CardDescription>
                   </div>
                   <div className="flex items-center gap-2">
@@ -437,7 +436,7 @@ export default function Index() {
                     <Button asChild variant="outline" size="sm">
                       <Link to="/goals">
                         <Plus className="h-4 w-4 mr-2" />
-                        Add Habit
+                        Add Goal
                       </Link>
                     </Button>
                   </div>
