@@ -135,8 +135,8 @@ export default function Calendar() {
     try {
       // Use local date string to avoid timezone issues
       const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const day = String(date.getDate()).padStart(2, "0");
       const dateString = `${year}-${month}-${day}`;
 
       const dayData = await api.calendar.getDayData(dateString);
@@ -231,8 +231,8 @@ export default function Calendar() {
   const getDayData = (date: Date): DayData | null => {
     // Use local date string to avoid timezone issues
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
     const dateKey = `${year}-${month}-${day}`;
     return calendarData[dateKey] || null;
   };
@@ -437,7 +437,7 @@ export default function Calendar() {
                           </DialogTrigger>
                           {selectedDay &&
                             selectedDay.date ===
-                              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}` && (
+                              `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}` && (
                               <DialogContent className="sm:max-w-lg">
                                 <DialogHeader>
                                   <DialogTitle className="flex items-center gap-2">
