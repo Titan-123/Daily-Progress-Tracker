@@ -336,7 +336,7 @@ export default function Index() {
             <CardHeader className="pb-3">
               <CardTitle className="text-lg flex items-center gap-2">
                 <div className="p-2 bg-primary/20 rounded-lg">🔥</div>
-                Habit Streak
+                Current Streak
               </CardTitle>
             </CardHeader>
             <CardContent>
