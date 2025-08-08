@@ -56,6 +56,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const login = async (email: string, password: string) => {
+    // Demo mode - bypass authentication for demo credentials
+    if (email === "demo@example.com" && password === "demo123") {
+      const demoUser = {
+        id: "demo-user-123",
+        name: "Demo User",
+        email: "demo@example.com",
+        preferences: {
+          theme: "light",
+          notifications: true,
+          reminderTime: "09:00",
+        },
+        streaks: {
+          current: 12,
+          best: 21,
+          lastActiveDate: new Date().toISOString(),
+        },
+      };
+
+      const demoToken = "demo-token-123";
+
+      setToken(demoToken);
+      setUser(demoUser);
+      localStorage.setItem("token", demoToken);
+      localStorage.setItem("user", JSON.stringify(demoUser));
+      return;
+    }
+
+    // Regular authentication for non-demo users
     const response = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
