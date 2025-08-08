@@ -147,6 +147,7 @@ export interface AnalyticsData {
   consistencyScore: number;
   improvementAreas: string[];
   strengths: string[];
+  habitStrength: Record<string, number>;
   weeklyData: {
     day: string;
     completion: number;
