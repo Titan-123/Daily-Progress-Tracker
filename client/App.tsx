@@ -118,6 +118,14 @@ const AppRoutes = () => {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/pricing"
+          element={
+            <ProtectedRoute>
+              <Pricing />
+            </ProtectedRoute>
+          }
+        />
 
         {/* Catch all route */}
         <Route path="*" element={<NotFound />} />
