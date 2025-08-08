@@ -159,32 +159,9 @@ export default function Pricing() {
               Choose Your Plan
             </h1>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Unlock your full potential with the perfect plan for your journey
+              Unlock your full potential with our simple monthly pricing
             </p>
           </div>
-
-          {/* Billing Toggle */}
-          <Tabs defaultValue="monthly" className="w-fit mx-auto">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger 
-                value="monthly" 
-                onClick={() => setBillingCycle("monthly")}
-                className="flex items-center gap-2"
-              >
-                <Calendar className="h-4 w-4" />
-                Monthly
-              </TabsTrigger>
-              <TabsTrigger 
-                value="yearly" 
-                onClick={() => setBillingCycle("yearly")}
-                className="flex items-center gap-2"
-              >
-                <TrendingUp className="h-4 w-4" />
-                Yearly
-                <Badge variant="secondary" className="ml-1">-20%</Badge>
-              </TabsTrigger>
-            </TabsList>
-          </Tabs>
         </div>
 
         {/* Pricing Cards */}
