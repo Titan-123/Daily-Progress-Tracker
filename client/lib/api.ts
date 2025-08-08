@@ -87,6 +87,31 @@ export interface Goal {
   createdAt: string;
 }
 
+export interface Habit {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  target: string;
+  streak: number;
+  bestStreak: number;
+  isActive: boolean;
+  createdAt: string;
+  lastCompletedDate?: string;
+}
+
+export interface DailyTarget {
+  id: string;
+  title: string;
+  description?: string;
+  category: string;
+  priority: "low" | "medium" | "high";
+  completed: boolean;
+  completedAt?: string;
+  dueDate: string;
+  createdAt: string;
+}
+
 export interface Achievement {
   id: string;
   title: string;
