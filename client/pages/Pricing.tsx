@@ -31,31 +31,17 @@ import { toast } from "sonner";
 
 export default function Pricing() {
   const { isPremium, subscriptionTier } = useAuth();
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly");
   const [loading, setLoading] = useState(false);
 
-  const handleUpgrade = async (tier: SubscriptionTier) => {
+  const handleUpgrade = (tier: SubscriptionTier) => {
     if (tier === "free") return;
-    
-    setLoading(true);
-    try {
-      // In a real app, this would integrate with Stripe/payment processor
-      toast.success("Redirecting to payment processor...");
-      // Simulate payment flow
-      setTimeout(() => {
-        toast.success("Upgrade successful! Welcome to Premium! 🎉");
-        setLoading(false);
-      }, 2000);
-    } catch (error) {
-      toast.error("Failed to process upgrade. Please try again.");
-      setLoading(false);
-    }
+    // Redirect to checkout page instead of processing here
+    window.open(`/checkout?plan=${tier}`, '_blank');
   };
 
   const getPrice = (tier: SubscriptionTier) => {
     if (tier === "free") return 0;
-    const basePrice = SUBSCRIPTION_PLANS[tier].price;
-    return billingCycle === "yearly" ? basePrice * 10 : basePrice; // 2 months free with yearly
+    return SUBSCRIPTION_PLANS[tier].price; // Monthly price only
   };
 
   const PricingCard = ({ tier }: { tier: SubscriptionTier }) => {
