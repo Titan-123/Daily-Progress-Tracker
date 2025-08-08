@@ -43,7 +43,7 @@ export default function Index() {
   );
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
-  const { user, logout } = useAuth();
+  const { user, logout, isPremium, hasAnalyticsAccess } = useAuth();
 
   // Load dashboard data on component mount
   useEffect(() => {
