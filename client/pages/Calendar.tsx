@@ -458,39 +458,73 @@ export default function Calendar() {
                                 </DialogHeader>
 
                                 <div className="space-y-4">
-                                  {/* Targets for the day */}
+                                  {/* Goals for the day */}
                                   <div>
                                     <h4 className="font-semibold mb-2">
-                                      Daily Targets
+                                      Goals for This Day
                                     </h4>
-                                    <div className="space-y-2">
+                                    <div className="space-y-3">
                                       {selectedDay.targets.map((target) => (
                                         <div
                                           key={target.id}
-                                          className="flex items-center gap-3 p-2 rounded-lg bg-muted/30"
+                                          className={`p-3 rounded-lg border ${
+                                            target.completed
+                                              ? "border-success/30 bg-success/5"
+                                              : "border-muted bg-muted/30"
+                                          }`}
                                         >
-                                          {target.completed ? (
-                                            <CheckCircle2 className="h-4 w-4 text-success" />
-                                          ) : (
-                                            <XCircle className="h-4 w-4 text-muted-foreground" />
-                                          )}
-                                          <span
-                                            className={
-                                              target.completed
-                                                ? ""
-                                                : "text-muted-foreground"
-                                            }
-                                          >
-                                            {target.title}
-                                          </span>
-                                          <Badge
-                                            variant="outline"
-                                            className="ml-auto"
-                                          >
-                                            {target.category}
-                                          </Badge>
+                                          <div className="flex items-start gap-3">
+                                            {target.completed ? (
+                                              <CheckCircle2 className="h-5 w-5 text-success mt-0.5" />
+                                            ) : (
+                                              <XCircle className="h-5 w-5 text-muted-foreground mt-0.5" />
+                                            )}
+                                            <div className="flex-1 min-w-0">
+                                              <h5
+                                                className={`font-medium ${
+                                                  target.completed
+                                                    ? "line-through text-muted-foreground"
+                                                    : ""
+                                                }`}
+                                              >
+                                                {target.title}
+                                              </h5>
+                                              {target.description && (
+                                                <p className="text-sm text-muted-foreground mt-1">
+                                                  {target.description}
+                                                </p>
+                                              )}
+                                              <div className="flex items-center gap-2 mt-2">
+                                                <Badge variant="outline">
+                                                  {target.category}
+                                                </Badge>
+                                                <Badge
+                                                  className={`${
+                                                    target.type === "daily"
+                                                      ? "bg-primary/10 text-primary border-primary/20"
+                                                      : target.type === "weekly"
+                                                      ? "bg-warning/10 text-warning border-warning/20"
+                                                      : "bg-success/10 text-success border-success/20"
+                                                  }`}
+                                                >
+                                                  {target.type}
+                                                </Badge>
+                                                {target.streak > 0 && (
+                                                  <Badge variant="outline" className="text-warning">
+                                                    🔥 {target.streak}
+                                                  </Badge>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
                                         </div>
                                       ))}
+                                      {selectedDay.targets.length === 0 && (
+                                        <div className="text-center py-6 text-muted-foreground">
+                                          <Target className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                                          <p>No goals were set for this day</p>
+                                        </div>
+                                      )}
                                     </div>
                                   </div>
 
