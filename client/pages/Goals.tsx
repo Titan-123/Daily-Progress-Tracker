@@ -58,6 +58,7 @@ export default function Goals() {
     target: "",
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("habits");
 
   const categories = [
     "Health",
