@@ -12,6 +12,22 @@ export const authenticateToken = async (req, res, next) => {
       return res.status(401).json({ error: "Access token required" });
     }
 
+    // Handle demo token
+    if (token === "demo-token-123") {
+      req.userId = "demo-user-123";
+      req.user = {
+        _id: "demo-user-123",
+        name: "Demo User",
+        email: "demo@example.com",
+        preferences: {
+          theme: "light",
+          notifications: true,
+          reminderTime: "09:00",
+        },
+      };
+      return next();
+    }
+
     const decoded = jwt.verify(token, JWT_SECRET);
 
     // Check if user still exists
