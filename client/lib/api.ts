@@ -127,8 +127,11 @@ export interface DayData {
   targets: {
     id: string;
     title: string;
+    description?: string;
     completed: boolean;
     category: string;
+    type: string;
+    streak: number;
   }[];
   reflection?: string;
   mood?: "excellent" | "good" | "okay" | "difficult";
