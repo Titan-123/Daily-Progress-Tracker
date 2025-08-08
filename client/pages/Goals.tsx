@@ -460,9 +460,11 @@ export default function Goals() {
                     </p>
                   </div>
                 </div>
-                <Button variant="outline" className="border-warning text-warning hover:bg-warning/10">
-                  <Crown className="h-4 w-4 mr-2" />
-                  Upgrade to Premium
+                <Button asChild variant="outline" className="border-warning text-warning hover:bg-warning/10">
+                  <Link to="/pricing">
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrade to Premium
+                  </Link>
                 </Button>
               </div>
             </CardContent>
