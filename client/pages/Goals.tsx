@@ -324,25 +324,21 @@ export default function Goals() {
             </div>
           </div>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button
-                disabled={!isPremium && goals.filter(g => g.type === "daily").length >= 3}
-                className={!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? "relative" : ""}
-              >
-                {!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? (
-                  <>
-                    <Lock className="h-4 w-4 mr-2" />
-                    Upgrade for More Goals
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add New Goal
-                  </>
-                )}
-              </Button>
-            </DialogTrigger>
+          {!isPremium && goals.filter(g => g.type === "daily").length >= 3 ? (
+            <Button asChild className="relative">
+              <Link to="/pricing">
+                <Lock className="h-4 w-4 mr-2" />
+                Upgrade for More Goals
+              </Link>
+            </Button>
+          ) : (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add New Goal
+                </Button>
+              </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
                 <DialogTitle>Create a New Goal</DialogTitle>
@@ -439,7 +435,8 @@ export default function Goals() {
                 </Button>
               </div>
             </DialogContent>
-          </Dialog>
+            </Dialog>
+          )}
         </div>
 
         {/* Subscription Status */}
