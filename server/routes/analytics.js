@@ -91,7 +91,11 @@ export const handleGetWeeklyData = async (req, res) => {
 
 export const handleGetMonthlyTrends = async (req, res) => {
   try {
-    const userId = req.user?.id || DEFAULT_USER_ID;
+    const userId = req.user?.id;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Authentication required" });
+    }
 
     // Generate monthly trends for the past 4 weeks
     const trends = [];
