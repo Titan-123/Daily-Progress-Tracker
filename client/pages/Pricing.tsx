@@ -82,13 +82,10 @@ export default function Pricing() {
                 ${price}
                 {tier !== "free" && (
                   <span className="text-lg font-normal text-muted-foreground">
-                    /{billingCycle === "yearly" ? "year" : "month"}
+                    /month
                   </span>
                 )}
               </div>
-              {tier !== "free" && billingCycle === "yearly" && (
-                <p className="text-sm text-success">Save $23.88 per year!</p>
-              )}
             </div>
           </div>
         </CardHeader>
