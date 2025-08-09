@@ -31,6 +31,11 @@ import {
   handleUpdateMood,
   handleAddHighlight,
 } from "./routes/calendar.js";
+import {
+  handleUpgradeSubscription,
+  handleGetSubscription,
+  handleCancelSubscription,
+} from "./routes/subscription.js";
 
 export function createServer() {
   const app = express();
