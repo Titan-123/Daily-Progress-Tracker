@@ -114,9 +114,17 @@ export function createServer() {
   );
 
   // Subscription API routes (authentication required)
-  app.post("/api/subscription/upgrade", authenticateToken, handleUpgradeSubscription);
+  app.post(
+    "/api/subscription/upgrade",
+    authenticateToken,
+    handleUpgradeSubscription,
+  );
   app.get("/api/subscription", authenticateToken, handleGetSubscription);
-  app.post("/api/subscription/cancel", authenticateToken, handleCancelSubscription);
+  app.post(
+    "/api/subscription/cancel",
+    authenticateToken,
+    handleCancelSubscription,
+  );
 
   // Error handling middleware
   app.use((error, req, res, next) => {
