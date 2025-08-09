@@ -94,6 +94,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
+  // Poll localStorage for subscription changes (backup method)
+  useEffect(() => {
+    const checkForUpdates = () => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser && user) {
+        const parsedUser = JSON.parse(savedUser);
+        // Check if subscription tier has changed
+        if (parsedUser.subscription?.tier !== user.subscription?.tier) {
+          setUser(parsedUser);
+        }
+      }
+    };
+
+    const interval = setInterval(checkForUpdates, 2000); // Check every 2 seconds
+    return () => clearInterval(interval);
+  }, [user]);
+
   const login = async (email: string, password: string) => {
     // Demo mode - bypass authentication for demo credentials
     if (email === "demo@example.com" && password === "demo123") {
