@@ -106,6 +106,25 @@ export default function Checkout() {
         await refreshUser();
       }
 
+      // Also update localStorage directly to ensure persistence
+      const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+      if (currentUser) {
+        currentUser.subscription = {
+          tier: "premium",
+          status: "active",
+          startDate: new Date().toISOString(),
+        };
+        localStorage.setItem("user", JSON.stringify(currentUser));
+      }
+
+      // Notify parent window if this is opened in a new tab
+      if (window.opener) {
+        window.opener.postMessage({
+          type: 'SUBSCRIPTION_UPGRADED',
+          tier: 'premium'
+        }, window.location.origin);
+      }
+
       setPurchaseComplete(true);
       toast.success("🎉 Welcome to Premium! Your subscription is now active.");
     } catch (error) {
