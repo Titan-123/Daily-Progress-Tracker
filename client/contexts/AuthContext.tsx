@@ -84,14 +84,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin) return;
 
-      if (event.data.type === 'SUBSCRIPTION_UPGRADED') {
+      if (event.data.type === "SUBSCRIPTION_UPGRADED") {
         // Refresh user data when subscription is upgraded
         refreshUser();
       }
     };
 
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
   }, []);
 
   // Poll localStorage for subscription changes (backup method)

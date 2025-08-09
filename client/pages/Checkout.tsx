@@ -119,10 +119,13 @@ export default function Checkout() {
 
       // Notify parent window if this is opened in a new tab
       if (window.opener) {
-        window.opener.postMessage({
-          type: 'SUBSCRIPTION_UPGRADED',
-          tier: 'premium'
-        }, window.location.origin);
+        window.opener.postMessage(
+          {
+            type: "SUBSCRIPTION_UPGRADED",
+            tier: "premium",
+          },
+          window.location.origin,
+        );
       }
 
       setPurchaseComplete(true);
@@ -196,10 +199,13 @@ export default function Checkout() {
                   onClick={() => {
                     // Notify parent and close window
                     if (window.opener) {
-                      window.opener.postMessage({
-                        type: "SUBSCRIPTION_UPGRADED",
-                        tier: "premium",
-                      }, window.location.origin);
+                      window.opener.postMessage(
+                        {
+                          type: "SUBSCRIPTION_UPGRADED",
+                          tier: "premium",
+                        },
+                        window.location.origin,
+                      );
                       window.close();
                     } else {
                       navigate("/");
@@ -218,7 +224,8 @@ export default function Checkout() {
                 </Button>
               </div>
               <p className="text-sm text-muted-foreground">
-                Your Premium features are now active! Return to the dashboard to start using them.
+                Your Premium features are now active! Return to the dashboard to
+                start using them.
               </p>
             </div>
           </div>
