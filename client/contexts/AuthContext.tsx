@@ -79,6 +79,21 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     setLoading(false);
   }, []);
 
+  // Listen for subscription updates from checkout window
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === 'SUBSCRIPTION_UPGRADED') {
+        // Refresh user data when subscription is upgraded
+        refreshUser();
+      }
+    };
+
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
   const login = async (email: string, password: string) => {
     // Demo mode - bypass authentication for demo credentials
     if (email === "demo@example.com" && password === "demo123") {
