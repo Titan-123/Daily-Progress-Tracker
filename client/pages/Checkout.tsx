@@ -190,16 +190,35 @@ export default function Checkout() {
             </Card>
 
             <div className="space-y-4">
-              <Button
-                size="lg"
-                onClick={() => navigate("/")}
-                className="bg-gradient-to-r from-primary to-primary/80"
-              >
-                Start Using Premium Features
-              </Button>
+              <div className="flex gap-3 justify-center">
+                <Button
+                  size="lg"
+                  onClick={() => {
+                    // Notify parent and close window
+                    if (window.opener) {
+                      window.opener.postMessage({
+                        type: "SUBSCRIPTION_UPGRADED",
+                        tier: "premium",
+                      }, window.location.origin);
+                      window.close();
+                    } else {
+                      navigate("/");
+                    }
+                  }}
+                  className="bg-gradient-to-r from-primary to-primary/80"
+                >
+                  Return to Dashboard
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  onClick={() => window.open("/", "_blank")}
+                >
+                  Open New Tab
+                </Button>
+              </div>
               <p className="text-sm text-muted-foreground">
-                You can manage your subscription anytime from your account
-                settings
+                Your Premium features are now active! Return to the dashboard to start using them.
               </p>
             </div>
           </div>
