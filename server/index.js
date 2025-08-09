@@ -113,6 +113,11 @@ export function createServer() {
     handleAddHighlight,
   );
 
+  // Subscription API routes (authentication required)
+  app.post("/api/subscription/upgrade", authenticateToken, handleUpgradeSubscription);
+  app.get("/api/subscription", authenticateToken, handleGetSubscription);
+  app.post("/api/subscription/cancel", authenticateToken, handleCancelSubscription);
+
   // Error handling middleware
   app.use((error, req, res, next) => {
     console.error("Server error:", error);
