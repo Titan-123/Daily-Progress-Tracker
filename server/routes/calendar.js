@@ -1,5 +1,6 @@
 import DayEntry from "../models/DayEntry.js";
 import Target from "../models/Target.js";
+import { getDemoCalendarData, setDemoCalendarData, updateDemoCalendarReflection } from "../utils/demoUserStore.js";
 import Goal from "../models/Goal.js";
 import { getDemoDashboardTargets } from "../utils/demoUserStore.js";
 
