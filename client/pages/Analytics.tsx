@@ -18,6 +18,8 @@ import {
   Loader2,
   Crown,
   Lock,
+  Download,
+  Sparkles,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
