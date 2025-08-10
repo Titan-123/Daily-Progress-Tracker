@@ -205,21 +205,28 @@ export const handleSaveReflection = async (req, res) => {
 
     // Handle demo user separately
     if (userId === "demo-user-123") {
-      // Get current dashboard data to sync calendar
-      const dashboardTargets = getDemoDashboardTargets();
-      const completedCount = dashboardTargets.filter(t => t.completed).length;
+      // Get existing calendar data for this day or create new
+      let existingDayData = getDemoCalendarData(date);
 
-      const demoDay = {
-        date: date,
-        completed: completedCount,
-        total: dashboardTargets.length,
-        targets: dashboardTargets,
-        reflection: reflection,
-        mood: "good",
-        highlights: ["Great progress today!"],
-      };
-
-      return res.json(demoDay);
+      if (existingDayData) {
+        // Update only the reflection, preserve existing targets and completion
+        const updatedDay = updateDemoCalendarReflection(date, reflection);
+        return res.json(updatedDay);
+      } else {
+        // If no existing data, this shouldn't happen if they opened the modal,
+        // but create minimal data
+        const newDayData = {
+          date: date,
+          completed: 0,
+          total: 0,
+          targets: [],
+          reflection: reflection,
+          mood: undefined,
+          highlights: [],
+        };
+        setDemoCalendarData(date, newDayData);
+        return res.json(newDayData);
+      }
     }
 
     const dayDate = new Date(date);
