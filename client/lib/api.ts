@@ -214,16 +214,18 @@ const getDemoData = (endpoint: string) => {
             streak: 5,
           },
           {
-            id: "2",
+            id: "demo-2",
             title: "Exercise 30 minutes",
+            description: "Morning workout",
             completed: true,
             category: "Health",
             type: "daily",
             streak: 11,
           },
           {
-            id: "3",
+            id: "demo-3",
             title: "Read for 1 hour",
+            description: "Daily reading",
             completed: false,
             category: "Learning",
             type: "daily",
@@ -233,6 +235,8 @@ const getDemoData = (endpoint: string) => {
         mood: "okay" as const,
       },
     };
+
+    return staticDemoData;
   }
 
   return null;
