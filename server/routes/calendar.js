@@ -1,5 +1,7 @@
 import DayEntry from "../models/DayEntry.js";
 import Target from "../models/Target.js";
+import Goal from "../models/Goal.js";
+import { getDemoDashboardTargets } from "../utils/demoUserStore.js";
 
 export const handleGetCalendarData = async (req, res) => {
   try {
@@ -200,21 +202,58 @@ export const handleSaveReflection = async (req, res) => {
       return res.status(400).json({ error: "Reflection is required" });
     }
 
+    // Handle demo user separately
+    if (userId === "demo-user-123") {
+      // Get current dashboard data to sync calendar
+      const dashboardTargets = getDemoDashboardTargets();
+      const completedCount = dashboardTargets.filter(t => t.completed).length;
+
+      const demoDay = {
+        date: date,
+        completed: completedCount,
+        total: dashboardTargets.length,
+        targets: dashboardTargets,
+        reflection: reflection,
+        mood: "good",
+        highlights: ["Great progress today!"],
+      };
+
+      return res.json(demoDay);
+    }
+
     const dayDate = new Date(date);
 
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
 
     if (!dayEntry) {
-      // Create new day entry
+      // Get user's active daily goals to create targets
+      const activeGoals = await Goal.find({
+        userId,
+        type: "daily",
+        isActive: true
+      });
+
+      const targets = activeGoals.map(goal => ({
+        id: goal._id.toString(),
+        title: goal.title,
+        description: goal.description,
+        completed: false,
+        category: goal.category,
+        type: goal.type,
+        streak: goal.streak || 0,
+      }));
+
+      // Create new day entry with current daily goals
       dayEntry = new DayEntry({
         date: dayDate,
         userId,
         reflection,
         completed: 0,
-        total: 0,
-        targets: [],
+        total: targets.length,
+        targets: targets,
       });
     } else {
+      // Just update the reflection, preserve existing targets
       dayEntry.reflection = reflection;
     }
 
@@ -247,6 +286,23 @@ export const handleUpdateMood = async (req, res) => {
 
     if (!mood) {
       return res.status(400).json({ error: "Mood is required" });
+    }
+
+    // Handle demo user separately
+    if (userId === "demo-user-123") {
+      const dashboardTargets = getDemoDashboardTargets();
+      const completedCount = dashboardTargets.filter(t => t.completed).length;
+
+      const demoDay = {
+        date: date,
+        completed: completedCount,
+        total: dashboardTargets.length,
+        targets: dashboardTargets,
+        mood: mood,
+        highlights: ["Great progress today!"],
+      };
+
+      return res.json(demoDay);
     }
 
     const dayDate = new Date(date);
@@ -295,6 +351,22 @@ export const handleAddHighlight = async (req, res) => {
 
     if (!highlight) {
       return res.status(400).json({ error: "Highlight is required" });
+    }
+
+    // Handle demo user separately
+    if (userId === "demo-user-123") {
+      const dashboardTargets = getDemoDashboardTargets();
+      const completedCount = dashboardTargets.filter(t => t.completed).length;
+
+      const demoDay = {
+        date: date,
+        completed: completedCount,
+        total: dashboardTargets.length,
+        targets: dashboardTargets,
+        highlights: ["Great progress today!", highlight],
+      };
+
+      return res.json(demoDay);
     }
 
     const dayDate = new Date(date);

@@ -31,6 +31,11 @@ import {
   handleUpdateMood,
   handleAddHighlight,
 } from "./routes/calendar.js";
+import {
+  handleUpgradeSubscription,
+  handleGetSubscription,
+  handleCancelSubscription,
+} from "./routes/subscription.js";
 
 export function createServer() {
   const app = express();
@@ -106,6 +111,19 @@ export function createServer() {
     "/api/calendar/day/:date/highlights",
     authenticateToken,
     handleAddHighlight,
+  );
+
+  // Subscription API routes (authentication required)
+  app.post(
+    "/api/subscription/upgrade",
+    authenticateToken,
+    handleUpgradeSubscription,
+  );
+  app.get("/api/subscription", authenticateToken, handleGetSubscription);
+  app.post(
+    "/api/subscription/cancel",
+    authenticateToken,
+    handleCancelSubscription,
   );
 
   // Error handling middleware

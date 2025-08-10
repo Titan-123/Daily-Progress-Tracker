@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { addDemoGoal, getDemoDashboardTargets } from "../utils/demoUserStore.js";
 
 // Only import MongoDB models if mongoose is connected
 let Goal, Target;
@@ -42,6 +43,24 @@ export const handleGetGoals = async (req, res) => {
       return res.status(401).json({ error: "Authentication required" });
     }
 
+    // Handle demo user separately
+    if (userId === "demo-user-123") {
+      // For demo user, convert dashboard targets to goals format
+      const dashboardTargets = getDemoDashboardTargets();
+      const demoGoals = dashboardTargets.map(target => ({
+        id: target.id,
+        title: target.title,
+        description: target.description,
+        type: target.type,
+        category: target.category,
+        target: target.target || "Daily completion",
+        streak: target.streak,
+        isActive: true,
+        createdAt: new Date().toISOString(),
+      }));
+      return res.json(demoGoals);
+    }
+
     const goals = await Goal.find({ userId }).sort({ createdAt: -1 });
 
     const formattedGoals = goals.map((goal) => ({
@@ -80,6 +99,12 @@ export const handleCreateGoal = async (req, res) => {
 
     if (!title || !description || !type || !category || !target) {
       return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    // Handle demo user separately
+    if (userId === "demo-user-123") {
+      const newGoal = addDemoGoal({ title, description, type, category, target });
+      return res.status(201).json(newGoal);
     }
 
     const goal = new Goal({

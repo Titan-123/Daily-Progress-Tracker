@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
+import { getDemoUserSubscription } from "../utils/demoUserStore.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
 
@@ -10,6 +11,22 @@ export const authenticateToken = async (req, res, next) => {
 
     if (!token) {
       return res.status(401).json({ error: "Access token required" });
+    }
+
+    // Handle demo token
+    if (token === "demo-token-123") {
+      req.userId = "demo-user-123";
+      req.user = {
+        _id: "demo-user-123",
+        name: "Demo User",
+        email: "demo@example.com",
+        preferences: {
+          theme: "light",
+          notifications: true,
+          reminderTime: "09:00",
+        },
+      };
+      return next();
     }
 
     const decoded = jwt.verify(token, JWT_SECRET);
@@ -43,6 +60,22 @@ export const optionalAuth = async (req, res, next) => {
     const token = authHeader && authHeader.split(" ")[1];
 
     if (token) {
+      // Handle demo token
+      if (token === "demo-token-123") {
+        req.userId = "demo-user-123";
+        req.user = {
+          _id: "demo-user-123",
+          name: "Demo User",
+          email: "demo@example.com",
+          preferences: {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+        };
+        return next();
+      }
+
       const decoded = jwt.verify(token, JWT_SECRET);
       const user = await User.findById(decoded.userId);
 

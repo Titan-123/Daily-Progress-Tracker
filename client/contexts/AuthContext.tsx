@@ -1,4 +1,9 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+  UserSubscription,
+  SubscriptionTier,
+  SUBSCRIPTION_PLANS,
+} from "@shared/api";
 
 interface User {
   id: string;
@@ -14,6 +19,7 @@ interface User {
     best: number;
     lastActiveDate: string;
   };
+  subscription: UserSubscription;
 }
 
 interface AuthContextType {
@@ -22,8 +28,13 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   loading: boolean;
   isAuthenticated: boolean;
+  isPremium: boolean;
+  subscriptionTier: SubscriptionTier;
+  canCreateMoreGoals: (currentGoalCount: number) => boolean;
+  hasAnalyticsAccess: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -43,17 +54,116 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Load user from localStorage on mount
+  // Load user from localStorage on mount and fetch latest subscription
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
+    const loadUserAndSubscription = async () => {
+      const savedToken = localStorage.getItem("token");
+      const savedUser = localStorage.getItem("user");
 
-    if (savedToken && savedUser) {
-      setToken(savedToken);
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
+      if (savedToken && savedUser) {
+        setToken(savedToken);
+        const parsedUser = JSON.parse(savedUser);
+
+        // Add default subscription for existing users who don't have one
+        if (parsedUser && !parsedUser.subscription) {
+          parsedUser.subscription = {
+            tier: "free" as SubscriptionTier,
+            status: "active" as const,
+            startDate: new Date().toISOString(),
+          };
+          // Update localStorage with the new subscription
+          localStorage.setItem("user", JSON.stringify(parsedUser));
+        }
+
+        setUser(parsedUser);
+
+        // Fetch latest subscription data from backend
+        try {
+          const subscriptionResponse = await fetch("/api/subscription", {
+            headers: {
+              Authorization: `Bearer ${savedToken}`,
+            },
+          });
+
+          if (subscriptionResponse.ok) {
+            const subscriptionData = await subscriptionResponse.json();
+            console.log("Fetched subscription from backend:", subscriptionData.subscription);
+
+            const updatedUser = {
+              ...parsedUser,
+              subscription: subscriptionData.subscription,
+            };
+
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+          }
+        } catch (error) {
+          console.error("Failed to fetch subscription data:", error);
+        }
+      }
+      setLoading(false);
+    };
+
+    loadUserAndSubscription();
   }, []);
+
+  // Listen for subscription updates from checkout window
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+
+      if (event.data.type === "SUBSCRIPTION_UPGRADED") {
+        console.log("Received subscription upgrade message");
+        // Force immediate localStorage check and update
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+          const parsedUser = JSON.parse(savedUser);
+          setUser(parsedUser);
+          console.log("Updated user from message:", parsedUser);
+        }
+        // Also call refreshUser as backup
+        setTimeout(() => refreshUser(), 100);
+      }
+    };
+
+    window.addEventListener("message", handleMessage);
+    return () => window.removeEventListener("message", handleMessage);
+  }, []);
+
+  // Poll localStorage for subscription changes (backup method)
+  useEffect(() => {
+    const checkForUpdates = () => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser && user) {
+        const parsedUser = JSON.parse(savedUser);
+        // Check if subscription tier has changed
+        if (parsedUser.subscription?.tier !== user.subscription?.tier) {
+          console.log("Detected subscription change in localStorage:", parsedUser.subscription?.tier);
+          setUser(parsedUser);
+        }
+      }
+    };
+
+    const interval = setInterval(checkForUpdates, 1000); // Check every 1 second
+    return () => clearInterval(interval);
+  }, [user]);
+
+  // Refresh user data when window comes back into focus (when returning from checkout)
+  useEffect(() => {
+    const handleFocus = () => {
+      console.log("Window focused, checking for subscription updates");
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        const parsedUser = JSON.parse(savedUser);
+        if (parsedUser.subscription?.tier !== user?.subscription?.tier) {
+          setUser(parsedUser);
+        }
+      }
+    };
+
+    window.addEventListener("focus", handleFocus);
+    return () => window.removeEventListener("focus", handleFocus);
+  }, [user]);
 
   const login = async (email: string, password: string) => {
     // Demo mode - bypass authentication for demo credentials
@@ -71,6 +181,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
           current: 12,
           best: 21,
           lastActiveDate: new Date().toISOString(),
+        },
+        subscription: {
+          tier: "free" as SubscriptionTier,
+          status: "active" as const,
+          startDate: new Date().toISOString(),
         },
       };
 
@@ -132,14 +247,84 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("user");
   };
 
+  const refreshUser = async () => {
+    const currentToken = token || localStorage.getItem("token");
+    if (!currentToken) return;
+
+    try {
+      // Fetch current subscription data from backend
+      const subscriptionResponse = await fetch("/api/subscription", {
+        headers: {
+          Authorization: `Bearer ${currentToken}`,
+        },
+      });
+
+      if (subscriptionResponse.ok) {
+        const subscriptionData = await subscriptionResponse.json();
+
+        if (user) {
+          const updatedUser = {
+            ...user,
+            subscription: subscriptionData.subscription,
+          };
+
+          setUser(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+          console.log("User refreshed with subscription:", subscriptionData.subscription);
+        }
+      }
+
+      // For real users, also fetch updated user profile
+      if (currentToken !== "demo-token-123") {
+        const response = await fetch("/api/auth/profile", {
+          headers: {
+            Authorization: `Bearer ${currentToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          setUser(userData.user);
+          localStorage.setItem("user", JSON.stringify(userData.user));
+        }
+      }
+    } catch (error) {
+      console.error("Failed to refresh user data:", error);
+    }
+  };
+
+  // Helper methods for subscription checks
+  const isPremium = user?.subscription?.tier === "premium";
+  const subscriptionTier = user?.subscription?.tier || "free";
+  const hasAnalyticsAccess = isPremium;
+
+  // Debug logging
+  console.log("Current user subscription:", user?.subscription);
+  console.log("isPremium:", isPremium);
+  console.log("subscriptionTier:", subscriptionTier);
+
+  const canCreateMoreGoals = (currentGoalCount: number) => {
+    if (!user || !user.subscription) return false;
+    const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
+    return (
+      plan.limitations.maxDailyGoals === null ||
+      currentGoalCount < plan.limitations.maxDailyGoals
+    );
+  };
+
   const value = {
     user,
     token,
     login,
     register,
     logout,
+    refreshUser,
     loading,
     isAuthenticated: !!user,
+    isPremium,
+    subscriptionTier,
+    canCreateMoreGoals,
+    hasAnalyticsAccess,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

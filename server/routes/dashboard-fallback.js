@@ -1,30 +1,11 @@
 // Fallback mock data when MongoDB is not available
-let mockTargets = [
-  {
-    id: "1",
-    title: "Write 500 words",
-    description: "Creative writing practice",
-    type: "daily",
-    completed: false,
-    streak: 3,
-  },
-  {
-    id: "2",
-    title: "Study for 2 hours",
-    description: "Focus on JavaScript fundamentals",
-    type: "daily",
-    completed: true,
-    streak: 7,
-  },
-  {
-    id: "3",
-    title: "Exercise 30 minutes",
-    description: "Morning workout routine",
-    type: "daily",
-    completed: false,
-    streak: 2,
-  },
-];
+import { getDemoDashboardTargets, updateDemoTargetCompletion } from "../utils/demoUserStore.js";
+
+// Get targets from demo store instead of static data
+const getMockTargets = () => getDemoDashboardTargets();
+
+// Remove static mock targets - now using demo store
+let mockTargets = [];
 
 const mockAchievements = [
   {
@@ -52,8 +33,9 @@ const mockAchievements = [
 
 export const handleGetDashboardFallback = (req, res) => {
   console.log("📋 Using fallback dashboard data (MongoDB not connected)");
+  const currentTargets = getMockTargets();
   res.json({
-    targets: mockTargets,
+    targets: currentTargets,
     achievements: mockAchievements,
     weeklyProgress: 85,
     totalStreak: 12,
@@ -63,17 +45,17 @@ export const handleGetDashboardFallback = (req, res) => {
 export const handleToggleTargetFallback = (req, res) => {
   const { targetId } = req.params;
 
-  const targetIndex = mockTargets.findIndex((t) => t.id === targetId);
-  if (targetIndex === -1) {
+  const currentTargets = getMockTargets();
+  const target = currentTargets.find((t) => t.id === targetId);
+  if (!target) {
     return res.status(404).json({ error: "Target not found" });
   }
 
-  // Toggle the completed status
-  mockTargets[targetIndex] = {
-    ...mockTargets[targetIndex],
-    completed: !mockTargets[targetIndex].completed,
-  };
+  const newCompleted = !target.completed;
+  updateDemoTargetCompletion(targetId, newCompleted);
 
-  console.log(`🎯 Toggled target ${targetId} (fallback mode)`);
-  res.json(mockTargets[targetIndex]);
+  console.log(`🎯 Toggled target ${targetId} to ${newCompleted} (fallback mode)`);
+
+  const updatedTarget = { ...target, completed: newCompleted };
+  res.json(updatedTarget);
 };

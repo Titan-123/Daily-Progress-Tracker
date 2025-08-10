@@ -22,6 +22,11 @@ import {
   handleUpdateMood,
   handleAddHighlight,
 } from "./routes/calendar";
+import {
+  handleUpgradeSubscription,
+  handleGetSubscription,
+  handleCancelSubscription,
+} from "./routes/subscription";
 
 export function createServer() {
   const app = express();
@@ -61,6 +66,11 @@ export function createServer() {
   app.post("/api/calendar/day/:date/reflection", handleSaveReflection);
   app.post("/api/calendar/day/:date/mood", handleUpdateMood);
   app.post("/api/calendar/day/:date/highlights", handleAddHighlight);
+
+  // Subscription API routes
+  app.post("/api/subscription/upgrade", handleUpgradeSubscription);
+  app.get("/api/subscription", handleGetSubscription);
+  app.post("/api/subscription/cancel", handleCancelSubscription);
 
   return app;
 }

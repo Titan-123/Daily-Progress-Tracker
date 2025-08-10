@@ -14,6 +14,8 @@ import {
   User,
   Repeat,
   Clock,
+  Crown,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -41,7 +43,7 @@ export default function Index() {
   );
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
-  const { user, logout } = useAuth();
+  const { user, logout, isPremium, hasAnalyticsAccess, refreshUser } = useAuth();
 
   // Load dashboard data on component mount
   useEffect(() => {
@@ -103,7 +105,7 @@ export default function Index() {
             id: "1",
             title: "7-Day Streak",
             description: "Completed daily goals for a week!",
-            icon: "🔥",
+            icon: "���",
             earned: true,
           },
           {
@@ -275,13 +277,27 @@ export default function Index() {
                 <Target className="h-4 w-4" />
                 Goals
               </Link>
-              <Link
-                to="/analytics"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-              >
-                <BarChart3 className="h-4 w-4" />
-                Analytics
-              </Link>
+              {hasAnalyticsAccess ? (
+                <Link
+                  to="/analytics"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                >
+                  <BarChart3 className="h-4 w-4" />
+                  Analytics
+                  {isPremium && <Crown className="h-3 w-3 text-warning" />}
+                </Link>
+              ) : (
+                <Link
+                  to="/pricing"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+                >
+                  <Lock className="h-4 w-4" />
+                  Analytics
+                  <Badge variant="outline" className="text-xs">
+                    Premium
+                  </Badge>
+                </Link>
+              )}
               <Link
                 to="/calendar"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
@@ -289,14 +305,59 @@ export default function Index() {
                 <Calendar className="h-4 w-4" />
                 Calendar
               </Link>
+              <Link
+                to="/pricing"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Crown className="h-4 w-4" />
+                Pricing
+              </Link>
             </nav>
 
             {/* User Menu */}
             <div className="flex items-center gap-3">
+              {!isPremium && (
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="border-warning text-warning hover:bg-warning/10"
+                >
+                  <a
+                    href="/checkout?plan=premium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrade
+                  </a>
+                </Button>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => refreshUser()}
+                title="Refresh subscription status"
+              >
+                🔄
+              </Button>
               <div className="hidden sm:flex items-center gap-3">
                 <div className="text-right">
-                  <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium">{user?.name}</p>
+                    {isPremium && <Crown className="h-3 w-3 text-warning" />}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <p className="text-xs text-muted-foreground">
+                      {user?.email}
+                    </p>
+                    <Badge
+                      variant={isPremium ? "default" : "outline"}
+                      className="text-xs"
+                    >
+                      {isPremium ? "Premium" : "Free"}
+                    </Badge>
+                  </div>
                 </div>
                 <div className="p-2 bg-primary/10 rounded-full">
                   <User className="h-4 w-4 text-primary" />

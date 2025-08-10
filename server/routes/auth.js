@@ -107,6 +107,11 @@ export const handleRegister = async (req, res) => {
         name: user.name,
         email: user.email,
         preferences: user.preferences,
+        subscription: user.subscription || {
+          tier: "free",
+          status: "active",
+          startDate: new Date(),
+        },
       },
     });
   } catch (error) {
@@ -156,6 +161,11 @@ export const handleLogin = async (req, res) => {
         email: user.email,
         preferences: user.preferences,
         streaks: user.streaks,
+        subscription: user.subscription || {
+          tier: "free",
+          status: "active",
+          startDate: new Date(),
+        },
       },
     });
   } catch (error) {

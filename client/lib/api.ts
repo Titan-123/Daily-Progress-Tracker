@@ -1,6 +1,5 @@
 // API base URL - you can configure this for your backend
-const API_BASE_URL =
-  process.env.NODE_ENV === "production" ? "/api" : "http://localhost:3000/api";
+const API_BASE_URL = process.env.NODE_ENV === "production" ? "/api" : "/api";
 
 // Get token from localStorage
 const getAuthToken = () => {
@@ -13,36 +12,14 @@ const isDemoMode = () => {
   return token === "demo-token-123";
 };
 
+// Store current dashboard data for calendar sync
+let currentDashboardData: any = null;
+
 // Demo data
 const getDemoData = (endpoint: string) => {
   if (endpoint === "/dashboard") {
-    return {
-      targets: [
-        {
-          id: "1",
-          title: "Write 500 words",
-          description: "Creative writing practice",
-          type: "daily",
-          completed: true,
-          streak: 7,
-        },
-        {
-          id: "2",
-          title: "Exercise 30 minutes",
-          description: "Morning workout routine",
-          type: "daily",
-          completed: false,
-          streak: 12,
-        },
-        {
-          id: "3",
-          title: "Read for 1 hour",
-          description: "Daily reading habit",
-          type: "daily",
-          completed: true,
-          streak: 5,
-        },
-      ],
+    const dashboardData = {
+      targets: [], // Start with no goals for fresh user experience
       achievements: [
         {
           id: "1",
@@ -62,6 +39,10 @@ const getDemoData = (endpoint: string) => {
       weeklyProgress: 85,
       totalStreak: 12,
     };
+
+    // Store for calendar sync
+    currentDashboardData = dashboardData;
+    return dashboardData;
   }
 
   if (endpoint === "/analytics") {
@@ -136,6 +117,104 @@ const getDemoData = (endpoint: string) => {
         createdAt: "2024-01-03T00:00:00Z",
       },
     ];
+  }
+
+  // Calendar endpoints
+  if (endpoint.startsWith("/calendar")) {
+    const today = new Date();
+    const currentMonth = today.getMonth() + 1;
+    const currentYear = today.getFullYear();
+
+    // Get current dashboard targets (start with empty array)
+    const dashboardTargets = currentDashboardData?.targets || [];
+
+    // Calculate completion based on actual dashboard data
+    const completedCount = dashboardTargets.filter((t: any) => t.completed).length;
+    const totalCount = dashboardTargets.length;
+
+    return {
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`,
+        completed: completedCount,
+        total: totalCount,
+        targets: dashboardTargets.map((target: any) => ({
+          id: target.id,
+          title: target.title,
+          description: target.description || "",
+          completed: target.completed,
+          category: target.category,
+          type: target.type,
+          streak: target.streak,
+        })),
+        reflection: "Amazing day! Felt so productive and energized.",
+        mood: "excellent" as const,
+        highlights: ["Finished a short story", "Great workout session"],
+      },
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-15`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-15`,
+        completed: 2,
+        total: 3,
+        targets: [
+          {
+            id: "1",
+            title: "Write 500 words",
+            completed: true,
+            category: "Creative",
+            type: "daily",
+            streak: 6,
+          },
+          {
+            id: "2",
+            title: "Exercise 30 minutes",
+            completed: false,
+            category: "Health",
+            type: "daily",
+            streak: 11,
+          },
+          {
+            id: "3",
+            title: "Read for 1 hour",
+            completed: true,
+            category: "Learning",
+            type: "daily",
+            streak: 4,
+          },
+        ],
+        mood: "good" as const,
+      },
+      [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-14`]: {
+        date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-14`,
+        completed: 1,
+        total: 3,
+        targets: [
+          {
+            id: "1",
+            title: "Write 500 words",
+            completed: false,
+            category: "Creative",
+            type: "daily",
+            streak: 5,
+          },
+          {
+            id: "2",
+            title: "Exercise 30 minutes",
+            completed: true,
+            category: "Health",
+            type: "daily",
+            streak: 11,
+          },
+          {
+            id: "3",
+            title: "Read for 1 hour",
+            completed: false,
+            category: "Learning",
+            type: "daily",
+            streak: 3,
+          },
+        ],
+        mood: "okay" as const,
+      },
+    };
   }
 
   return null;

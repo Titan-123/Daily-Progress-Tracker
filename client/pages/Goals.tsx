@@ -14,7 +14,10 @@ import {
   CheckCircle2,
   Save,
   Loader2,
+  Crown,
+  Lock,
 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -47,6 +50,7 @@ import { api, type Goal } from "@/lib/api";
 import { toast } from "sonner";
 
 export default function Goals() {
+  const { canCreateMoreGoals, isPremium, subscriptionTier } = useAuth();
   const [goals, setGoals] = useState<Goal[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -133,6 +137,19 @@ export default function Goals() {
     ) {
       toast.error("Please fill in all fields");
       return;
+    }
+
+    // Check daily goal limits for free users
+    if (newGoal.type === "daily") {
+      const dailyGoalsCount = goals.filter(
+        (goal) => goal.type === "daily",
+      ).length;
+      if (!canCreateMoreGoals(dailyGoalsCount)) {
+        toast.error(
+          "You've reached the limit of 3 daily goals on the free plan. Upgrade to Premium for unlimited goals!",
+        );
+        return;
+      }
     }
 
     try {
@@ -311,111 +328,169 @@ export default function Goals() {
             </div>
           </div>
 
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Add New Goal
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle>Create a New Goal</DialogTitle>
-                <DialogDescription>
-                  Set up a meaningful target that will help you grow and thrive!
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label htmlFor="title">Goal Title</Label>
-                  <Input
-                    id="title"
-                    placeholder="e.g., Write in journal"
-                    value={newGoal.title}
-                    onChange={(e) =>
-                      setNewGoal({ ...newGoal, title: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    placeholder="What does this goal mean to you?"
-                    value={newGoal.description}
-                    onChange={(e) =>
-                      setNewGoal({ ...newGoal, description: e.target.value })
-                    }
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+          {!isPremium && goals.filter((g) => g.type === "daily").length >= 3 ? (
+            <Button asChild className="relative">
+              <a
+                href="/checkout?plan=premium"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Lock className="h-4 w-4 mr-2" />
+                Upgrade for More Goals
+              </a>
+            </Button>
+          ) : (
+            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add New Goal
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Create a New Goal</DialogTitle>
+                  <DialogDescription>
+                    Set up a meaningful target that will help you grow and
+                    thrive!
+                  </DialogDescription>
+                </DialogHeader>
+                <div className="space-y-4 py-4">
                   <div className="space-y-2">
-                    <Label htmlFor="type">Frequency</Label>
-                    <Select
-                      value={newGoal.type}
-                      onValueChange={(value: "daily" | "weekly" | "monthly") =>
-                        setNewGoal({ ...newGoal, type: value })
+                    <Label htmlFor="title">Goal Title</Label>
+                    <Input
+                      id="title"
+                      placeholder="e.g., Write in journal"
+                      value={newGoal.title}
+                      onChange={(e) =>
+                        setNewGoal({ ...newGoal, title: e.target.value })
                       }
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="daily">Daily</SelectItem>
-                        <SelectItem value="weekly">Weekly</SelectItem>
-                        <SelectItem value="monthly">Monthly</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="category">Category</Label>
-                    <Select
-                      value={newGoal.category}
-                      onValueChange={(value) =>
-                        setNewGoal({ ...newGoal, category: value })
+                    <Label htmlFor="description">Description</Label>
+                    <Textarea
+                      id="description"
+                      placeholder="What does this goal mean to you?"
+                      value={newGoal.description}
+                      onChange={(e) =>
+                        setNewGoal({ ...newGoal, description: e.target.value })
                       }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Choose..." />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {categories.map((category) => (
-                          <SelectItem key={category} value={category}>
-                            {category}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="type">Frequency</Label>
+                      <Select
+                        value={newGoal.type}
+                        onValueChange={(
+                          value: "daily" | "weekly" | "monthly",
+                        ) => setNewGoal({ ...newGoal, type: value })}
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="daily">Daily</SelectItem>
+                          <SelectItem value="weekly">Weekly</SelectItem>
+                          <SelectItem value="monthly">Monthly</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="category">Category</Label>
+                      <Select
+                        value={newGoal.category}
+                        onValueChange={(value) =>
+                          setNewGoal({ ...newGoal, category: value })
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Choose..." />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {categories.map((category) => (
+                            <SelectItem key={category} value={category}>
+                              {category}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="target">Target Amount</Label>
+                    <Input
+                      id="target"
+                      placeholder="e.g., 30 minutes, 500 words, 1 book"
+                      value={newGoal.target}
+                      onChange={(e) =>
+                        setNewGoal({ ...newGoal, target: e.target.value })
+                      }
+                    />
+                  </div>
+                  <Button
+                    onClick={addGoal}
+                    className="w-full"
+                    disabled={saving}
+                  >
+                    {saving ? (
+                      <>
+                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        <Save className="h-4 w-4 mr-2" />
+                        Create Goal
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          )}
+        </div>
+
+        {/* Subscription Status */}
+        {!isPremium && (
+          <Card className="border-2 border-warning/20 bg-gradient-to-r from-warning/5 to-accent/10">
+            <CardContent className="pt-6">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="p-2 rounded-lg bg-warning/10">
+                    <Crown className="h-6 w-6 text-warning" />
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold">
+                      Free Plan:{" "}
+                      {goals.filter((g) => g.type === "daily").length}/3 Daily
+                      Goals Used
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Upgrade to Premium for unlimited daily goals and advanced
+                      analytics
+                    </p>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="target">Target Amount</Label>
-                  <Input
-                    id="target"
-                    placeholder="e.g., 30 minutes, 500 words, 1 book"
-                    value={newGoal.target}
-                    onChange={(e) =>
-                      setNewGoal({ ...newGoal, target: e.target.value })
-                    }
-                  />
-                </div>
-                <Button onClick={addGoal} className="w-full" disabled={saving}>
-                  {saving ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Creating...
-                    </>
-                  ) : (
-                    <>
-                      <Save className="h-4 w-4 mr-2" />
-                      Create Goal
-                    </>
-                  )}
+                <Button
+                  asChild
+                  variant="outline"
+                  className="border-warning text-warning hover:bg-warning/10"
+                >
+                  <a
+                    href="/checkout?plan=premium"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Crown className="h-4 w-4 mr-2" />
+                    Upgrade to Premium
+                  </a>
                 </Button>
               </div>
-            </DialogContent>
-          </Dialog>
-        </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Motivational Message */}
         <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
