@@ -1083,17 +1083,28 @@ export default function Analytics() {
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart
                       data={[
-                        { month: 'Jan', completion: 65, consistency: 78 },
-                        { month: 'Feb', completion: 72, consistency: 82 },
-                        { month: 'Mar', completion: 78, consistency: 85 },
-                        { month: 'Apr', completion: 85, consistency: 88 },
-                        { month: 'May', completion: 82, consistency: 90 },
-                        { month: 'Jun', completion: 88, consistency: 92 },
+                        { month: "Jan", completion: 65, consistency: 78 },
+                        { month: "Feb", completion: 72, consistency: 82 },
+                        { month: "Mar", completion: 78, consistency: 85 },
+                        { month: "Apr", completion: 85, consistency: 88 },
+                        { month: "May", completion: 82, consistency: 90 },
+                        { month: "Jun", completion: 88, consistency: 92 },
                       ]}
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
-                      <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
+                      <XAxis
+                        dataKey="month"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        domain={[0, 100]}
+                      />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "hsl(var(--card))",
@@ -1138,17 +1149,31 @@ export default function Analytics() {
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart
                       data={[
-                        { category: 'Health', completion: 92, total: 25 },
-                        { category: 'Learning', completion: 85, total: 18 },
-                        { category: 'Creative', completion: 78, total: 15 },
-                        { category: 'Professional', completion: 88, total: 20 },
-                        { category: 'Personal', completion: 75, total: 12 },
+                        { category: "Health", completion: 92, total: 25 },
+                        { category: "Learning", completion: 85, total: 18 },
+                        { category: "Creative", completion: 78, total: 15 },
+                        { category: "Professional", completion: 88, total: 20 },
+                        { category: "Personal", completion: 75, total: 12 },
                       ]}
                       layout="horizontal"
                     >
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
-                      <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={12} />
-                      <YAxis type="category" dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} width={80} />
+                      <CartesianGrid
+                        strokeDasharray="3 3"
+                        stroke="hsl(var(--muted))"
+                      />
+                      <XAxis
+                        type="number"
+                        domain={[0, 100]}
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                      />
+                      <YAxis
+                        type="category"
+                        dataKey="category"
+                        stroke="hsl(var(--muted-foreground))"
+                        fontSize={12}
+                        width={80}
+                      />
                       <Tooltip
                         contentStyle={{
                           backgroundColor: "hsl(var(--card))",
@@ -1157,10 +1182,14 @@ export default function Analytics() {
                         }}
                         formatter={(value: any, name: any, props: any) => [
                           `${value}% (${props.payload.total} goals)`,
-                          "Completion Rate"
+                          "Completion Rate",
                         ]}
                       />
-                      <Bar dataKey="completion" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+                      <Bar
+                        dataKey="completion"
+                        fill="hsl(var(--primary))"
+                        radius={[0, 4, 4, 0]}
+                      />
                     </BarChart>
                   </ResponsiveContainer>
                 </CardContent>
@@ -1173,7 +1202,9 @@ export default function Analytics() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">Peak Performance</CardTitle>
-                  <CardDescription>When you complete goals most often</CardDescription>
+                  <CardDescription>
+                    When you complete goals most often
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
@@ -1201,7 +1232,8 @@ export default function Analytics() {
                   </div>
                   <div className="pt-3 border-t">
                     <p className="text-xs text-muted-foreground">
-                      💡 You're most productive in the morning! Consider scheduling important goals before noon.
+                      💡 You're most productive in the morning! Consider
+                      scheduling important goals before noon.
                     </p>
                   </div>
                 </CardContent>
@@ -1217,11 +1249,15 @@ export default function Analytics() {
                   <div className="space-y-3">
                     <div className="flex justify-between">
                       <span className="text-sm">Current Streak</span>
-                      <span className="font-semibold text-warning">🔥 {analyticsData.currentStreak} days</span>
+                      <span className="font-semibold text-warning">
+                        🔥 {analyticsData.currentStreak} days
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Best Streak</span>
-                      <span className="font-semibold text-success">⭐ {analyticsData.bestStreak} days</span>
+                      <span className="font-semibold text-success">
+                        ⭐ {analyticsData.bestStreak} days
+                      </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm">Average Streak</span>
@@ -1230,7 +1266,10 @@ export default function Analytics() {
                   </div>
                   <div className="pt-3 border-t">
                     <p className="text-xs text-muted-foreground">
-                      🎯 You're {analyticsData.currentStreak >= analyticsData.bestStreak ? 'at your best!' : `${analyticsData.bestStreak - analyticsData.currentStreak} days from your record!`}
+                      🎯 You're{" "}
+                      {analyticsData.currentStreak >= analyticsData.bestStreak
+                        ? "at your best!"
+                        : `${analyticsData.bestStreak - analyticsData.currentStreak} days from your record!`}
                     </p>
                   </div>
                 </CardContent>
@@ -1240,7 +1279,9 @@ export default function Analytics() {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-lg">AI Recommendations</CardTitle>
-                  <CardDescription>Personalized goal suggestions</CardDescription>
+                  <CardDescription>
+                    Personalized goal suggestions
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-3">
@@ -1248,8 +1289,12 @@ export default function Analytics() {
                       <div className="flex items-start gap-2">
                         <Target className="h-4 w-4 text-primary mt-0.5" />
                         <div>
-                          <p className="text-sm font-medium">Add a weekend goal</p>
-                          <p className="text-xs text-muted-foreground">Your weekend completion drops to 45%</p>
+                          <p className="text-sm font-medium">
+                            Add a weekend goal
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            Your weekend completion drops to 45%
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1258,7 +1303,9 @@ export default function Analytics() {
                         <Zap className="h-4 w-4 text-success mt-0.5" />
                         <div>
                           <p className="text-sm font-medium">Evening routine</p>
-                          <p className="text-xs text-muted-foreground">Try moving one goal to evening</p>
+                          <p className="text-xs text-muted-foreground">
+                            Try moving one goal to evening
+                          </p>
                         </div>
                       </div>
                     </div>
@@ -1300,7 +1347,8 @@ export default function Analytics() {
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground mt-4">
-                  Premium feature: Export your complete goal history, analytics data, and progress reports.
+                  Premium feature: Export your complete goal history, analytics
+                  data, and progress reports.
                 </p>
               </CardContent>
             </Card>

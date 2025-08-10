@@ -87,7 +87,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           if (subscriptionResponse.ok) {
             const subscriptionData = await subscriptionResponse.json();
-            console.log("Fetched subscription from backend:", subscriptionData.subscription);
+            console.log(
+              "Fetched subscription from backend:",
+              subscriptionData.subscription,
+            );
 
             const updatedUser = {
               ...parsedUser,
@@ -138,7 +141,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
         const parsedUser = JSON.parse(savedUser);
         // Check if subscription tier has changed
         if (parsedUser.subscription?.tier !== user.subscription?.tier) {
-          console.log("Detected subscription change in localStorage:", parsedUser.subscription?.tier);
+          console.log(
+            "Detected subscription change in localStorage:",
+            parsedUser.subscription?.tier,
+          );
           setUser(parsedUser);
         }
       }
@@ -270,7 +276,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
           setUser(updatedUser);
           localStorage.setItem("user", JSON.stringify(updatedUser));
-          console.log("User refreshed with subscription:", subscriptionData.subscription);
+          console.log(
+            "User refreshed with subscription:",
+            subscriptionData.subscription,
+          );
         }
       }
 
