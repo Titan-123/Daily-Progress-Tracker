@@ -6,7 +6,7 @@ let demoUserData = {
     startDate: new Date().toISOString(),
   },
   dashboardTargets: [], // Start with no goals for fresh user experience
-  calendarData: {} // Store day-specific data
+  calendarData: {}, // Store day-specific data
 };
 
 export const getDemoUserSubscription = () => {
@@ -27,7 +27,7 @@ export const getDemoDashboardTargets = () => {
 };
 
 export const updateDemoTargetCompletion = (targetId, completed) => {
-  const target = demoUserData.dashboardTargets.find(t => t.id === targetId);
+  const target = demoUserData.dashboardTargets.find((t) => t.id === targetId);
   if (target) {
     target.completed = completed;
     console.log(`Demo target ${targetId} completion updated to:`, completed);

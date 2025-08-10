@@ -1,6 +1,10 @@
 import DayEntry from "../models/DayEntry.js";
 import Target from "../models/Target.js";
-import { getDemoCalendarData, setDemoCalendarData, updateDemoCalendarReflection } from "../utils/demoUserStore.js";
+import {
+  getDemoCalendarData,
+  setDemoCalendarData,
+  updateDemoCalendarReflection,
+} from "../utils/demoUserStore.js";
 import Goal from "../models/Goal.js";
 import { getDemoDashboardTargets } from "../utils/demoUserStore.js";
 
@@ -238,10 +242,10 @@ export const handleSaveReflection = async (req, res) => {
       const activeGoals = await Goal.find({
         userId,
         type: "daily",
-        isActive: true
+        isActive: true,
       });
 
-      const targets = activeGoals.map(goal => ({
+      const targets = activeGoals.map((goal) => ({
         id: goal._id.toString(),
         title: goal.title,
         description: goal.description,
@@ -299,7 +303,7 @@ export const handleUpdateMood = async (req, res) => {
     // Handle demo user separately
     if (userId === "demo-user-123") {
       const dashboardTargets = getDemoDashboardTargets();
-      const completedCount = dashboardTargets.filter(t => t.completed).length;
+      const completedCount = dashboardTargets.filter((t) => t.completed).length;
 
       const demoDay = {
         date: date,
@@ -364,7 +368,7 @@ export const handleAddHighlight = async (req, res) => {
     // Handle demo user separately
     if (userId === "demo-user-123") {
       const dashboardTargets = getDemoDashboardTargets();
-      const completedCount = dashboardTargets.filter(t => t.completed).length;
+      const completedCount = dashboardTargets.filter((t) => t.completed).length;
 
       const demoDay = {
         date: date,
