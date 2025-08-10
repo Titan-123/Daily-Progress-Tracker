@@ -331,11 +331,15 @@ export default function Analytics() {
         </Card>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-4">
+          <TabsList className="grid w-full grid-cols-5">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="charts">Charts</TabsTrigger>
             <TabsTrigger value="trends">Trends</TabsTrigger>
             <TabsTrigger value="insights">Insights</TabsTrigger>
+            <TabsTrigger value="premium" className="flex items-center gap-1">
+              <Crown className="h-3 w-3" />
+              Premium
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="charts" className="space-y-6">
