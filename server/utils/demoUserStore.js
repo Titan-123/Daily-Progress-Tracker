@@ -5,7 +5,8 @@ let demoUserData = {
     status: "active",
     startDate: new Date().toISOString(),
   },
-  dashboardTargets: [] // Start with no goals for fresh user experience
+  dashboardTargets: [], // Start with no goals for fresh user experience
+  calendarData: {} // Store day-specific data
 };
 
 export const getDemoUserSubscription = () => {
