@@ -66,6 +66,34 @@ export const addDemoGoal = (goalData) => {
   return newGoal;
 };
 
+export const getDemoCalendarData = (dateKey) => {
+  return demoUserData.calendarData[dateKey] || null;
+};
+
+export const setDemoCalendarData = (dateKey, dayData) => {
+  demoUserData.calendarData[dateKey] = dayData;
+  console.log(`Demo calendar data set for ${dateKey}:`, dayData);
+  return dayData;
+};
+
+export const updateDemoCalendarReflection = (dateKey, reflection) => {
+  if (demoUserData.calendarData[dateKey]) {
+    demoUserData.calendarData[dateKey].reflection = reflection;
+  } else {
+    // Create new day data if it doesn't exist
+    demoUserData.calendarData[dateKey] = {
+      date: dateKey,
+      completed: 0,
+      total: 0,
+      targets: [],
+      reflection: reflection,
+      mood: "good",
+      highlights: [],
+    };
+  }
+  return demoUserData.calendarData[dateKey];
+};
+
 export const resetDemoUser = () => {
   demoUserData.subscription = {
     tier: "free",
@@ -73,4 +101,5 @@ export const resetDemoUser = () => {
     startDate: new Date().toISOString(),
   };
   demoUserData.dashboardTargets = []; // Reset to empty goals
+  demoUserData.calendarData = {}; // Reset calendar data
 };
