@@ -205,8 +205,9 @@ const getDemoData = (endpoint: string) => {
         total: 3,
         targets: [
           {
-            id: "1",
+            id: "demo-1",
             title: "Write 500 words",
+            description: "Creative writing practice",
             completed: false,
             category: "Creative",
             type: "daily",
