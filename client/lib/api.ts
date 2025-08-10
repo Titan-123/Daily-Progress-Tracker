@@ -125,27 +125,41 @@ const getDemoData = (endpoint: string) => {
     const currentMonth = today.getMonth() + 1;
     const currentYear = today.getFullYear();
 
-    // Get current dashboard targets (start with empty array)
-    const dashboardTargets = currentDashboardData?.targets || [];
-
-    // Calculate completion based on actual dashboard data
-    const completedCount = dashboardTargets.filter((t: any) => t.completed).length;
-    const totalCount = dashboardTargets.length;
-
-    return {
+    // Create static demo calendar data that doesn't change based on dashboard
+    const staticDemoData = {
       [`${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`]: {
         date: `${currentYear}-${currentMonth.toString().padStart(2, "0")}-16`,
-        completed: completedCount,
-        total: totalCount,
-        targets: dashboardTargets.map((target: any) => ({
-          id: target.id,
-          title: target.title,
-          description: target.description || "",
-          completed: target.completed,
-          category: target.category,
-          type: target.type,
-          streak: target.streak,
-        })),
+        completed: 3,
+        total: 3,
+        targets: [
+          {
+            id: "demo-1",
+            title: "Write 500 words",
+            description: "Creative writing practice",
+            completed: true,
+            category: "Creative",
+            type: "daily",
+            streak: 7,
+          },
+          {
+            id: "demo-2",
+            title: "Exercise 30 minutes",
+            description: "Morning workout",
+            completed: true,
+            category: "Health",
+            type: "daily",
+            streak: 12,
+          },
+          {
+            id: "demo-3",
+            title: "Read for 1 hour",
+            description: "Daily reading",
+            completed: true,
+            category: "Learning",
+            type: "daily",
+            streak: 5,
+          },
+        ],
         reflection: "Amazing day! Felt so productive and energized.",
         mood: "excellent" as const,
         highlights: ["Finished a short story", "Great workout session"],
