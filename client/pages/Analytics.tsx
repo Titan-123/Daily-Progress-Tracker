@@ -1062,6 +1062,247 @@ export default function Analytics() {
               </CardContent>
             </Card>
           </TabsContent>
+
+          <TabsContent value="premium" className="space-y-6">
+            {/* Premium Analytics */}
+            <div className="grid gap-6 lg:grid-cols-2">
+              {/* Advanced Goal Performance */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <Crown className="h-5 w-5 text-warning" />
+                    Advanced Goal Performance
+                  </CardTitle>
+                  <CardDescription>
+                    Deep insights into your goal completion patterns
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart
+                      data={[
+                        { month: 'Jan', completion: 65, consistency: 78 },
+                        { month: 'Feb', completion: 72, consistency: 82 },
+                        { month: 'Mar', completion: 78, consistency: 85 },
+                        { month: 'Apr', completion: 85, consistency: 88 },
+                        { month: 'May', completion: 82, consistency: 90 },
+                        { month: 'Jun', completion: 88, consistency: 92 },
+                      ]}
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <XAxis dataKey="month" stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <YAxis stroke="hsl(var(--muted-foreground))" fontSize={12} domain={[0, 100]} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <Legend />
+                      <Line
+                        type="monotone"
+                        dataKey="completion"
+                        stroke="hsl(var(--primary))"
+                        strokeWidth={3}
+                        name="Completion Rate"
+                        dot={{ r: 6 }}
+                      />
+                      <Line
+                        type="monotone"
+                        dataKey="consistency"
+                        stroke="hsl(var(--success))"
+                        strokeWidth={3}
+                        name="Consistency Score"
+                        dot={{ r: 6 }}
+                      />
+                    </LineChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+
+              {/* Goal Category Breakdown */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    <BarChart3 className="h-5 w-5 text-primary" />
+                    Category Performance
+                  </CardTitle>
+                  <CardDescription>
+                    How you perform across different goal categories
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <BarChart
+                      data={[
+                        { category: 'Health', completion: 92, total: 25 },
+                        { category: 'Learning', completion: 85, total: 18 },
+                        { category: 'Creative', completion: 78, total: 15 },
+                        { category: 'Professional', completion: 88, total: 20 },
+                        { category: 'Personal', completion: 75, total: 12 },
+                      ]}
+                      layout="horizontal"
+                    >
+                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--muted))" />
+                      <XAxis type="number" domain={[0, 100]} stroke="hsl(var(--muted-foreground))" fontSize={12} />
+                      <YAxis type="category" dataKey="category" stroke="hsl(var(--muted-foreground))" fontSize={12} width={80} />
+                      <Tooltip
+                        contentStyle={{
+                          backgroundColor: "hsl(var(--card))",
+                          border: "1px solid hsl(var(--border))",
+                          borderRadius: "8px",
+                        }}
+                        formatter={(value: any, name: any, props: any) => [
+                          `${value}% (${props.payload.total} goals)`,
+                          "Completion Rate"
+                        ]}
+                      />
+                      <Bar dataKey="completion" fill="hsl(var(--primary))" radius={[0, 4, 4, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Premium Insights Grid */}
+            <div className="grid gap-6 lg:grid-cols-3">
+              {/* Best Performance Times */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Peak Performance</CardTitle>
+                  <CardDescription>When you complete goals most often</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Morning (6-12pm)</span>
+                      <div className="flex items-center gap-2">
+                        <Progress value={85} className="w-16 h-2" />
+                        <span className="text-sm font-medium">85%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Afternoon (12-6pm)</span>
+                      <div className="flex items-center gap-2">
+                        <Progress value={65} className="w-16 h-2" />
+                        <span className="text-sm font-medium">65%</span>
+                      </div>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Evening (6-12am)</span>
+                      <div className="flex items-center gap-2">
+                        <Progress value={45} className="w-16 h-2" />
+                        <span className="text-sm font-medium">45%</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t">
+                    <p className="text-xs text-muted-foreground">
+                      💡 You're most productive in the morning! Consider scheduling important goals before noon.
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Streak Analysis */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">Streak Patterns</CardTitle>
+                  <CardDescription>Your consistency journey</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex justify-between">
+                      <span className="text-sm">Current Streak</span>
+                      <span className="font-semibold text-warning">🔥 {analyticsData.currentStreak} days</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Best Streak</span>
+                      <span className="font-semibold text-success">⭐ {analyticsData.bestStreak} days</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-sm">Average Streak</span>
+                      <span className="font-semibold">📊 8 days</span>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t">
+                    <p className="text-xs text-muted-foreground">
+                      🎯 You're {analyticsData.currentStreak >= analyticsData.bestStreak ? 'at your best!' : `${analyticsData.bestStreak - analyticsData.currentStreak} days from your record!`}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Goal Recommendations */}
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-lg">AI Recommendations</CardTitle>
+                  <CardDescription>Personalized goal suggestions</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
+                      <div className="flex items-start gap-2">
+                        <Target className="h-4 w-4 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Add a weekend goal</p>
+                          <p className="text-xs text-muted-foreground">Your weekend completion drops to 45%</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-3 rounded-lg bg-success/5 border border-success/20">
+                      <div className="flex items-start gap-2">
+                        <Zap className="h-4 w-4 text-success mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Evening routine</p>
+                          <p className="text-xs text-muted-foreground">Try moving one goal to evening</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="pt-3 border-t">
+                    <Button variant="outline" size="sm" className="w-full">
+                      <Sparkles className="h-3 w-3 mr-2" />
+                      Get More Suggestions
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+
+            {/* Data Export */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Download className="h-5 w-5 text-primary" />
+                  Data Export & Backup
+                </CardTitle>
+                <CardDescription>
+                  Export your data for analysis or backup
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-4">
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export CSV
+                  </Button>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Export JSON
+                  </Button>
+                  <Button variant="outline">
+                    <Download className="h-4 w-4 mr-2" />
+                    Generate Report
+                  </Button>
+                </div>
+                <p className="text-sm text-muted-foreground mt-4">
+                  Premium feature: Export your complete goal history, analytics data, and progress reports.
+                </p>
+              </CardContent>
+            </Card>
+          </TabsContent>
         </Tabs>
       </div>
     </div>
