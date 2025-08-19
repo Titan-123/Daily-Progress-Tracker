@@ -336,7 +336,7 @@ export default function Index() {
                 <div className="text-right">
                   <div className="flex items-center gap-2">
                     <p className="text-sm font-medium">{user?.name}</p>
-                    {isPremium && <Crown className="h-3 w-3 text-warning" />}
+                    {/* TEMPORARILY HIDDEN PREMIUM CROWN: {isPremium && <Crown className="h-3 w-3 text-warning" />} */}
                   </div>
                   <div className="flex items-center gap-2">
                     <p className="text-xs text-muted-foreground">
