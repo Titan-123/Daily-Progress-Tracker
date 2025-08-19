@@ -11,41 +11,6 @@ const generateToken = (userId) => {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
-// Create default goals for new users
-const createDefaultGoals = async (userId) => {
-  const defaultGoals = [
-    {
-      title: "Daily Writing",
-      description: "Write down your thoughts or work on creative projects",
-      type: "daily",
-      category: "Creative",
-      target: "15 minutes",
-      userId,
-      isActive: true,
-    },
-    {
-      title: "Learning Time",
-      description: "Dedicate time to learning something new",
-      type: "daily",
-      category: "Learning",
-      target: "30 minutes",
-      userId,
-      isActive: true,
-    },
-    {
-      title: "Physical Activity",
-      description: "Move your body and stay healthy",
-      type: "daily",
-      category: "Health",
-      target: "20 minutes",
-      userId,
-      isActive: true,
-    },
-  ];
-
-  await Goal.insertMany(defaultGoals);
-  console.log(`✅ Created default goals for user ${userId}`);
-};
 
 export const handleRegister = async (req, res) => {
   try {
@@ -91,8 +56,6 @@ export const handleRegister = async (req, res) => {
 
     await user.save();
 
-    // Create default goals for the new user
-    await createDefaultGoals(user._id);
 
     // Generate token
     const token = generateToken(user._id);
