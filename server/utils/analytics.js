@@ -2,6 +2,14 @@ import Target from "../models/Target.js";
 import DayEntry from "../models/DayEntry.js";
 import Goal from "../models/Goal.js";
 
+// Helper function to format date as local YYYY-MM-DD string
+const formatLocalDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const calculateStreaks = async (userId) => {
   try {
     // Get all targets for the user, sorted by date descending
