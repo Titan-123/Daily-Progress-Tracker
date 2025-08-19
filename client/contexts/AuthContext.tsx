@@ -259,7 +259,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       // Fetch current subscription data from backend
-      const subscriptionResponse = await fetch("http://localhost:3000/api/subscription", {
+      const subscriptionResponse = await fetch("/api/subscription", {
         headers: {
           Authorization: `Bearer ${currentToken}`,
         },
