@@ -3,8 +3,7 @@ import mongoose from "mongoose";
 const connectDB = async () => {
   try {
     // MongoDB connection string - can be configured via environment variables
-    const mongoURI =
-      process.env.MONGODB_URI 
+    const mongoURI = process.env.MONGODB_URI || "mongodb://localhost:27017/daily-progress-tracker"; 
 
     console.log("🔄 Attempting to connect to MongoDB...",mongoURI);
 
