@@ -199,6 +199,35 @@ export const handleLogin = async (req, res) => {
 
 export const handleGetProfile = async (req, res) => {
   try {
+    // Handle demo user
+    if (req.userId === "demo-user-123") {
+      return res.json({
+        user: {
+          id: "demo-user-123",
+          name: "Demo User",
+          email: "demo@example.com",
+          preferences: {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+          streaks: {
+            current: 12,
+            best: 21,
+            lastActiveDate: new Date().toISOString(),
+          },
+        },
+      });
+    }
+
+    // Check if MongoDB is connected for real users
+    const mongoReady = await loadUserModel();
+    if (!mongoReady) {
+      return res.status(503).json({
+        error: "Database temporarily unavailable. Please try again later."
+      });
+    }
+
     const user = await User.findById(req.userId).select("-password");
     if (!user) {
       return res.status(404).json({ error: "User not found" });
