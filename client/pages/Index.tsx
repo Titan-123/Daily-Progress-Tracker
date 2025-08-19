@@ -277,27 +277,16 @@ export default function Index() {
                 <Target className="h-4 w-4" />
                 Goals
               </Link>
-              {hasAnalyticsAccess ? (
-                <Link
-                  to="/analytics"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                >
-                  <BarChart3 className="h-4 w-4" />
-                  Analytics
-                  {isPremium && <Crown className="h-3 w-3 text-warning" />}
-                </Link>
-              ) : (
-                <Link
-                  to="/pricing"
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-                >
-                  <Lock className="h-4 w-4" />
-                  Analytics
-                  <Badge variant="outline" className="text-xs">
-                    Premium
-                  </Badge>
-                </Link>
-              )}
+              <Link
+                to="/analytics"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <BarChart3 className="h-4 w-4" />
+                Analytics
+                <Badge variant="outline" className="text-xs">
+                  Coming Soon
+                </Badge>
+              </Link>
               <Link
                 to="/calendar"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
