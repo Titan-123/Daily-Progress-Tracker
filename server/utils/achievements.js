@@ -92,7 +92,7 @@ const achievementCheckers = {
   // Check if user completed a target before 9 AM
   async hasEarlyCompletion(userId) {
     const targets = await Target.find({ userId, completed: true });
-    
+
     for (const target of targets) {
       if (target.completedAt) {
         const completionHour = new Date(target.completedAt).getHours();
@@ -134,7 +134,7 @@ const achievementCheckers = {
 
     // Check if any week has 90% completion
     for (const week of Object.values(weeks)) {
-      if (week.total > 0 && (week.completed / week.total) >= 0.9) {
+      if (week.total > 0 && week.completed / week.total >= 0.9) {
         return true;
       }
     }
