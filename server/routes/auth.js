@@ -257,6 +257,36 @@ export const handleUpdateProfile = async (req, res) => {
     delete updates.email;
     delete updates._id;
 
+    // Handle demo user
+    if (req.userId === "demo-user-123") {
+      return res.json({
+        message: "Demo profile updated successfully",
+        user: {
+          id: "demo-user-123",
+          name: updates.name || "Demo User",
+          email: "demo@example.com",
+          preferences: updates.preferences || {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+          streaks: {
+            current: 12,
+            best: 21,
+            lastActiveDate: new Date().toISOString(),
+          },
+        },
+      });
+    }
+
+    // Check if MongoDB is connected for real users
+    const mongoReady = await loadUserModel();
+    if (!mongoReady) {
+      return res.status(503).json({
+        error: "Database temporarily unavailable. Please try again later."
+      });
+    }
+
     const user = await User.findByIdAndUpdate(req.userId, updates, {
       new: true,
     }).select("-password");
