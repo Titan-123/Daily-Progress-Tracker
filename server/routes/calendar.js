@@ -50,7 +50,7 @@ export const handleGetCalendarData = async (req, res) => {
     const calendarData = {};
 
     for (const entry of dayEntries) {
-      const dateKey = entry.date.toISOString().split("T")[0];
+      const dateKey = formatLocalDate(entry.date);
 
       // Get targets for this day to populate the targets array
       const dayStart = new Date(entry.date);
