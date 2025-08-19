@@ -115,6 +115,38 @@ export const handleLogin = async (req, res) => {
         .json({ error: "Please provide email and password" });
     }
 
+    // Handle demo login even if MongoDB is not connected
+    if (email === "demo@example.com" && password === "demo123") {
+      const token = generateToken("demo-user-123");
+      return res.json({
+        message: "Demo login successful",
+        token,
+        user: {
+          id: "demo-user-123",
+          name: "Demo User",
+          email: "demo@example.com",
+          preferences: {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+          subscription: {
+            tier: "free",
+            status: "active",
+            startDate: new Date().toISOString(),
+          },
+        },
+      });
+    }
+
+    // Check if MongoDB is connected for real user authentication
+    const mongoReady = await loadUserModel();
+    if (!mongoReady) {
+      return res.status(503).json({
+        error: "Database temporarily unavailable. Please try the demo account (demo@example.com / demo123) or try again later."
+      });
+    }
+
     // Find user
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
