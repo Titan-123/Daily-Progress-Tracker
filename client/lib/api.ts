@@ -26,18 +26,18 @@ const getDemoData = (endpoint: string) => {
           title: "Week Warrior",
           description: "Completed goals for 7 days straight!",
           icon: "🔥",
-          earned: true,
+          earned: false,
         },
         {
           id: "2",
           title: "Early Bird",
           description: "Started progress tracking before 8 AM",
           icon: "🌅",
-          earned: true,
+          earned: false,
         },
       ],
-      weeklyProgress: 85,
-      totalStreak: 12,
+      weeklyProgress: 0,
+      totalStreak: 0,
     };
 
     // Store for calendar sync
