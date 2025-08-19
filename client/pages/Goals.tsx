@@ -457,7 +457,7 @@ export default function Goals() {
           */}
         </div>
 
-        {/* Subscription Status */}
+        {/* TEMPORARILY HIDDEN SUBSCRIPTION STATUS CARD
         {!isPremium && (
           <Card className="border-2 border-warning/20 bg-gradient-to-r from-warning/5 to-accent/10">
             <CardContent className="pt-6">
@@ -496,6 +496,7 @@ export default function Goals() {
             </CardContent>
           </Card>
         )}
+        */}
 
         {/* Motivational Message */}
         <Card className="border-2 border-primary/20 bg-gradient-to-r from-primary/5 to-accent/20">
