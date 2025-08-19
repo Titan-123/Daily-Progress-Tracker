@@ -303,22 +303,33 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   // Helper methods for subscription checks
-  const isPremium = user?.subscription?.tier === "premium";
-  const subscriptionTier = user?.subscription?.tier || "free";
-  const hasAnalyticsAccess = isPremium;
+  // TEMPORARILY DISABLED FOR FREE VERSION - PREMIUM CODE COMMENTED FOR LATER USE
+
+  // const isPremium = user?.subscription?.tier === "premium";
+  // const subscriptionTier = user?.subscription?.tier || "free";
+  // const hasAnalyticsAccess = isPremium;
+
+  // TEMPORARY: Make everything free and accessible
+  const isPremium = false; // Temporarily always false
+  const subscriptionTier = "free" as SubscriptionTier; // Temporarily always free
+  const hasAnalyticsAccess = false; // Temporarily disabled - will show coming soon
 
   // Debug logging
   console.log("Current user subscription:", user?.subscription);
-  console.log("isPremium:", isPremium);
-  console.log("subscriptionTier:", subscriptionTier);
+  console.log("isPremium (temporarily disabled):", isPremium);
+  console.log("subscriptionTier (temporarily forced to free):", subscriptionTier);
 
   const canCreateMoreGoals = (currentGoalCount: number) => {
-    if (!user || !user.subscription) return false;
-    const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
-    return (
-      plan.limitations.maxDailyGoals === null ||
-      currentGoalCount < plan.limitations.maxDailyGoals
-    );
+    // TEMPORARILY DISABLED PREMIUM LIMITS - ALLOW UNLIMITED GOALS
+    return true; // Always allow creating more goals
+
+    // ORIGINAL PREMIUM CODE (COMMENTED FOR LATER USE):
+    // if (!user || !user.subscription) return false;
+    // const plan = SUBSCRIPTION_PLANS[user.subscription.tier];
+    // return (
+    //   plan.limitations.maxDailyGoals === null ||
+    //   currentGoalCount < plan.limitations.maxDailyGoals
+    // );
   };
 
   const value = {
