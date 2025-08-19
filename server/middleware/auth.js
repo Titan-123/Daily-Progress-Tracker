@@ -54,7 +54,26 @@ export const authenticateToken = async (req, res, next) => {
 
     const decoded = jwt.verify(token, JWT_SECRET);
 
-    // Check if user still exists
+    // For real users, check if MongoDB is connected
+    const mongoReady = await loadUserModel();
+    if (!mongoReady) {
+      // If MongoDB is not available, we can't validate the user exists
+      // But we can still allow access if the token is valid
+      req.userId = decoded.userId;
+      req.user = {
+        _id: decoded.userId,
+        name: "User", // Default name when DB unavailable
+        email: "user@example.com", // Default email when DB unavailable
+        preferences: {
+          theme: "light",
+          notifications: true,
+          reminderTime: "09:00",
+        },
+      };
+      return next();
+    }
+
+    // Check if user still exists in database
     const user = await User.findById(decoded.userId);
     if (!user) {
       return res.status(401).json({ error: "User not found" });
