@@ -187,7 +187,7 @@ export const handleGetDayData = async (req, res) => {
     }
 
     res.json({
-      date: dayEntry.date.toISOString().split("T")[0],
+      date: formatLocalDate(dayEntry.date),
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
@@ -280,7 +280,7 @@ export const handleSaveReflection = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split("T")[0],
+      date: formatLocalDate(dayEntry.date),
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
@@ -345,7 +345,7 @@ export const handleUpdateMood = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split("T")[0],
+      date: formatLocalDate(dayEntry.date),
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
@@ -412,7 +412,7 @@ export const handleAddHighlight = async (req, res) => {
     await dayEntry.save();
 
     res.json({
-      date: dayEntry.date.toISOString().split("T")[0],
+      date: formatLocalDate(dayEntry.date),
       completed: dayEntry.completed,
       total: dayEntry.total,
       targets: dayEntry.targets,
