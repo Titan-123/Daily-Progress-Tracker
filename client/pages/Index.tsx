@@ -73,48 +73,23 @@ export default function Index() {
     } catch (error) {
       console.error("Failed to load dashboard data:", error);
       toast.error("Failed to load dashboard data. Please try again.");
-      // Fallback to mock data if API fails
+      // Fallback to empty state if API fails - let user start fresh
       setDashboardData({
-        targets: [
-          {
-            id: "1",
-            title: "Write 500 words",
-            description: "Creative writing practice",
-            type: "daily",
-            completed: false,
-            streak: 3,
-          },
-          {
-            id: "2",
-            title: "Study for 2 hours",
-            description: "Focus on JavaScript fundamentals",
-            type: "daily",
-            completed: true,
-            streak: 7,
-          },
-          {
-            id: "3",
-            title: "Exercise 30 minutes",
-            description: "Morning workout routine",
-            type: "daily",
-            completed: false,
-            streak: 2,
-          },
-        ],
+        targets: [],
         achievements: [
           {
             id: "1",
             title: "7-Day Streak",
             description: "Completed daily goals for a week!",
-            icon: "���",
-            earned: true,
+            icon: "🔥",
+            earned: false,
           },
           {
             id: "2",
             title: "Early Bird",
             description: "Started progress tracking before 8 AM",
             icon: "🌅",
-            earned: true,
+            earned: false,
           },
           {
             id: "3",
@@ -124,8 +99,8 @@ export default function Index() {
             earned: false,
           },
         ],
-        weeklyProgress: 85,
-        totalStreak: 12,
+        weeklyProgress: 0,
+        totalStreak: 0,
       });
     } finally {
       setLoading(false);
