@@ -119,11 +119,28 @@ export const optionalAuth = async (req, res, next) => {
       }
 
       const decoded = jwt.verify(token, JWT_SECRET);
-      const user = await User.findById(decoded.userId);
 
-      if (user) {
+      // Check if MongoDB is connected
+      const mongoReady = await loadUserModel();
+      if (!mongoReady) {
+        // Allow access with limited user info when DB unavailable
         req.userId = decoded.userId;
-        req.user = user;
+        req.user = {
+          _id: decoded.userId,
+          name: "User",
+          email: "user@example.com",
+          preferences: {
+            theme: "light",
+            notifications: true,
+            reminderTime: "09:00",
+          },
+        };
+      } else {
+        const user = await User.findById(decoded.userId);
+        if (user) {
+          req.userId = decoded.userId;
+          req.user = user;
+        }
       }
     }
 
