@@ -3,6 +3,7 @@ import {
   handleGetDashboardFallback,
   handleToggleTargetFallback,
 } from "./dashboard-fallback.js";
+import { calculateUserAchievements } from "../utils/achievements.js";
 
 // Only import MongoDB models if mongoose is connected
 let Target,
