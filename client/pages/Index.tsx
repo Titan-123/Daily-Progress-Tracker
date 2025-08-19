@@ -254,6 +254,13 @@ export default function Index() {
                 Goals
               </Link>
               <Link
+                to="/calendar"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
+              >
+                <Calendar className="h-4 w-4" />
+                Calendar
+              </Link>
+              <Link
                 to="/analytics"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
               >
@@ -262,13 +269,6 @@ export default function Index() {
                 <Badge variant="outline" className="text-xs">
                   Coming Soon
                 </Badge>
-              </Link>
-              <Link
-                to="/calendar"
-                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
-              >
-                <Calendar className="h-4 w-4" />
-                Calendar
               </Link>
               {/* TEMPORARILY HIDDEN PRICING LINK
               <Link
@@ -302,14 +302,6 @@ export default function Index() {
                 </Button>
               )}
               */}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => refreshUser()}
-                title="Refresh subscription status"
-              >
-                🔄
-              </Button>
               <div className="hidden sm:flex items-center gap-3">
                 <div className="text-right">
                   <div className="flex items-center gap-2">
