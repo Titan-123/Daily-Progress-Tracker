@@ -294,6 +294,7 @@ export default function Index() {
                 <Calendar className="h-4 w-4" />
                 Calendar
               </Link>
+              {/* TEMPORARILY HIDDEN PRICING LINK
               <Link
                 to="/pricing"
                 className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground hover:text-foreground"
@@ -301,6 +302,7 @@ export default function Index() {
                 <Crown className="h-4 w-4" />
                 Pricing
               </Link>
+              */}
             </nav>
 
             {/* User Menu */}
@@ -342,12 +344,14 @@ export default function Index() {
                     <p className="text-xs text-muted-foreground">
                       {user?.email}
                     </p>
+                    {/* TEMPORARILY HIDDEN PREMIUM BADGE
                     <Badge
                       variant={isPremium ? "default" : "outline"}
                       className="text-xs"
                     >
                       {isPremium ? "Premium" : "Free"}
                     </Badge>
+                    */}
                   </div>
                 </div>
                 <div className="p-2 bg-primary/10 rounded-full">
