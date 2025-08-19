@@ -13,14 +13,14 @@ const mockAchievements = [
     title: "7-Day Streak",
     description: "Completed daily goals for a week!",
     icon: "🔥",
-    earned: true,
+    earned: false,
   },
   {
     id: "2",
     title: "Early Bird",
     description: "Started progress tracking before 8 AM",
     icon: "🌅",
-    earned: true,
+    earned: false,
   },
   {
     id: "3",
@@ -37,8 +37,8 @@ export const handleGetDashboardFallback = (req, res) => {
   res.json({
     targets: currentTargets,
     achievements: mockAchievements,
-    weeklyProgress: 85,
-    totalStreak: 12,
+    weeklyProgress: 0,
+    totalStreak: 0,
   });
 };
 
