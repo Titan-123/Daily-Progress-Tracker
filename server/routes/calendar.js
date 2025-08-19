@@ -8,6 +8,14 @@ import {
 import Goal from "../models/Goal.js";
 import { getDemoDashboardTargets } from "../utils/demoUserStore.js";
 
+// Helper function to format date as local YYYY-MM-DD string
+const formatLocalDate = (date) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 export const handleGetCalendarData = async (req, res) => {
   try {
     const userId = req.user?.id;
