@@ -22,16 +22,23 @@ const getDemoData = (endpoint: string) => {
       targets: [], // Start with no goals for fresh user experience
       achievements: [
         {
-          id: "1",
-          title: "Week Warrior",
-          description: "Completed goals for 7 days straight!",
-          icon: "🔥",
+          id: "first_goal",
+          title: "Goal Setter",
+          description: "Created your first goal",
+          icon: "🎯",
           earned: false,
         },
         {
-          id: "2",
+          id: "first_completion",
+          title: "First Victory",
+          description: "Completed your first daily target",
+          icon: "✅",
+          earned: false,
+        },
+        {
+          id: "early_bird",
           title: "Early Bird",
-          description: "Started progress tracking before 8 AM",
+          description: "Completed a target before 9 AM",
           icon: "🌅",
           earned: false,
         },
