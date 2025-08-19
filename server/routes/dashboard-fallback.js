@@ -3,6 +3,7 @@ import {
   getDemoDashboardTargets,
   updateDemoTargetCompletion,
 } from "../utils/demoUserStore.js";
+import { getAllAchievementDefinitions } from "../utils/achievements.js";
 
 // Get targets from demo store instead of static data
 const getMockTargets = () => getDemoDashboardTargets();
