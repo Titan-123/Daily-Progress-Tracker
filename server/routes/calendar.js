@@ -93,7 +93,7 @@ export const handleGetCalendarData = async (req, res) => {
     // Group targets by date
     const targetsByDate = {};
     allTargets.forEach((target) => {
-      const dateKey = target.date.toISOString().split("T")[0];
+      const dateKey = formatLocalDate(target.date);
       if (!targetsByDate[dateKey]) {
         targetsByDate[dateKey] = [];
       }
