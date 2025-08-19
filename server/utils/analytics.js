@@ -25,7 +25,7 @@ export const calculateStreaks = async (userId) => {
     // Group targets by date
     const targetsByDate = {};
     targets.forEach((target) => {
-      const dateKey = target.date.toISOString().split("T")[0];
+      const dateKey = formatLocalDate(target.date);
       if (!targetsByDate[dateKey]) {
         targetsByDate[dateKey] = { completed: 0, total: 0 };
       }
