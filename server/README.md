@@ -31,7 +31,6 @@ cp .env.example .env
 Edit `.env` file:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/daily-progress-tracker
 PORT=3000
 NODE_ENV=development
 ```

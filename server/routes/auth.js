@@ -11,6 +11,7 @@ const generateToken = (userId) => {
 };
 
 export const handleRegister = async (req, res) => {
+  console.log("hello")
   try {
     const { name, email, password } = req.body;
 
@@ -76,6 +77,7 @@ export const handleRegister = async (req, res) => {
     });
   } catch (error) {
     console.error("Registration error:", error);
+    console.log("error----",error)
     res.status(500).json({ error: "Failed to register user" });
   }
 };

@@ -205,7 +205,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
 
     // Regular authentication for non-demo users
-    const response = await fetch("/api/auth/login", {
+    const response = await fetch("http://localhost:3000/api/auth/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -226,7 +226,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   const register = async (name: string, email: string, password: string) => {
-    const response = await fetch("/api/auth/register", {
+    console.log("i am in register")
+    const response = await fetch("http://localhost:3000/api/auth/register", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -259,11 +260,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
     try {
       // Fetch current subscription data from backend
-      const subscriptionResponse = await fetch("/api/subscription", {
+      const subscriptionResponse = await fetch("http://localhost:3000/api/subscription", {
         headers: {
           Authorization: `Bearer ${currentToken}`,
         },
       });
+      console.log("subs response----",subscriptionResponse)
 
       if (subscriptionResponse.ok) {
         const subscriptionData = await subscriptionResponse.json();

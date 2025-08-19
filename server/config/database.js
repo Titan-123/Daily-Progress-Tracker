@@ -4,15 +4,15 @@ const connectDB = async () => {
   try {
     // MongoDB connection string - can be configured via environment variables
     const mongoURI =
-      process.env.MONGODB_URI ||
-      "mongodb://localhost:27017/daily-progress-tracker";
+      process.env.MONGODB_URI 
 
-    console.log("🔄 Attempting to connect to MongoDB...");
+    console.log("🔄 Attempting to connect to MongoDB...",mongoURI);
 
     const conn = await mongoose.connect(mongoURI, {
       serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
       socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
     });
+  
 
     console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
     return conn;

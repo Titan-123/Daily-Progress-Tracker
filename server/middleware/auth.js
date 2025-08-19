@@ -6,6 +6,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
 
 export const authenticateToken = async (req, res, next) => {
   try {
+    console.log("in authenticate")
     const authHeader = req.headers.authorization;
     const token = authHeader && authHeader.split(" ")[1]; // Bearer TOKEN
 
