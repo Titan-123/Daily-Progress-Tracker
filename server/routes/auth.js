@@ -1,6 +1,28 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import mongoose from "mongoose";
+
+// Only import User model if mongoose is connected
+let User;
+
+const isMongoConnected = () => {
+  return mongoose.connection.readyState === 1;
+};
+
+// Dynamically import User model when MongoDB is connected
+const loadUserModel = async () => {
+  if (isMongoConnected()) {
+    try {
+      const userModule = await import("../models/User.js");
+      User = userModule.default;
+      return true;
+    } catch (error) {
+      console.error("Error loading User model:", error);
+      return false;
+    }
+  }
+  return false;
+};
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
