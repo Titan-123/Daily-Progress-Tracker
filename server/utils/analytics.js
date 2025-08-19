@@ -137,8 +137,7 @@ export const getWeeklyData = async (userId, weekOffset = 0) => {
 
       const dayTargets = targets.filter(
         (target) =>
-          target.date.toISOString().split("T")[0] ===
-          currentDate.toISOString().split("T")[0],
+          formatLocalDate(target.date) === formatLocalDate(currentDate),
       );
 
       const completed = dayTargets.filter((target) => target.completed).length;
