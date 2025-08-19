@@ -10,7 +10,6 @@ const generateToken = (userId) => {
   return jwt.sign({ userId }, JWT_SECRET, { expiresIn: JWT_EXPIRES_IN });
 };
 
-
 export const handleRegister = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -54,7 +53,6 @@ export const handleRegister = async (req, res) => {
     });
 
     await user.save();
-
 
     // Generate token
     const token = generateToken(user._id);
