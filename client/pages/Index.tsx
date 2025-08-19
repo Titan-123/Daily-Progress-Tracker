@@ -53,15 +53,22 @@ export default function Index() {
 
   // Refresh dashboard data when page becomes visible (user returns from other pages)
   useEffect(() => {
+    let timeoutId: number;
+
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        loadDashboardData();
+        // Debounce the dashboard refresh to prevent rapid updates
+        clearTimeout(timeoutId);
+        timeoutId = window.setTimeout(() => {
+          loadDashboardData();
+        }, 300);
       }
     };
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      clearTimeout(timeoutId);
     };
   }, []);
 
