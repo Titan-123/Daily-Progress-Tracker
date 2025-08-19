@@ -1,6 +1,28 @@
 import jwt from "jsonwebtoken";
-import User from "../models/User.js";
+import mongoose from "mongoose";
 import { getDemoUserSubscription } from "../utils/demoUserStore.js";
+
+// Only import User model if mongoose is connected
+let User;
+
+const isMongoConnected = () => {
+  return mongoose.connection.readyState === 1;
+};
+
+// Dynamically import User model when MongoDB is connected
+const loadUserModel = async () => {
+  if (isMongoConnected()) {
+    try {
+      const userModule = await import("../models/User.js");
+      User = userModule.default;
+      return true;
+    } catch (error) {
+      console.error("Error loading User model in middleware:", error);
+      return false;
+    }
+  }
+  return false;
+};
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
 
