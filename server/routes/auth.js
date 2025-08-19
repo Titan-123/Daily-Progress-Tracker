@@ -33,7 +33,6 @@ const generateToken = (userId) => {
 };
 
 export const handleRegister = async (req, res) => {
-  console.log("hello")
   try {
     const { name, email, password } = req.body;
 
@@ -48,6 +47,14 @@ export const handleRegister = async (req, res) => {
       return res
         .status(400)
         .json({ error: "Password must be at least 6 characters long" });
+    }
+
+    // Check if MongoDB is connected for user registration
+    const mongoReady = await loadUserModel();
+    if (!mongoReady) {
+      return res.status(503).json({
+        error: "Database temporarily unavailable. Registration is not available. Please try the demo account (demo@example.com / demo123) or try again later."
+      });
     }
 
     // Check if user already exists
