@@ -305,6 +305,7 @@ export default function Index() {
 
             {/* User Menu */}
             <div className="flex items-center gap-3">
+              {/* TEMPORARILY HIDDEN PREMIUM UPGRADE BUTTON
               {!isPremium && (
                 <Button
                   asChild
@@ -322,6 +323,7 @@ export default function Index() {
                   </a>
                 </Button>
               )}
+              */}
               <Button
                 variant="ghost"
                 size="sm"
