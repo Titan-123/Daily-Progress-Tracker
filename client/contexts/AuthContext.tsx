@@ -317,7 +317,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   // Debug logging
   console.log("Current user subscription:", user?.subscription);
   console.log("isPremium (temporarily disabled):", isPremium);
-  console.log("subscriptionTier (temporarily forced to free):", subscriptionTier);
+  console.log(
+    "subscriptionTier (temporarily forced to free):",
+    subscriptionTier,
+  );
 
   const canCreateMoreGoals = (currentGoalCount: number) => {
     // TEMPORARILY DISABLED PREMIUM LIMITS - ALLOW UNLIMITED GOALS

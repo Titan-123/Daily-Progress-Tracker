@@ -343,115 +343,110 @@ export default function Goals() {
             </Button>
           ) : (
           */}
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add New Goal
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-md">
-                <DialogHeader>
-                  <DialogTitle>Create a New Goal</DialogTitle>
-                  <DialogDescription>
-                    Set up a meaningful target that will help you grow and
-                    thrive!
-                  </DialogDescription>
-                </DialogHeader>
-                <div className="space-y-4 py-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="title">Goal Title</Label>
-                    <Input
-                      id="title"
-                      placeholder="e.g., Write in journal"
-                      value={newGoal.title}
-                      onChange={(e) =>
-                        setNewGoal({ ...newGoal, title: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="description">Description</Label>
-                    <Textarea
-                      id="description"
-                      placeholder="What does this goal mean to you?"
-                      value={newGoal.description}
-                      onChange={(e) =>
-                        setNewGoal({ ...newGoal, description: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="type">Frequency</Label>
-                      <Select
-                        value={newGoal.type}
-                        onValueChange={(
-                          value: "daily" | "weekly" | "monthly",
-                        ) => setNewGoal({ ...newGoal, type: value })}
-                      >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="daily">Daily</SelectItem>
-                          <SelectItem value="weekly">Weekly</SelectItem>
-                          <SelectItem value="monthly">Monthly</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="category">Category</Label>
-                      <Select
-                        value={newGoal.category}
-                        onValueChange={(value) =>
-                          setNewGoal({ ...newGoal, category: value })
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Choose..." />
-                        </SelectTrigger>
-                        <SelectContent>
-                          {categories.map((category) => (
-                            <SelectItem key={category} value={category}>
-                              {category}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="target">Target Amount</Label>
-                    <Input
-                      id="target"
-                      placeholder="e.g., 30 minutes, 500 words, 1 book"
-                      value={newGoal.target}
-                      onChange={(e) =>
-                        setNewGoal({ ...newGoal, target: e.target.value })
-                      }
-                    />
-                  </div>
-                  <Button
-                    onClick={addGoal}
-                    className="w-full"
-                    disabled={saving}
-                  >
-                    {saving ? (
-                      <>
-                        <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                        Creating...
-                      </>
-                    ) : (
-                      <>
-                        <Save className="h-4 w-4 mr-2" />
-                        Create Goal
-                      </>
-                    )}
-                  </Button>
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add New Goal
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md">
+              <DialogHeader>
+                <DialogTitle>Create a New Goal</DialogTitle>
+                <DialogDescription>
+                  Set up a meaningful target that will help you grow and thrive!
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Goal Title</Label>
+                  <Input
+                    id="title"
+                    placeholder="e.g., Write in journal"
+                    value={newGoal.title}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, title: e.target.value })
+                    }
+                  />
                 </div>
-              </DialogContent>
-            </Dialog>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    placeholder="What does this goal mean to you?"
+                    value={newGoal.description}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, description: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="type">Frequency</Label>
+                    <Select
+                      value={newGoal.type}
+                      onValueChange={(value: "daily" | "weekly" | "monthly") =>
+                        setNewGoal({ ...newGoal, type: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="daily">Daily</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Category</Label>
+                    <Select
+                      value={newGoal.category}
+                      onValueChange={(value) =>
+                        setNewGoal({ ...newGoal, category: value })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Choose..." />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category} value={category}>
+                            {category}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="target">Target Amount</Label>
+                  <Input
+                    id="target"
+                    placeholder="e.g., 30 minutes, 500 words, 1 book"
+                    value={newGoal.target}
+                    onChange={(e) =>
+                      setNewGoal({ ...newGoal, target: e.target.value })
+                    }
+                  />
+                </div>
+                <Button onClick={addGoal} className="w-full" disabled={saving}>
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Creating...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="h-4 w-4 mr-2" />
+                      Create Goal
+                    </>
+                  )}
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
           {/* TEMPORARILY HIDDEN PREMIUM UPGRADE BUTTON END
           )}
           */}

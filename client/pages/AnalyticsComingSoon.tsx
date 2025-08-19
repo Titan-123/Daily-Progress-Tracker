@@ -48,17 +48,16 @@ export default function AnalyticsComingSoon() {
               <div className="mx-auto w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                 <Sparkles className="h-8 w-8 text-primary" />
               </div>
-              
+
               <div className="space-y-2">
                 <Badge className="bg-warning/10 text-warning border-warning/20 mb-4">
                   <Clock className="h-3 w-3 mr-1" />
                   Coming Soon
                 </Badge>
-                <h2 className="text-3xl font-bold">
-                  Advanced Analytics
-                </h2>
+                <h2 className="text-3xl font-bold">Advanced Analytics</h2>
                 <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                  We're building powerful analytics to help you understand your progress patterns and achieve your goals faster.
+                  We're building powerful analytics to help you understand your
+                  progress patterns and achieve your goals faster.
                 </p>
               </div>
             </div>
@@ -76,7 +75,9 @@ export default function AnalyticsComingSoon() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Visualize your progress over time with beautiful charts and graphs showing completion rates, streaks, and consistency patterns.
+                Visualize your progress over time with beautiful charts and
+                graphs showing completion rates, streaks, and consistency
+                patterns.
               </p>
             </CardContent>
           </Card>
@@ -90,7 +91,8 @@ export default function AnalyticsComingSoon() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Discover which goals you excel at, identify improvement areas, and get personalized recommendations for better results.
+                Discover which goals you excel at, identify improvement areas,
+                and get personalized recommendations for better results.
               </p>
             </CardContent>
           </Card>
@@ -104,7 +106,8 @@ export default function AnalyticsComingSoon() {
             </CardHeader>
             <CardContent>
               <p className="text-muted-foreground">
-                Understand your peak performance times, category breakdowns, and detailed completion statistics across all your goals.
+                Understand your peak performance times, category breakdowns, and
+                detailed completion statistics across all your goals.
               </p>
             </CardContent>
           </Card>
@@ -120,9 +123,11 @@ export default function AnalyticsComingSoon() {
           </CardHeader>
           <CardContent className="text-center space-y-4">
             <p className="text-muted-foreground">
-              In the meantime, keep setting and achieving your goals! Your progress data is being saved and will be available as soon as analytics launches.
+              In the meantime, keep setting and achieving your goals! Your
+              progress data is being saved and will be available as soon as
+              analytics launches.
             </p>
-            
+
             <div className="flex flex-wrap justify-center gap-4">
               <Button asChild>
                 <Link to="/goals">
