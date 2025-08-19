@@ -447,8 +447,7 @@ export const authApi = {
 // Dashboard API calls
 export const dashboardApi = {
   async getDashboardData(): Promise<DashboardData> {
-    console.log("hi  --")
-    return apiRequest<DashboardData>("http://localhost:3000/api/dashboard");
+    return apiRequest<DashboardData>("/dashboard");
   },
 
   async toggleTarget(targetId: string): Promise<Target> {
