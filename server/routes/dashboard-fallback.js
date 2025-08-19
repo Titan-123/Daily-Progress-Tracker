@@ -11,29 +11,8 @@ const getMockTargets = () => getDemoDashboardTargets();
 // Remove static mock targets - now using demo store
 let mockTargets = [];
 
-const mockAchievements = [
-  {
-    id: "1",
-    title: "7-Day Streak",
-    description: "Completed daily goals for a week!",
-    icon: "🔥",
-    earned: false,
-  },
-  {
-    id: "2",
-    title: "Early Bird",
-    description: "Started progress tracking before 8 AM",
-    icon: "🌅",
-    earned: false,
-  },
-  {
-    id: "3",
-    title: "Consistency Master",
-    description: "Hit 90% weekly completion rate",
-    icon: "⭐",
-    earned: false,
-  },
-];
+// Get available achievements (none unlocked in fallback mode)
+const getMockAchievements = () => getAllAchievementDefinitions().slice(0, 3);
 
 export const handleGetDashboardFallback = (req, res) => {
   console.log("📋 Using fallback dashboard data (MongoDB not connected)");
