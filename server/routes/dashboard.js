@@ -119,46 +119,8 @@ export const handleGetDashboard = async (req, res) => {
       streak: target.streak,
     }));
 
-    // Get user achievements
-    const userAchievements = await UserAchievement.find({ userId })
-      .populate("achievementId")
-      .sort({ earnedAt: -1 })
-      .limit(10);
-
-    const achievements = userAchievements.map((ua) => ({
-      id: ua.achievementId._id.toString(),
-      title: ua.achievementId.title,
-      description: ua.achievementId.description,
-      icon: ua.achievementId.icon,
-      earned: true,
-    }));
-
-    // Add some default achievements if none exist (for new users)
-    if (achievements.length === 0) {
-      achievements.push(
-        {
-          id: "1",
-          title: "First Step",
-          description: "Welcome to your progress journey!",
-          icon: "🎯",
-          earned: false,
-        },
-        {
-          id: "2",
-          title: "Goal Setter",
-          description: "Create your first custom goal",
-          icon: "🌟",
-          earned: false,
-        },
-        {
-          id: "3",
-          title: "Day One",
-          description: "Complete your first daily target",
-          icon: "✅",
-          earned: false,
-        },
-      );
-    }
+    // Get user achievements using dynamic calculation
+    const achievements = await calculateUserAchievements(userId);
 
     // Calculate stats
     const currentStreak = await calculateStreaks(userId);
