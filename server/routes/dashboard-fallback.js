@@ -1,5 +1,8 @@
 // Fallback mock data when MongoDB is not available
-import { getDemoDashboardTargets, updateDemoTargetCompletion } from "../utils/demoUserStore.js";
+import {
+  getDemoDashboardTargets,
+  updateDemoTargetCompletion,
+} from "../utils/demoUserStore.js";
 
 // Get targets from demo store instead of static data
 const getMockTargets = () => getDemoDashboardTargets();
@@ -54,7 +57,9 @@ export const handleToggleTargetFallback = (req, res) => {
   const newCompleted = !target.completed;
   updateDemoTargetCompletion(targetId, newCompleted);
 
-  console.log(`🎯 Toggled target ${targetId} to ${newCompleted} (fallback mode)`);
+  console.log(
+    `🎯 Toggled target ${targetId} to ${newCompleted} (fallback mode)`,
+  );
 
   const updatedTarget = { ...target, completed: newCompleted };
   res.json(updatedTarget);
