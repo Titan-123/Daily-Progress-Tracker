@@ -329,6 +329,7 @@ export default function Goals() {
             </div>
           </div>
 
+          {/* TEMPORARILY HIDDEN PREMIUM UPGRADE BUTTON - ALWAYS SHOW ADD GOAL DIALOG
           {!isPremium && goals.filter((g) => g.type === "daily").length >= 3 ? (
             <Button asChild className="relative">
               <a
@@ -341,6 +342,7 @@ export default function Goals() {
               </a>
             </Button>
           ) : (
+          */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
@@ -450,7 +452,9 @@ export default function Goals() {
                 </div>
               </DialogContent>
             </Dialog>
+          {/* TEMPORARILY HIDDEN PREMIUM UPGRADE BUTTON END
           )}
+          */}
         </div>
 
         {/* Subscription Status */}
