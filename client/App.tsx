@@ -1,5 +1,5 @@
 import "./global.css";
-import "./lib/resize-observer-polyfill";
+import "./lib/suppress-resize-observer-errors";
 
 import { Toaster } from "@/components/ui/toaster";
 import { createRoot } from "react-dom/client";
