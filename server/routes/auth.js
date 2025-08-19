@@ -1,7 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/User.js";
-import Goal from "../models/Goal.js";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your-super-secret-jwt-key";
 const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
