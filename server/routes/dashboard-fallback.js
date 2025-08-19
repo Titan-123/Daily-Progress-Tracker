@@ -19,7 +19,7 @@ export const handleGetDashboardFallback = (req, res) => {
   const currentTargets = getMockTargets();
   res.json({
     targets: currentTargets,
-    achievements: mockAchievements,
+    achievements: getMockAchievements(),
     weeklyProgress: 0,
     totalStreak: 0,
   });
