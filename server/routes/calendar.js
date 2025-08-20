@@ -73,10 +73,14 @@ export const handleGetCalendarData = async (req, res) => {
         streak: target.streak,
       }));
 
+      // Calculate real-time completion counts from current targets
+      const completedCount = targets.filter(t => t.completed).length;
+      const totalCount = targets.length;
+
       calendarData[dateKey] = {
         date: dateKey,
-        completed: entry.completed,
-        total: entry.total,
+        completed: completedCount, // Use real-time count
+        total: totalCount,         // Use real-time count
         targets: formattedTargets,
         reflection: entry.reflection,
         mood: entry.mood,
