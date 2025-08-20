@@ -336,11 +336,35 @@ export const handleSaveReflection = async (req, res) => {
 
     await dayEntry.save();
 
+    // Return fresh target data to ensure real-time completion status
+    const dayStart = new Date(dayDate);
+    dayStart.setHours(0, 0, 0, 0);
+    const dayEnd = new Date(dayDate);
+    dayEnd.setHours(23, 59, 59, 999);
+
+    const currentTargets = await Target.find({
+      userId,
+      date: { $gte: dayStart, $lte: dayEnd },
+    }).populate("goalId");
+
+    const formattedTargets = currentTargets.map((target) => ({
+      id: target._id.toString(),
+      title: target.title,
+      description: target.description,
+      completed: target.completed,
+      category: target.goalId?.category || "General",
+      type: target.type,
+      streak: target.streak,
+    }));
+
+    const completedCount = currentTargets.filter(t => t.completed).length;
+    const totalCount = currentTargets.length;
+
     res.json({
       date: formatLocalDate(dayEntry.date),
-      completed: dayEntry.completed,
-      total: dayEntry.total,
-      targets: dayEntry.targets,
+      completed: completedCount,        // Use real-time count
+      total: totalCount,               // Use real-time count
+      targets: formattedTargets,       // Use real-time targets
       reflection: dayEntry.reflection,
       mood: dayEntry.mood,
       highlights: dayEntry.highlights,
