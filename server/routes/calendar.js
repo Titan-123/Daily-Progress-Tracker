@@ -246,29 +246,58 @@ export const handleSaveReflection = async (req, res) => {
     let dayEntry = await DayEntry.findOne({ userId, date: dayDate });
 
     if (!dayEntry) {
-      // Get user's active daily goals to create targets
-      const activeGoals = await Goal.find({
+      // Get today's actual targets from dashboard (with current completion status)
+      const dayStart = new Date(dayDate);
+      dayStart.setHours(0, 0, 0, 0);
+      const dayEnd = new Date(dayDate);
+      dayEnd.setHours(23, 59, 59, 999);
+
+      const dashboardTargets = await Target.find({
         userId,
-        type: "daily",
-        isActive: true,
-      });
+        date: { $gte: dayStart, $lte: dayEnd },
+      }).populate("goalId");
 
-      const targets = activeGoals.map((goal) => ({
-        id: goal._id.toString(),
-        title: goal.title,
-        description: goal.description,
-        completed: false,
-        category: goal.category,
-        type: goal.type,
-        streak: goal.streak || 0,
-      }));
+      let targets = [];
+      let completedCount = 0;
 
-      // Create new day entry with current daily goals
+      if (dashboardTargets.length > 0) {
+        // Use actual dashboard targets with current completion status
+        targets = dashboardTargets.map((target) => ({
+          id: target._id.toString(),
+          title: target.title,
+          description: target.description,
+          completed: target.completed,
+          category: target.goalId?.category || "General",
+          type: target.type,
+          streak: target.streak || 0,
+        }));
+        completedCount = dashboardTargets.filter(t => t.completed).length;
+      } else {
+        // Fallback: Get user's active daily goals if no dashboard targets exist
+        const activeGoals = await Goal.find({
+          userId,
+          type: "daily",
+          isActive: true,
+        });
+
+        targets = activeGoals.map((goal) => ({
+          id: goal._id.toString(),
+          title: goal.title,
+          description: goal.description,
+          completed: false,
+          category: goal.category,
+          type: goal.type,
+          streak: goal.streak || 0,
+        }));
+        completedCount = 0;
+      }
+
+      // Create new day entry with current dashboard completion status
       dayEntry = new DayEntry({
         date: dayDate,
         userId,
         reflection,
-        completed: 0,
+        completed: completedCount,
         total: targets.length,
         targets: targets,
       });
