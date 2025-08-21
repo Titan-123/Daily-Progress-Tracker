@@ -18,9 +18,11 @@ export default defineConfig(({ mode }) => ({
     outDir: "dist/spa",
   },
   optimizeDeps: {
-    include: ["react", "react-dom", "react-router-dom", "@tanstack/react-query"],
-    exclude: ["lucide-react"],
-    force: true,
+    include: ["react", "react-dom", "react-router-dom"],
+    exclude: ["@tanstack/react-query", "lucide-react"],
+    esbuildOptions: {
+      target: "esnext",
+    },
   },
   plugins: [react(), expressPlugin()],
   resolve: {
