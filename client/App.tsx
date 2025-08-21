@@ -1,3 +1,4 @@
+import React from "react";
 import "./global.css";
 import "./lib/suppress-resize-observer-errors";
 
