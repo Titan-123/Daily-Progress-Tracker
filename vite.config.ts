@@ -7,7 +7,7 @@ import { createServer } from "./server/index.js";
 export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
-    port: 8080,
+    port: 8083,
     strictPort: true,
     fs: {
       allow: ["./client", "./shared"],
